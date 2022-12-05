@@ -6,6 +6,7 @@ const app = express();
 const connectDB = require("./mongodb/mongo.connect");
 
 const StudentRoutes = require("./routes/student.routes");
+const TeacherRoutes = require("./routes/teacher.routes")
 
 const corstAllowAll = {
   credentials: true,
@@ -36,3 +37,5 @@ app.get("/test", (req, res) => {
 
 // all routes here
 app.use("/student", StudentRoutes);
+app.use("/teacher", TeacherRoutes);
+
