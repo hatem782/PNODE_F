@@ -4,8 +4,7 @@ const cors = require("cors");
 const bodyParser = require("body-parser");
 const app = express();
 const connectDB = require("./mongodb/mongo.connect");
-
-const StudentRoutes = require("./routes/student.routes");
+const Routes = require("./routes/AllRoutes.routes");
 
 const corstAllowAll = {
   credentials: true,
@@ -17,7 +16,7 @@ dotenv.config();
 app.use(cors(corstAllowAll));
 app.options("*", cors());
 app.use(bodyParser.json());
-app.use(bodyParser.urlencoded());
+app.use(bodyParser.urlencoded({ extended: true }));
 
 app.listen(process.env.PORT || 8080, () => {
   console.log(process.env.PORT);
@@ -34,5 +33,4 @@ app.get("/test", (req, res) => {
   res.send(resu);
 });
 
-// all routes here
-app.use("/student", StudentRoutes);
+app.use("/api", Routes);

@@ -1,4 +1,5 @@
 const StudentModel = require("../models/student.module");
+const bcrypt = require("bcrypt");
 
 const CreateStudent = async (req, res) => {
   try {
@@ -10,6 +11,8 @@ const CreateStudent = async (req, res) => {
       phoneNumber,
       birthDate,
       sex,
+      classe,
+      niveau,
       profilImage,
     } = req.body;
     if (
@@ -20,6 +23,8 @@ const CreateStudent = async (req, res) => {
       !phoneNumber ||
       !birthDate ||
       !sex ||
+      !classe ||
+      !niveau ||
       !profilImage
     ) {
       return res
@@ -34,7 +39,39 @@ const CreateStudent = async (req, res) => {
         Success: false,
       });
     }
+
+    // CRYPTING PASSWORD
+    const salt = process.env.SALT;
+    const cryptedMdp = await bcrypt.hash(password, Number(salt));
+
     const newStudent = await StudentModel.create({
+      firstName,
+      lastName,
+      email,
+      password: cryptedMdp,
+      phoneNumber,
+      birthDate,
+      sex,
+      classe,
+      niveau,
+      profilImage,
+    });
+    const createdStudent = await newStudent.save();
+
+    return res.status(200).json({
+      Message: "student created suucessfully",
+      Success: true,
+      data: createdStudent,
+    });
+  } catch (error) {
+    console.log("##########:", error);
+    res.status(500).send({ Message: "Server Error", Error: error.message });
+  }
+};
+
+const CreateAluminie = async (req, res) => {
+  try {
+    const {
       firstName,
       lastName,
       email,
@@ -43,6 +80,47 @@ const CreateStudent = async (req, res) => {
       birthDate,
       sex,
       profilImage,
+      promotion,
+    } = req.body;
+    if (
+      !firstName ||
+      !lastName ||
+      !email ||
+      !password ||
+      !phoneNumber ||
+      !birthDate ||
+      !sex ||
+      !profilImage ||
+      !promotion
+    ) {
+      return res
+        .status(400)
+        .json({ Message: "All informations are required", Success: false });
+    }
+    const existStudent = await StudentModel.findOne({ email });
+
+    if (existStudent) {
+      return res.status(409).json({
+        Message: "student already exists with that mail",
+        Success: false,
+      });
+    }
+
+    // CRYPTING PASSWORD
+    const salt = process.env.SALT;
+    const cryptedMdp = await bcrypt.hash(password, Number(salt));
+
+    const newStudent = await StudentModel.create({
+      firstName,
+      lastName,
+      email,
+      password: cryptedMdp,
+      phoneNumber,
+      birthDate,
+      sex,
+      profilImage,
+      isAluminie: true,
+      isDeplomated: true,
     });
     const createdStudent = await newStudent.save();
 
@@ -101,6 +179,8 @@ const UpdateStudent = async (req, res) => {
       phoneNumber,
       birthDate,
       sex,
+      classe,
+      niveau,
       profilImage,
     } = req.body;
     if (
@@ -111,6 +191,8 @@ const UpdateStudent = async (req, res) => {
       !phoneNumber ||
       !birthDate ||
       !sex ||
+      !classe ||
+      !niveau ||
       !profilImage
     ) {
       return res
@@ -162,6 +244,26 @@ const DeleteStudent = async (req, res) => {
     res.status(500).send({ Message: "Server Error", Error: error.message });
   }
 };
+
+const StudentLogin = async (req, res) => {};
+
+const AluminieLogin = async (req, res) => {};
+
+const UploadCV = async (req, res) => {};
+
+const UploadProfileImg = async (req, res) => {};
+
+const ChangePassword = async (req, res) => {};
+
+const UpdatePromotion = async (req, res) => {};
+
+const UpdateDeplome = async (req, res) => {
+  // make him aluminie
+  // make deplomated true
+  // update promotion
+};
+
+const Public_Private_Profile = async (req, res) => {};
 
 module.exports = {
   CreateStudent,
