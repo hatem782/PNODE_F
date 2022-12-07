@@ -1,7 +1,7 @@
 const StudentModel = require("../models/student.module");
 const bcrypt = require("bcrypt");
 
-const CreateStudent = async (req, res) => {
+const RegisterStudent = async (req, res) => {
   try {
     const {
       firstName,
@@ -13,7 +13,6 @@ const CreateStudent = async (req, res) => {
       sex,
       classe,
       niveau,
-      profilImage,
     } = req.body;
     if (
       !firstName ||
@@ -24,8 +23,7 @@ const CreateStudent = async (req, res) => {
       !birthDate ||
       !sex ||
       !classe ||
-      !niveau ||
-      !profilImage
+      !niveau
     ) {
       return res
         .status(400)
@@ -54,7 +52,6 @@ const CreateStudent = async (req, res) => {
       sex,
       classe,
       niveau,
-      profilImage,
     });
     const createdStudent = await newStudent.save();
 
@@ -69,7 +66,7 @@ const CreateStudent = async (req, res) => {
   }
 };
 
-const CreateAluminie = async (req, res) => {
+const RegisterAluminie = async (req, res) => {
   try {
     const {
       firstName,
@@ -79,8 +76,8 @@ const CreateAluminie = async (req, res) => {
       phoneNumber,
       birthDate,
       sex,
-      profilImage,
       promotion,
+      deplome,
     } = req.body;
     if (
       !firstName ||
@@ -90,8 +87,8 @@ const CreateAluminie = async (req, res) => {
       !phoneNumber ||
       !birthDate ||
       !sex ||
-      !profilImage ||
-      !promotion
+      !promotion ||
+      !deplome
     ) {
       return res
         .status(400)
@@ -101,7 +98,7 @@ const CreateAluminie = async (req, res) => {
 
     if (existStudent) {
       return res.status(409).json({
-        Message: "student already exists with that mail",
+        Message: "Aluminie already exists with that mail",
         Success: false,
       });
     }
@@ -118,14 +115,14 @@ const CreateAluminie = async (req, res) => {
       phoneNumber,
       birthDate,
       sex,
-      profilImage,
+      deplome,
       isAluminie: true,
       isDeplomated: true,
     });
     const createdStudent = await newStudent.save();
 
     return res.status(200).json({
-      Message: "student created suucessfully",
+      Message: "Aluminie created suucessfully",
       Success: true,
       data: createdStudent,
     });
@@ -245,6 +242,10 @@ const DeleteStudent = async (req, res) => {
   }
 };
 
+const CreateStudent = async (req, res) => {};
+
+const CreateAluminie = async (req, res) => {};
+
 const StudentLogin = async (req, res) => {};
 
 const AluminieLogin = async (req, res) => {};
@@ -266,9 +267,10 @@ const UpdateDeplome = async (req, res) => {
 const Public_Private_Profile = async (req, res) => {};
 
 module.exports = {
-  CreateStudent,
+  RegisterStudent,
   GetAllStudents,
   GetOneStudent,
   UpdateStudent,
   DeleteStudent,
+  RegisterAluminie,
 };
