@@ -169,29 +169,9 @@ const GetOneStudent = async (req, res) => {
 const UpdateStudent = async (req, res) => {
   try {
     const { _id } = req.params;
-    const {
-      firstName,
-      lastName,
-      email,
-      phoneNumber,
-      birthDate,
-      sex,
-      classe,
-      niveau,
-      profilImage,
-    } = req.body;
-    if (
-      !_id ||
-      !firstName ||
-      !lastName ||
-      !email ||
-      !phoneNumber ||
-      !birthDate ||
-      !sex ||
-      !classe ||
-      !niveau ||
-      !profilImage
-    ) {
+    const { firstName, lastName, email, phoneNumber, birthDate, sex } =
+      req.body;
+    if (!_id || !firstName || !lastName || !phoneNumber || !birthDate || !sex) {
       return res
         .status(400)
         .json({ Message: "All informations are required!", Success: false });
@@ -202,11 +182,9 @@ const UpdateStudent = async (req, res) => {
         $set: {
           firstName,
           lastName,
-          email,
           phoneNumber,
           birthDate,
           sex,
-          profilImage,
         },
       },
       { new: true }
@@ -255,6 +233,8 @@ const UploadCV = async (req, res) => {};
 const UploadProfileImg = async (req, res) => {};
 
 const ChangePassword = async (req, res) => {};
+
+const ChangeEmail = async (req, res) => {}; // to test if the mail is unique or not
 
 const UpdatePromotion = async (req, res) => {};
 
