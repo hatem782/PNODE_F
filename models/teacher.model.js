@@ -13,13 +13,17 @@ const TeacherModel = new Schema(
          type: String, 
          required: false 
         },
-      login: {
+      userName: {
          type: String, 
          required: true ,
         },
       password: {
          type: String,
           required: true,
+         },
+      email: {
+          type: String, 
+          required: true ,
          },
       phoneNumber: { 
         type: Number, 
@@ -34,6 +38,15 @@ const TeacherModel = new Schema(
         required: true, 
         default: "MEN" 
     },
+    isResponsable: { 
+      type: Boolean, 
+      required: false, 
+      default: false
+  },
+    course: {
+      type:[String],
+      required: true
+   },
       profilImage: { type: String, default: defimg },
     },
     {

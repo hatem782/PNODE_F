@@ -7,6 +7,9 @@ const connectDB = require("./mongodb/mongo.connect");
 
 const StudentRoutes = require("./routes/student.routes");
 const TeacherRoutes = require("./routes/teacher.routes")
+const EventRoutes = require("./routes/event.routes")
+const ParticipationRoutes = require("./routes/participation.routes")
+
 
 const corstAllowAll = {
   credentials: true,
@@ -38,4 +41,8 @@ app.get("/test", (req, res) => {
 // all routes here
 app.use("/student", StudentRoutes);
 app.use("/teacher", TeacherRoutes);
+app.use("/event", EventRoutes);
+app.use("/participation",  ParticipationRoutes)
+
+
 

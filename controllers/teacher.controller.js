@@ -6,11 +6,11 @@ const validationTeacher = Joi.object({
     firstName: Joi.string().required(),
     lastName: Joi.string(),
     birthDate: Joi.string(),
-    phoneNumber: Joi.number(),
+    phoneNumber: Joi.number().integer(),
     sex: Joi.string().required(),
-    login: Joi.string().required(),
-    password :Joi.string().required()
-
+    email: Joi.string().required().email(),
+    isResponsable: Joi.boolean(),
+    course: Joi.array().items(Joi.string()),
 
 } )
 
@@ -22,25 +22,30 @@ const CreateTeacher =  async(req,res) => {
             phoneNumber,
             birthDate,
             sex,
-            login,
-            password
+            isResponsable,
+            email,
+            course
           } = req.body;
         const validation =  validationTeacher.validate(req.body);
         if(validation.error) return res.status(400).json({ Message: validation.error.details[0].message, Success: false });
 
-        const existTeacher = await TeacherModel.findOne({  login });
+        const existTeacher = await TeacherModel.findOne({  phoneNumber });
         if(existTeacher)   return res.status(409).json({
-           Message: "teacher already exists with that login",
+           Message: "teacher already exists with that phoneNumber",
            Success: false,
          }); 
+         
          const newTeacher = new TeacherModel({
             firstName,
             lastName,
             phoneNumber,
             birthDate,
             sex,
-            login,
-            password
+            userName:phoneNumber,
+            password: phoneNumber,
+            isResponsable,
+            email,
+            course
           });
           const createdTeacher = await newTeacher.save();
           return res.status(200).json({
@@ -64,11 +69,13 @@ const UpdateTeacher = async (req, res) => {
     const {
       firstName,
       lastName,
-      login,
       phoneNumber,
       birthDate,
       sex,
-      profilImage
+      profilImage,
+      isResponsable,
+      email,
+      course
     } = req.body;
  
 
@@ -78,11 +85,16 @@ const UpdateTeacher = async (req, res) => {
         $set: {
           firstName,
           lastName,
-          login,
           phoneNumber,
           birthDate,
           sex,
           profilImage,
+          isResponsable,
+          email,
+          userName:phoneNumber,
+          password:phoneNumber,
+          course
+
         },
       },
       { new: true } // return new teacher with update
@@ -94,7 +106,7 @@ const UpdateTeacher = async (req, res) => {
         data: updateTeacher,
       });
     }
-    return res.status(200).json({ Message: "Student updated successfully",data: updateTeacher });
+    return res.status(200).json({ Message: "teacher updated successfully",data: updateTeacher });
   } catch (error) {
     console.log("##########:", error);
     res.status(500).send({ Message: "Server Error", Error: error.message });
