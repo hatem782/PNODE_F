@@ -3,7 +3,7 @@ const dotenv = require("dotenv");
 const cors = require("cors");
 const bodyParser = require("body-parser");
 const app = express();
-const connectDB = require("./mongodb/mongo.connect");
+const connectDB = require("./Database/mongo.connect");
 const Routes = require("./routes/AllRoutes.routes");
 
 const corstAllowAll = {
