@@ -7,7 +7,4 @@ router.put("/update/:_id", EventController.UpdateEvent);
 router.delete("/delete/:_id", EventController.DeleteEvent);
 router.get("/getAll", EventController.GetAllEvents);
 
-
-
-
 module.exports = router;
