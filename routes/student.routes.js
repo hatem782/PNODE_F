@@ -3,7 +3,6 @@ const router = express.Router();
 const StudentController = require("../controllers/student.controller");
 const isStudent = require("../middlewares/isStudent");
 
-router.post("/register_student", StudentController.RegisterStudent);
 router.post("/register_aluminie", StudentController.RegisterAluminie);
 router.get("/login", StudentController.StudentLogin);
 router.get("/getAll", StudentController.GetAllStudents);
