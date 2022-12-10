@@ -1,5 +1,6 @@
 const StudentModel = require("../models/student.module");
 const bcrypt = require("bcrypt");
+const GenereteToken = require("../functions/GenerateJWT");
 
 const RegisterStudent = async (req, res) => {
   try {
@@ -224,9 +225,46 @@ const CreateStudent = async (req, res) => {};
 
 const CreateAluminie = async (req, res) => {};
 
-const StudentLogin = async (req, res) => {};
-
-const AluminieLogin = async (req, res) => {};
+const StudentLogin = async (req, res) => {
+  try {
+    const { email, password } = req.query;
+    //--------------------------------------------------------------------------
+    // Verify all data exist
+    if (!email || !password) {
+      return res
+        .status(406)
+        .json({ Message: "All informations are required!", Success: false });
+    }
+    //--------------------------------------------------------------------------
+    // Verify user by mail
+    let user = await StudentModel.findOne({ email });
+    if (!user) {
+      return res.status(400).json({
+        Message: "Please verify your email and password",
+        Success: false,
+      });
+    }
+    //--------------------------------------------------------------------------
+    // Verify user password
+    const passMatch = await bcrypt.compare(password, user?.password);
+    if (!passMatch) {
+      return res.status(400).json({
+        Message: "Please verify your email and password",
+        Success: false,
+      });
+    }
+    const token = GenereteToken({ _id: user._id, email }, "24h");
+    const role = user.isAluminie ? "aluminie" : "student";
+    return res.status(200).json({
+      Message: "Logged successfully",
+      Success: true,
+      data: { user, token, role },
+    });
+  } catch (error) {
+    console.log("##########:", error);
+    res.status(500).send({ Message: "Server Error", Error: error.message });
+  }
+};
 
 const UploadCV = async (req, res) => {};
 
@@ -253,4 +291,5 @@ module.exports = {
   UpdateStudent,
   DeleteStudent,
   RegisterAluminie,
+  StudentLogin,
 };
