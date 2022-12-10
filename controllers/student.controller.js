@@ -2,7 +2,8 @@ const StudentModel = require("../models/student.module");
 const bcrypt = require("bcrypt");
 const GenereteToken = require("../functions/GenerateJWT");
 
-const RegisterStudent = async (req, res) => {
+const CreateStudent = async (req, res) => {
+  // auto generate password
   try {
     const {
       firstName,
@@ -170,8 +171,7 @@ const GetOneStudent = async (req, res) => {
 const UpdateStudent = async (req, res) => {
   try {
     const { _id } = req.params;
-    const { firstName, lastName, email, phoneNumber, birthDate, sex } =
-      req.body;
+    const { firstName, lastName, phoneNumber, birthDate, sex } = req.body;
     if (!_id || !firstName || !lastName || !phoneNumber || !birthDate || !sex) {
       return res
         .status(400)
@@ -221,10 +221,6 @@ const DeleteStudent = async (req, res) => {
   }
 };
 
-const CreateStudent = async (req, res) => {};
-
-const CreateAluminie = async (req, res) => {};
-
 const StudentLogin = async (req, res) => {
   try {
     const { email, password } = req.query;
@@ -253,7 +249,7 @@ const StudentLogin = async (req, res) => {
         Success: false,
       });
     }
-    const token = GenereteToken({ _id: user._id, email }, "24h");
+    const token = GenereteToken({ _id: user._id }, "24h");
     const role = user.isAluminie ? "aluminie" : "student";
     return res.status(200).json({
       Message: "Logged successfully",
@@ -285,7 +281,7 @@ const UpdateDeplome = async (req, res) => {
 const Public_Private_Profile = async (req, res) => {};
 
 module.exports = {
-  RegisterStudent,
+  CreateStudent,
   GetAllStudents,
   GetOneStudent,
   UpdateStudent,

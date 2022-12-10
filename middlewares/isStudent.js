@@ -1,7 +1,7 @@
 const jwt = require("jsonwebtoken");
 const studentModel = require("../models/student.module");
 
-exports.isAuth = async (req, res, next) => {
+module.exports = async (req, res, next) => {
   if (!req.headers.authorization) {
     return res.status(302).json({ success: false, message: "no auth" });
   }
