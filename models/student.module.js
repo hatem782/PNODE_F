@@ -14,6 +14,7 @@ const StudentModel = new Schema(
     birthDate: { type: Date, required: false },
     classe: { type: String, required: false },
     niveau: { type: String, required: false },
+    numero_classe: { type: Number, required: false },
     sex: { type: String, required: true, default: "Men" },
     profilImage: { type: String, default: defimg },
     cv: { type: String, required: false },
@@ -22,6 +23,7 @@ const StudentModel = new Schema(
     deplome: { type: String, default: false },
     promotion: { type: String, required: false },
     isPublic: { type: Boolean, default: true },
+    blocked: { type: Boolean, default: false },
   },
   {
     timestamps: true,

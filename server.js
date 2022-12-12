@@ -1,6 +1,7 @@
 const express = require("express");
 const dotenv = require("dotenv");
 const cors = require("cors");
+const fileupload = require("express-fileupload");
 const bodyParser = require("body-parser");
 const app = express();
 const connectDB = require("./Database/mongo.connect");
@@ -16,7 +17,19 @@ dotenv.config();
 app.use(cors(corstAllowAll));
 app.options("*", cors());
 app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({ extended: true }));
+
+app.use(
+  bodyParser.urlencoded({
+    limit: "50mb",
+    extended: true,
+    parameterLimit: 50000,
+  })
+);
+app.use(
+  fileupload({
+    limits: { fileSize: 50 * 1024 * 1024 },
+  })
+);
 
 app.listen(process.env.PORT || 8080, () => {
   console.log(process.env.PORT);
