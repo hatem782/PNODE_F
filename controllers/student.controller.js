@@ -393,6 +393,64 @@ const ChangePassword = async (req, res) => {
   }
 };
 
+const ForgotPassword = async (req, res) => {
+  try {
+    const { email } = req.body;
+
+    if (!email) {
+      return res
+        .status(400)
+        .json({ Message: "email is required", Success: false });
+    }
+    const existStudent = await StudentModel.findOne({ email });
+
+    if (!existStudent) {
+      return res.status(400).json({
+        Message: "there's no student with that mail",
+        Success: false,
+      });
+    }
+
+    const password = GeneratePassword.GeneratePass();
+    const salt = process.env.SALT;
+    const cryptedMdp = await bcrypt.hash(password, Number(salt));
+
+    const updateStudent = await StudentModel.findOneAndUpdate(
+      { _id: existStudent._id },
+      {
+        $set: {
+          password: cryptedMdp,
+        },
+      },
+      { new: true }
+    );
+    if (!updateStudent) {
+      return res.status(400).json({
+        Message: "Failed to update student",
+        Success: false,
+      });
+    }
+
+    // SENDING THE LOGIN AND PASSWORD TO USER WITH MAIL
+    let subject = "Password Recover";
+    let content = `
+        <div>
+        <h2>Welcome ${existStudent.firstName} ${existStudent.lastName} to our plateforme</h2>
+        <p>we recieved a request to recover your password</p>
+        <p>your new password is : <b>${password}</b> </p>
+        <p>please make sure to change your password after you access to your account</p>
+        </div>`;
+    await Mailer.Mail_Sender(existStudent.email, content, subject);
+
+    return res
+      .status(200)
+      .json({ Message: "new password sent to your mail box" });
+  } catch (error) {
+    console.log("##########:", error);
+    res.status(500).send({ Message: "Server Error", Error: error.message });
+  }
+};
+
 const ChangeEmail = async (req, res) => {
   try {
     const _id = req.user._id;
@@ -602,4 +660,5 @@ module.exports = {
   BecomeDeplomated,
   pub_priv_profile,
   block_unblock,
+  ForgotPassword,
 };

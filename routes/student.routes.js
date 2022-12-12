@@ -6,6 +6,7 @@ const isStudent = require("../middlewares/isStudent");
 // anyone
 router.post("/register_aluminie", StudentController.RegisterAluminie); // te5dem
 router.get("/login", StudentController.StudentLogin); // te5dem
+router.put("/forget_pass", StudentController.ForgotPassword); // te5dem
 
 // Student or aluminie
 router.put("/update", isStudent, StudentController.UpdateStudent); // te5dem
