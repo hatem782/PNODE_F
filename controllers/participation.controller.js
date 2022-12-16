@@ -3,23 +3,28 @@ const ParticipationModel = require("../models/Participation.model");
 
 const CreateParticipation = async (req, res) => {
   try {
-    const { _idEvent, _idStudent } = req.params; //houni id student bich nwali ne5thou m token
+    const { _idEvent } = req.params;
+    const _idStudent = req.user._id;
+    console.log(_idStudent);
 
-    const existParticipation = await ParticipationModel.findOne({ _idStudent });
+    const existParticipation = await ParticipationModel.findOne({
+      studentId: _idStudent,
+      eventId: _idEvent,
+    });
     if (existParticipation)
       return res.status(409).json({
-        Message: "Participation already exist",
+        Message: "Participation already exist for that event",
         Success: false,
       });
     const newParticipation = new ParticipationModel({
-      studentId: _idStudent,
+      studentId: req.user._id,
       eventId: _idEvent,
     });
     const createdParticipation = await newParticipation.save();
     return res.status(200).json({
       Message: "Participation created suucessfully",
       Success: true,
-      data: createdParticipation,
+      data: createdParticipation.populate("eventId"),
     });
   } catch (error) {
     console.log("##########:", error);
@@ -29,16 +34,16 @@ const CreateParticipation = async (req, res) => {
 
 const UpdateParticipation = async (req, res) => {
   try {
-    const { _idEvent, _idStudent } = req.params;
-    //houni id student bich nwali ne5thou m token
+    const { _idEvent } = req.params;
+    const _idStudent = req.user._id;
 
     const participation = await ParticipationModel.findOne({
-      _idEvent,
-      _idStudent,
+      studentId: _idStudent,
+      eventId: _idEvent,
     });
     console.log(participation.confirmation);
     const updateParticipation = await ParticipationModel.findOneAndUpdate(
-      { _idEvent, _idStudent },
+      { studentId: _idStudent, eventId: _idEvent },
       { confirmation: !participation.confirmation },
       { new: true }
     );
@@ -48,12 +53,10 @@ const UpdateParticipation = async (req, res) => {
         Success: false,
       });
     }
-    return res
-      .status(200)
-      .json({
-        Message: "Participation updated successfully",
-        data: updateParticipation,
-      });
+    return res.status(200).json({
+      Message: "Participation updated successfully",
+      data: updateParticipation,
+    });
   } catch (error) {
     console.log("##########:", error);
     res.status(500).send({ Message: "Server Error", Error: error.message });
@@ -70,12 +73,10 @@ const GetAllParticipationsConfirmed = async (req, res) => {
         .status(400)
         .json({ Message: "Failed to find Participation", Success: false });
 
-    return res
-      .status(200)
-      .json({
-        Message: "Participations found successfully ",
-        data: Participations,
-      });
+    return res.status(200).json({
+      Message: "Participations found successfully ",
+      data: Participations,
+    });
   } catch (error) {
     console.log("##########:", error);
     res.status(500).send({ Message: "Server Error", Error: error.message });

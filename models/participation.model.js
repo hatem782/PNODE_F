@@ -18,6 +18,12 @@ const ParticipationModel = new Schema(
       required: true,
       default: false,
     },
+    message: {
+      type: String,
+      resuired: false,
+      default:
+        "Vous êtes invité à cet événement,prière de confirmer votre présence.",
+    },
   },
   {
     timestamps: true,
