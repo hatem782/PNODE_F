@@ -7,6 +7,12 @@ const app = express();
 const connectDB = require("./Database/mongo.connect");
 const Routes = require("./routes/AllRoutes.routes");
 
+
+const swaggerUi=require('swagger-ui-express')
+//const swaggerDocument = require('./Swagger/swagger.json');
+const swaggerFile = require('./Swagger/swagger_output.json')
+
+
 const corstAllowAll = {
   credentials: true,
   origin: true,
@@ -30,6 +36,10 @@ app.use(
     limits: { fileSize: 50 * 1024 * 1024 },
   })
 );
+
+
+app.use('/doc', swaggerUi.serve, swaggerUi.setup(swaggerFile))
+
 
 app.listen(process.env.PORT || 8080, () => {
   console.log(process.env.PORT);

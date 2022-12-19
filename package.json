@@ -5,7 +5,8 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "nodemon server.js"
+    "start": "nodemon server.js",
+    "swagger-autogen": "node Swagger/swagger.js"
   },
   "author": "",
   "license": "ISC",
@@ -22,6 +23,9 @@
     "mongoose": "^6.7.3",
     "multer": "^1.4.5-lts.1",
     "nodemailer": "^6.8.0",
-    "streamifier": "^0.1.1"
+    "streamifier": "^0.1.1",
+    "swagger-autogen": "^2.22.0",
+    "swagger-jsdoc": "^6.2.5",
+    "swagger-ui-express": "^4.6.0"
   }
 }
