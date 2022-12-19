@@ -6,14 +6,11 @@ const isStudent = require("../middlewares/isStudent");
 // anyone
 router.post("/register_aluminie", StudentController.RegisterAluminie); // te5dem
 router.get("/login", StudentController.StudentLogin); // te5dem
-router.put("/forget_pass", StudentController.ForgotPassword); // te5dem
 
 // Student or aluminie
 router.put("/update", isStudent, StudentController.UpdateStudent); // te5dem
-router.put("/profile_img", isStudent, StudentController.UploadProfileImg); // te5dem
 router.put("/profile_cv", isStudent, StudentController.UploadCV); // te5dem
-router.put("/change_pass", isStudent, StudentController.ChangePassword); // te5dem
-router.put("/change_mail", isStudent, StudentController.ChangeEmail); // te5dem
+
 router.put("/pub_priv", isStudent, StudentController.pub_priv_profile); // te5dem
 
 // Admin or Manager
