@@ -30,9 +30,7 @@ module.exports = async (req, res, next) => {
     }
 
     // there is no user
-    return res
-      .status(401)
-      .json({ success: false, Message: "Unauthorized Student" });
+    return res.status(401).json({ success: false, Message: "Unauthorized" });
   } catch (err) {
     console.log(err);
     return res.status(302).json({ success: false, Message: "not loged in" });

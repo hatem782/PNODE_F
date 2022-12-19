@@ -80,7 +80,7 @@ const CreateStudent = async (req, res) => {
     await Mailer.Mail_Sender(email, content, subject);
 
     return res.status(200).json({
-      Message: "student created suucessfully",
+      Message: "student created sucessfully",
       Success: true,
       data: createdStudent,
     });
@@ -158,7 +158,7 @@ const RegisterAluminie = async (req, res) => {
 
 const StudentLogin = async (req, res) => {
   try {
-    const { email, password } = req.query;
+    const { email, password } = req.body;
     //--------------------------------------------------------------------------
     // Verify all data exist
     if (!email || !password) {
@@ -290,6 +290,7 @@ const UploadCV = async (req, res) => {
     const _id = req.user._id;
     const file = req.files.file;
     const pdfData = await FileUpload.FileUpload(file, "students/cv");
+    console.log(pdfData);
 
     const updateStudent = await StudentModel.findOneAndUpdate(
       { _id },
