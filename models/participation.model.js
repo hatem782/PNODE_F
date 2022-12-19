@@ -18,6 +18,12 @@ const ParticipationModel = new Schema(
       required: true,
       default: false,
     },
+
+    isInvitation: {
+      type: String,
+      required: false,
+      default: false,
+    },
   },
   {
     timestamps: true,
