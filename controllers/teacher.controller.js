@@ -10,7 +10,7 @@ const validationTeacher = Joi.object({
   email: Joi.string().required().email(),
   isResponsable: Joi.boolean(),
   course: Joi.array().items(Joi.string()),
-});
+}).unknown(true);
 
 const CreateTeacher = async (req, res) => {
   try {
