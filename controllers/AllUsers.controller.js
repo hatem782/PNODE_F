@@ -1,16 +1,30 @@
 const StudentModel = require("../models/student.module");
+const TeachertModel = require("../models/teacher.model");
 const bcrypt = require("bcrypt");
 const Mailer = require("../mails/Mail_Sender");
 const GeneratePassword = require("../functions/GeneratePass");
 const FileUpload = require("../uploads/FileUpload");
 
+const GetUserSchema = (userType) => {
+  switch (userType) {
+    case "students":
+      return StudentModel;
+    case "teachers":
+      return TeachertModel;
+    default:
+      return StudentModel;
+  }
+};
+
 const UploadProfileImg = async (req, res) => {
   try {
     const _id = req.user._id;
     const file = req.files.file;
-    const imageData = await FileUpload.FileUpload(file, "students/images");
+    const userType = req.userType;
+    const imageData = await FileUpload.FileUpload(file, `${userType}/images`);
+    const Schema = GetUserSchema(userType);
 
-    const updateStudent = await StudentModel.findOneAndUpdate(
+    const updateUser = await Schema.findOneAndUpdate(
       { _id },
       {
         $set: {
@@ -19,15 +33,15 @@ const UploadProfileImg = async (req, res) => {
       },
       { new: true }
     );
-    if (!updateStudent) {
+    if (!updateUser) {
       return res.status(400).json({
-        Message: "Failed to update student",
+        Message: "Failed to update",
         Success: false,
       });
     }
     return res
       .status(200)
-      .json({ Message: "Student updated successfully", data: updateStudent });
+      .json({ Message: "updated successfully", data: updateUser });
   } catch (error) {
     console.log("##########:", error);
     res.status(500).send({ Message: "Server Error", Error: error.message });
@@ -37,9 +51,9 @@ const UploadProfileImg = async (req, res) => {
 const ChangePassword = async (req, res) => {
   try {
     const _id = req.user._id;
-    const password = req.body.password;
-    const oldpassword = req.body.oldpassword;
-    const confpassword = req.body.confpassword;
+    const { password, oldpassword, confpassword } = req.body;
+
+    const Schema = GetUserSchema(req.userType);
 
     const passMatch = await bcrypt.compare(oldpassword, req.user.password);
     if (!passMatch) {
@@ -58,7 +72,7 @@ const ChangePassword = async (req, res) => {
     const salt = process.env.SALT;
     const cryptedMdp = await bcrypt.hash(password, Number(salt));
 
-    const updateStudent = await StudentModel.findOneAndUpdate(
+    const updateUser = await Schema.findOneAndUpdate(
       { _id },
       {
         $set: {
@@ -67,15 +81,15 @@ const ChangePassword = async (req, res) => {
       },
       { new: true }
     );
-    if (!updateStudent) {
+    if (!updateUser) {
       return res.status(400).json({
-        Message: "Failed to update student",
+        Message: "Failed to update",
         Success: false,
       });
     }
     return res
       .status(200)
-      .json({ Message: "Student updated successfully", data: updateStudent });
+      .json({ Message: "updated successfully", data: updateUser });
   } catch (error) {
     console.log("##########:", error);
     res.status(500).send({ Message: "Server Error", Error: error.message });
@@ -84,18 +98,19 @@ const ChangePassword = async (req, res) => {
 
 const ForgotPassword = async (req, res) => {
   try {
-    const { email } = req.body;
+    const { email, userType } = req.body;
+    const Schema = GetUserSchema(userType);
 
     if (!email) {
       return res
         .status(400)
         .json({ Message: "email is required", Success: false });
     }
-    const existStudent = await StudentModel.findOne({ email });
+    const existUser = await Schema.findOne({ email });
 
-    if (!existStudent) {
+    if (!existUser) {
       return res.status(400).json({
-        Message: "there's no student with that mail",
+        Message: "there's no user with that email",
         Success: false,
       });
     }
@@ -104,8 +119,8 @@ const ForgotPassword = async (req, res) => {
     const salt = process.env.SALT;
     const cryptedMdp = await bcrypt.hash(password, Number(salt));
 
-    const updateStudent = await StudentModel.findOneAndUpdate(
-      { _id: existStudent._id },
+    const updateUser = await Schema.findOneAndUpdate(
+      { _id: existUser._id },
       {
         $set: {
           password: cryptedMdp,
@@ -113,9 +128,9 @@ const ForgotPassword = async (req, res) => {
       },
       { new: true }
     );
-    if (!updateStudent) {
+    if (!updateUser) {
       return res.status(400).json({
-        Message: "Failed to update student",
+        Message: "Failed to update",
         Success: false,
       });
     }
@@ -124,12 +139,12 @@ const ForgotPassword = async (req, res) => {
     let subject = "Password Recover";
     let content = `
           <div>
-          <h2>Welcome ${existStudent.firstName} ${existStudent.lastName} to our plateforme</h2>
+          <h2>Welcome ${existUser.firstName} ${existUser.lastName} to our plateforme</h2>
           <p>we recieved a request to recover your password</p>
           <p>your new password is : <b>${password}</b> </p>
           <p>please make sure to change your password after you access to your account</p>
           </div>`;
-    await Mailer.Mail_Sender(existStudent.email, content, subject);
+    await Mailer.Mail_Sender(existUser.email, content, subject);
 
     return res
       .status(200)
@@ -144,6 +159,7 @@ const ChangeEmail = async (req, res) => {
   try {
     const _id = req.user._id;
     const email = req.body.email;
+    const Schema = GetUserSchema(req.userType);
 
     if (!email) {
       return res
@@ -151,16 +167,16 @@ const ChangeEmail = async (req, res) => {
         .json({ Message: "email field is emtpy", Success: false });
     }
 
-    const existStudent = await StudentModel.findOne({ email });
+    const existUser = await Schema.findOne({ email });
 
-    if (existStudent) {
+    if (existUser) {
       return res.status(409).json({
-        Message: "student already exists with that mail",
+        Message: "user already exists with that email",
         Success: false,
       });
     }
 
-    const updateStudent = await StudentModel.findOneAndUpdate(
+    const updateUser = await Schema.findOneAndUpdate(
       { _id },
       {
         $set: {
@@ -169,15 +185,15 @@ const ChangeEmail = async (req, res) => {
       },
       { new: true }
     );
-    if (!updateStudent) {
+    if (!updateUser) {
       return res.status(400).json({
-        Message: "Failed to update student",
+        Message: "Failed to update",
         Success: false,
       });
     }
     return res
       .status(200)
-      .json({ Message: "Student updated successfully", data: updateStudent });
+      .json({ Message: "updated successfully", data: updateUser });
   } catch (error) {
     console.log("##########:", error);
     res.status(500).send({ Message: "Server Error", Error: error.message });

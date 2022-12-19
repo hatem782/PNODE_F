@@ -1,11 +1,11 @@
 const express = require("express");
 const router = express.Router();
 const AllUsers = require("../controllers/AllUsers.controller");
-const isStudent = require("../middlewares/isStudent");
+const isUser = require("../middlewares/isUser");
 
-router.put("/profile_img", isStudent, AllUsers.UploadProfileImg); // te5dem
-router.put("/change_pass", isStudent, AllUsers.ChangePassword); // te5dem
-router.put("/change_mail", isStudent, AllUsers.ChangeEmail); // te5dem
-router.put("/forget_pass", AllUsers.ForgotPassword); // te5dem
+router.put("/profile_img", isUser, AllUsers.UploadProfileImg);
+router.put("/change_pass", isUser, AllUsers.ChangePassword);
+router.put("/change_mail", isUser, AllUsers.ChangeEmail);
+router.put("/forget_pass", AllUsers.ForgotPassword);
 
 module.exports = router;
