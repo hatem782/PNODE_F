@@ -4,37 +4,15 @@ const FileUpload = require("../uploads/FileUpload");
 
 const RegisterAluminie = async (req, res) => {
   try {
-    const {
-      firstName,
-      lastName,
-      email,
-      password,
-      phoneNumber,
-      birthDate,
-      sex,
-      promotion,
-      deplome,
-    } = req.body;
-    if (
-      !firstName ||
-      !lastName ||
-      !email ||
-      !password ||
-      !phoneNumber ||
-      !birthDate ||
-      !sex ||
-      !promotion ||
-      !deplome
-    ) {
-      return res
-        .status(400)
-        .json({ Message: "All informations are required", Success: false });
-    }
-    const existStudent = await UserModel.findOne({ email });
+    const { phoneNumber, email, password } = req.body;
+
+    const existStudent = await UserModel.findOne({
+      $or: [{ email }, { phoneNumber }],
+    });
 
     if (existStudent) {
       return res.status(409).json({
-        Message: "Aluminie already exists with that mail",
+        Message: "Aluminie already exists with that email",
         Success: false,
       });
     }
@@ -44,17 +22,9 @@ const RegisterAluminie = async (req, res) => {
     const cryptedMdp = await bcrypt.hash(password, Number(salt));
 
     const newStudent = await UserModel.create({
-      firstName,
-      lastName,
-      email,
+      ...req.body,
       password: cryptedMdp,
-      phoneNumber,
-      birthDate,
-      sex,
-      deplome,
-      username: email,
-      isAluminie: true,
-      isDeplomated: true,
+      userName: phoneNumber,
     });
     const createdStudent = await newStudent.save();
 

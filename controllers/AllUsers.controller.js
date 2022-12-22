@@ -4,16 +4,6 @@ const Mailer = require("../mails/Mail_Sender");
 const GeneratePassword = require("../functions/GeneratePass");
 const FileUpload = require("../uploads/FileUpload");
 const GenereteToken = require("../functions/GenerateJWT");
-// const validationTeacher = Joi.object({
-//   firstName: Joi.string().required(),
-//   lastName: Joi.string(),
-//   birthDate: Joi.string(),
-//   phoneNumber: Joi.number().integer(),
-//   sex: Joi.string().required(),
-//   email: Joi.string().required().email(),
-//   isResponsable: Joi.boolean(),
-//   course: Joi.array().items(Joi.string()),
-// }).unknown(true);
 
 const CreateUser = async (req, res) => {
   try {
@@ -255,7 +245,7 @@ const ChangePassword = async (req, res) => {
 
 const ForgotPassword = async (req, res) => {
   try {
-    const { email, userType } = req.body;
+    const { email } = req.body;
     if (!email) {
       return res
         .status(400)
