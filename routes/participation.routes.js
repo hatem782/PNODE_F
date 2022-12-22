@@ -1,12 +1,12 @@
 const express = require("express");
 const router = express.Router();
 const ParticipationController = require("../controllers/participation.controller");
-const isStudent = require("../middlewares/isStudent.js");
-const isAluminie = require("../middlewares/isStudent.js");
+const isStudent = require("../middlewares/VerifToken");
+const isAluminie = require("../middlewares/VerifToken");
 
 router.post(
   "/create/:_idEvent",
-  isStudent,
+  isStudent.isUser,
   ParticipationController.CreateParticipation
 );
 router.post(
@@ -15,12 +15,12 @@ router.post(
 );
 router.put(
   "/update/:_idEvent",
-  isStudent,
+  isStudent.isUser,
   ParticipationController.UpdateParticipation
 );
 router.put(
   "/updateConfirInvit/:_idEvent",
-  isAluminie,
+  isAluminie.isUser,
   ParticipationController.UpdateInvitation
 );
 router.get(

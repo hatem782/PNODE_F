@@ -7,9 +7,9 @@ var mongoose = require('mongoose');
 
 
 const validationProject = Joi.object({
-    title: Joi.date().required(),
-    type: Joi.string().valid("PFA", "PFE", "Stage"),
-    description: Joi.string().required(),
+  title: Joi.date().required(),
+  type: Joi.string().valid("PFA", "PFE", "Stage"),
+  description: Joi.string().required(),
 });
 const CreateProject = async (req, res) => {
     // #swagger.tags = ['Project apis']
@@ -115,13 +115,13 @@ const CreateProject = async (req, res) => {
                     });
                 }
         }
-
-    } catch (error) {
-        console.log("##########:", error);
-        res.status(500).send({ Message: "Server Error", Error: error.message });
-    }
+ 
+    
+  } catch (error) {
+    console.log("##########:", error);
+    res.status(500).send({ Message: "Server Error", Error: error.message });
+  }
 };
-
 
 const GetProjectsContainingTechnologies = async (req, ress) => {
     // #swagger.tags = ['Project apis']
@@ -171,19 +171,19 @@ const GetAllProjects = async (req, res) => {
 };
 
 const GetAllProjectsByType = async (req, res) => {
-    const { type } = req.params;
-    // #swagger.tags = ['Project apis']
-    // #swagger.description = 'Endpoint return  projects list by given type'
-    // #swagger.parameters['type'] = { description: 'type of projects to return  .' }
-    try {
-        const Projects = await ProjectModel.find({ type });
-        return res
-            .status(200)
-            .json({ Message: "Projects found successfully ", data: Projects });
-    } catch (error) {
-        console.log("##########:", error);
-        res.status(500).send({ Message: "Server Error", Error: error.message });
-    }
+  const { type } = req.params;
+  // #swagger.tags = ['Project apis']
+  // #swagger.description = 'Endpoint return  projects list by given type'
+  // #swagger.parameters['type'] = { description: 'type of projects to return  .' }
+  try {
+    const Projects = await ProjectModel.find({ type });
+    return res
+      .status(200)
+      .json({ Message: "Projects found successfully ", data: Projects });
+  } catch (error) {
+    console.log("##########:", error);
+    res.status(500).send({ Message: "Server Error", Error: error.message });
+  }
 };
 
 

@@ -5,8 +5,8 @@ const TeacherRoutes = require("./teacher.routes");
 const AllUsers = require("./AllUsers.routes");
 const EventRoutes = require("./event.routes");
 const ParticipationRoutes = require("./participation.routes");
-const ProjectRoutes = require("./project.route");
-const TechnologieRoutes = require("./technologie.route");
+const ProjectRoutes = require("./project.routes");
+const TechnologieRoutes = require("./technologie.routes");
 
 router.use("/student", StudentRoutes);
 router.use("/teacher", TeacherRoutes);

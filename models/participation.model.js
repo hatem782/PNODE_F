@@ -20,9 +20,14 @@ const ParticipationModel = new Schema(
     },
 
     isInvitation: {
-      type: String,
-      required: false,
+      type: Boolean,
+      required: true,
       default: false,
+    },
+    location: {
+      type: String,
+      required: true,
+      default: "ISAMM",
     },
   },
   {
