@@ -5,13 +5,19 @@ const mongoose = require("mongoose");
 const eventModel = require("../models/event.model");
 const Mailer = require("../mails/Mail_Sender");
 
+const validationParticipation = Joi.object({
+  eventId: Joi.required(),
+});
 //student
 const CreateParticipation = async (req, res) => {
   try {
     const { _idEvent } = req.params;
     const _idStudent = req.user._id;
-    console.log(_idStudent);
-
+    const validation = validationRecruitment.validate(_idEvent);
+    if (validation.error)
+      return res
+        .status(400)
+        .json({ Message: validation.error.details[0].message, Success: false });
     const existParticipation = await ParticipationModel.findOne({
       studentId: _idStudent,
       eventId: _idEvent,

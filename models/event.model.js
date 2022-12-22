@@ -25,6 +25,7 @@ const EventModel = new Schema(
     location: {
       type: String,
       required: true,
+      default: "isamm",
     },
   },
   {

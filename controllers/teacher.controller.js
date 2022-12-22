@@ -4,17 +4,6 @@ const bcrypt = require("bcrypt");
 const Mailer = require("../mails/Mail_Sender");
 const GenereteToken = require("../functions/GenerateJWT");
 
-const validationTeacher = Joi.object({
-  firstName: Joi.string().required(),
-  lastName: Joi.string(),
-  birthDate: Joi.string(),
-  phoneNumber: Joi.number().integer(),
-  sex: Joi.string().required(),
-  email: Joi.string().required().email(),
-  isResponsable: Joi.boolean(),
-  course: Joi.array().items(Joi.string()),
-}).unknown(true);
-
 const CreateTeacher = async (req, res) => {
   try {
     const {
@@ -27,12 +16,6 @@ const CreateTeacher = async (req, res) => {
       email,
       course,
     } = req.body;
-    const validation = validationTeacher.validate(req.body);
-
-    if (validation.error)
-      return res
-        .status(400)
-        .json({ Message: validation.error.details[0].message, Success: false });
 
     const existTeacher = await TeacherModel.findOne({ phoneNumber, email });
     if (existTeacher)
