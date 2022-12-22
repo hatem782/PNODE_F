@@ -1,21 +1,8 @@
-const Joi = require("joi");
 const EventModel = require("../models/event.model");
-
-const validationEvent = Joi.object({
-  eventDate: Joi.date().required(),
-  eventType: Joi.string().valid("JPO", "journéé d'integration ", "formation"),
-  description: Joi.string().required(),
-  eventName: Joi.string().required(),
-});
 
 const CreateEvent = async (req, res) => {
   try {
     const { eventDate, eventType, description, eventName } = req.body;
-    const validation = validationEvent.validate(req.body);
-    if (validation.error)
-      return res
-        .status(400)
-        .json({ Message: validation.error.details[0].message, Success: false });
 
     const existEvent = await EventModel.findOne({ eventDate, eventType });
     if (existEvent)
@@ -23,12 +10,7 @@ const CreateEvent = async (req, res) => {
         Message: "Event already exist",
         Success: false,
       });
-    const newEvent = new EventModel({
-      eventDate,
-      eventType,
-      description,
-      eventName,
-    });
+    const newEvent = new EventModel(req.body);
     const createdEvent = await newEvent.save();
     return res.status(200).json({
       Message: "Event created suucessfully",
