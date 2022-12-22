@@ -1,6 +1,4 @@
 const mongoose = require("mongoose");
-const studentModule = require("./student.module");
-const technologieModule = require("./technologie.module");
 const Schema = mongoose.Schema;
 
 const ProjectModel = new Schema(

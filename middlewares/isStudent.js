@@ -1,5 +1,5 @@
 const jwt = require("jsonwebtoken");
-const studentModel = require("../models/student.module");
+const studentModel = require("../models/user.module");
 
 module.exports = async (req, res, next) => {
   if (!req.headers.authorization) {

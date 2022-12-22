@@ -7,7 +7,6 @@ const Mail_Sender = async (email, content, subject = "Isamm") => {
     service: "gmail",
     auth: { user, pass },
   });
-  console.log(email);
   let mailDetails = {
     from: user,
     to: email,

@@ -1,6 +1,6 @@
 const Joi = require("joi");
 const ParticipationModel = require("../models/Participation.model");
-const studentModule = require("../models/student.module");
+const studentModule = require("../models/user.module");
 const mongoose = require("mongoose");
 const eventModel = require("../models/event.model");
 const Mailer = require("../mails/Mail_Sender");

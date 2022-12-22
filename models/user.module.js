@@ -22,9 +22,9 @@ const UserModel = new Schema(
     },
     role: {
       type: String,
-      default: "STRUDENT",
+      default: "STUDENT",
       enum: [
-        "STRUDENT",
+        "STUDENT",
         "ALUMINIE",
         "TEACHER",
         "RESPONSIBLE",

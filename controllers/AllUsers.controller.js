@@ -3,7 +3,7 @@ const bcrypt = require("bcrypt");
 const Mailer = require("../mails/Mail_Sender");
 const GeneratePassword = require("../functions/GeneratePass");
 const FileUpload = require("../uploads/FileUpload");
-
+const GenereteToken = require("../functions/GenerateJWT");
 // const validationTeacher = Joi.object({
 //   firstName: Joi.string().required(),
 //   lastName: Joi.string(),
@@ -61,10 +61,13 @@ const CreateUser = async (req, res) => {
 
 const Login = async (req, res) => {
   try {
-    const { username, password } = req.body;
+    const { userName, password } = req.body;
     //--------------------------------------------------------------------------
     // Verify user by mail
-    let user = await UserModel.findOne({ username });
+    console.log("userName :", userName);
+    console.log("password :", password);
+    let user = await UserModel.findOne({ userName });
+    console.log(user);
     if (!user) {
       return res.status(400).json({
         Message: "Please verify your username and password",
