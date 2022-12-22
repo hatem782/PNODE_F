@@ -3,6 +3,7 @@ const mongoose = require("mongoose");
 const RecruitmentSchema = new mongoose.Schema({
   studentId: {
     type: mongoose.Schema.Types.ObjectId,
+    ref: "Student",
     required: true,
   },
   type: {
@@ -23,6 +24,11 @@ const RecruitmentSchema = new mongoose.Schema({
   description: {
     type: String,
     required: false,
+  },
+  date: {
+    type: Date,
+    required: true,
+    default: Date.now(),
   },
 });
 
