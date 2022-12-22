@@ -1,19 +1,6 @@
-const Joi = require("joi");
 const UserModel = require("../models/user.module");
 const bcrypt = require("bcrypt");
-const Mailer = require("../mails/Mail_Sender");
 const GenereteToken = require("../functions/GenerateJWT");
-
-// const validationTeacher = Joi.object({
-//   firstName: Joi.string().required(),
-//   lastName: Joi.string(),
-//   birthDate: Joi.string(),
-//   phoneNumber: Joi.number().integer(),
-//   sex: Joi.string().required(),
-//   email: Joi.string().required().email(),
-//   isResponsable: Joi.boolean(),
-//   course: Joi.array().items(Joi.string()),
-// }).unknown(true);
 
 const UpdateTeacherCourse = async (req, res) => {
   try {

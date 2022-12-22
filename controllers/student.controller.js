@@ -1,8 +1,5 @@
 const UserModel = require("../models/user.module");
 const bcrypt = require("bcrypt");
-const Mailer = require("../mails/Mail_Sender");
-const GeneratePassword = require("../functions/GeneratePass");
-const GenereteToken = require("../functions/GenerateJWT");
 const FileUpload = require("../uploads/FileUpload");
 
 const RegisterAluminie = async (req, res) => {
