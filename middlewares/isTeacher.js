@@ -1,5 +1,5 @@
 const jwt = require("jsonwebtoken");
-const studentModel = require("../models/student.module");
+const teacherModel = require("../models/teacher.model");
 
 module.exports = async (req, res, next) => {
   if (!req.headers.authorization) {
@@ -11,7 +11,7 @@ module.exports = async (req, res, next) => {
   try {
     const decoded = await jwt.verify(token, process.env.ACCESS_TOKEN_SECRET);
 
-    const user = await studentModel.findOne({ _id: decoded._id });
+    const user = await teacherModel.findOne({ _id: decoded._id });
     if (!user) {
       return res
         .status(401)

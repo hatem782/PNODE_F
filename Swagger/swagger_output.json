@@ -71,18 +71,7 @@
     "/student/login": {
       "get": {
         "description": "",
-        "parameters": [
-          {
-            "name": "email",
-            "in": "query",
-            "type": "string"
-          },
-          {
-            "name": "password",
-            "in": "query",
-            "type": "string"
-          }
-        ],
+        "parameters": [],
         "responses": {
           "200": {
             "description": "OK"
@@ -99,78 +88,10 @@
         }
       }
     },
-    "/student/getAll": {
-      "get": {
-        "description": "",
-        "parameters": [],
-        "responses": {
-          "200": {
-            "description": "OK"
-          },
-          "500": {
-            "description": "Internal Server Error"
-          }
-        }
-      }
-    },
-    "/student/getOne/{_id}": {
-      "get": {
-        "description": "",
-        "parameters": [
-          {
-            "name": "_id",
-            "in": "path",
-            "required": true,
-            "type": "string"
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "OK"
-          },
-          "400": {
-            "description": "Bad Request"
-          },
-          "500": {
-            "description": "Internal Server Error"
-          }
-        }
-      }
-    },
-    "/student/delete/{_id}": {
-      "delete": {
-        "description": "",
-        "parameters": [
-          {
-            "name": "_id",
-            "in": "path",
-            "required": true,
-            "type": "string"
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "OK"
-          },
-          "400": {
-            "description": "Bad Request"
-          },
-          "500": {
-            "description": "Internal Server Error"
-          }
-        }
-      }
-    },
-    "/student/update/{_id}": {
+    "/student/update": {
       "put": {
         "description": "",
         "parameters": [
-          {
-            "name": "_id",
-            "in": "path",
-            "required": true,
-            "type": "string"
-          },
           {
             "name": "authorization",
             "in": "header",
@@ -220,7 +141,68 @@
         }
       }
     },
-    "/teacher/create": {
+    "/student/profile_cv": {
+      "put": {
+        "description": "",
+        "parameters": [
+          {
+            "name": "authorization",
+            "in": "header",
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "302": {
+            "description": "Found"
+          },
+          "400": {
+            "description": "Bad Request"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      }
+    },
+    "/student/pub_priv": {
+      "put": {
+        "description": "",
+        "parameters": [
+          {
+            "name": "authorization",
+            "in": "header",
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "302": {
+            "description": "Found"
+          },
+          "400": {
+            "description": "Bad Request"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "406": {
+            "description": "Not Acceptable"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      }
+    },
+    "/student/create": {
       "post": {
         "description": "",
         "parameters": [
@@ -236,6 +218,9 @@
                 "lastName": {
                   "example": "any"
                 },
+                "email": {
+                  "example": "any"
+                },
                 "phoneNumber": {
                   "example": "any"
                 },
@@ -245,16 +230,227 @@
                 "sex": {
                   "example": "any"
                 },
-                "isResponsable": {
+                "classe": {
                   "example": "any"
                 },
-                "email": {
+                "niveau": {
                   "example": "any"
                 },
-                "course": {
+                "numero_classe": {
+                  "example": "any"
+                },
+                "promotion": {
                   "example": "any"
                 }
               }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "400": {
+            "description": "Bad Request"
+          },
+          "409": {
+            "description": "Conflict"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      }
+    },
+    "/student/getAll": {
+      "get": {
+        "description": "",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      }
+    },
+    "/student/getOne/{_id}": {
+      "get": {
+        "description": "",
+        "parameters": [
+          {
+            "name": "_id",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "400": {
+            "description": "Bad Request"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      }
+    },
+    "/student/change_promotion/{_id}": {
+      "put": {
+        "description": "",
+        "parameters": [
+          {
+            "name": "_id",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "body",
+            "in": "body",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "classe": {
+                  "example": "any"
+                },
+                "niveau": {
+                  "example": "any"
+                },
+                "numero_classe": {
+                  "example": "any"
+                },
+                "promotion": {
+                  "example": "any"
+                }
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "400": {
+            "description": "Bad Request"
+          },
+          "406": {
+            "description": "Not Acceptable"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      }
+    },
+    "/student/become_deplomated/{_id}": {
+      "put": {
+        "description": "",
+        "parameters": [
+          {
+            "name": "_id",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "body",
+            "in": "body",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "promotion": {
+                  "example": "any"
+                },
+                "deplome": {
+                  "example": "any"
+                }
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "400": {
+            "description": "Bad Request"
+          },
+          "406": {
+            "description": "Not Acceptable"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      }
+    },
+    "/student/block_unblock/{_id}": {
+      "put": {
+        "description": "",
+        "parameters": [
+          {
+            "name": "_id",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "400": {
+            "description": "Bad Request"
+          },
+          "406": {
+            "description": "Not Acceptable"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      }
+    },
+    "/student/delete/{_id}": {
+      "delete": {
+        "description": "",
+        "parameters": [
+          {
+            "name": "_id",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "400": {
+            "description": "Bad Request"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      }
+    },
+    "/teacher/create": {
+      "post": {
+        "description": "",
+        "parameters": [
+          {
+            "name": "Teacher",
+            "in": "body",
+            "description": "Create a Teacher",
+            "schema": {
+              "$ref": "#/definitions/Teacher"
             }
           }
         ],
@@ -365,6 +561,193 @@
         "responses": {
           "200": {
             "description": "OK"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      }
+    },
+    "/teacher/login": {
+      "get": {
+        "description": "",
+        "parameters": [
+          {
+            "name": "userName",
+            "in": "query",
+            "type": "string"
+          },
+          {
+            "name": "password",
+            "in": "query",
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "400": {
+            "description": "Bad Request"
+          },
+          "406": {
+            "description": "Not Acceptable"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      }
+    },
+    "/user/profile_img": {
+      "put": {
+        "description": "",
+        "parameters": [
+          {
+            "name": "authorization",
+            "in": "header",
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "302": {
+            "description": "Found"
+          },
+          "400": {
+            "description": "Bad Request"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      }
+    },
+    "/user/change_pass": {
+      "put": {
+        "description": "",
+        "parameters": [
+          {
+            "name": "authorization",
+            "in": "header",
+            "type": "string"
+          },
+          {
+            "name": "body",
+            "in": "body",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "password": {
+                  "example": "any"
+                },
+                "oldpassword": {
+                  "example": "any"
+                },
+                "confpassword": {
+                  "example": "any"
+                }
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "302": {
+            "description": "Found"
+          },
+          "400": {
+            "description": "Bad Request"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      }
+    },
+    "/user/change_mail": {
+      "put": {
+        "description": "",
+        "parameters": [
+          {
+            "name": "authorization",
+            "in": "header",
+            "type": "string"
+          },
+          {
+            "name": "body",
+            "in": "body",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "email": {
+                  "example": "any"
+                }
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "302": {
+            "description": "Found"
+          },
+          "400": {
+            "description": "Bad Request"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "406": {
+            "description": "Not Acceptable"
+          },
+          "409": {
+            "description": "Conflict"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      }
+    },
+    "/user/forget_pass": {
+      "put": {
+        "description": "",
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "email": {
+                  "example": "any"
+                },
+                "userType": {
+                  "example": "any"
+                }
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "400": {
+            "description": "Bad Request"
           },
           "500": {
             "description": "Internal Server Error"
@@ -497,7 +880,42 @@
         }
       }
     },
-    "/participation/create/{_idEvent}/{_idStudent}": {
+    "/participation/create/{_idEvent}": {
+      "post": {
+        "description": "",
+        "parameters": [
+          {
+            "name": "_idEvent",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "authorization",
+            "in": "header",
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "302": {
+            "description": "Found"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "409": {
+            "description": "Conflict"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      }
+    },
+    "/participation/createInvitation/{_idEvent}/{_idStudent}": {
       "post": {
         "description": "",
         "parameters": [
@@ -527,7 +945,7 @@
         }
       }
     },
-    "/participation/update/{_idEvent}/{_idStudent}": {
+    "/participation/update/{_idEvent}": {
       "put": {
         "description": "",
         "parameters": [
@@ -538,7 +956,71 @@
             "type": "string"
           },
           {
-            "name": "_idStudent",
+            "name": "authorization",
+            "in": "header",
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "302": {
+            "description": "Found"
+          },
+          "400": {
+            "description": "Bad Request"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      }
+    },
+    "/participation/updateConfirInvit/{_idEvent}": {
+      "put": {
+        "description": "",
+        "parameters": [
+          {
+            "name": "_idEvent",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "authorization",
+            "in": "header",
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "302": {
+            "description": "Found"
+          },
+          "400": {
+            "description": "Bad Request"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      }
+    },
+    "/participation/getAllConfirmed/{_idEvent}": {
+      "get": {
+        "description": "",
+        "parameters": [
+          {
+            "name": "_idEvent",
             "in": "path",
             "required": true,
             "type": "string"
@@ -557,10 +1039,17 @@
         }
       }
     },
-    "/participation/getAllConfirmed": {
+    "/participation/getAllConfirmedInvit/{_idEvent}": {
       "get": {
         "description": "",
-        "parameters": [],
+        "parameters": [
+          {
+            "name": "_idEvent",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ],
         "responses": {
           "200": {
             "description": "OK"
@@ -587,81 +1076,11 @@
             "type": "string"
           },
           {
-            "name": "title",
-            "description": "title of project .",
-            "in": "query",
-            "type": "string"
-          },
-          {
-            "name": "description",
-            "description": "title of project .",
-            "in": "query",
-            "type": "string"
-          },
-          {
-            "name": "type",
-            "description": "type of project [PFA | PFE | stage].",
-            "in": "query",
-            "type": "string"
-          },
-          {
-            "name": "students",
-            "description": "list of objectIds of students applied to project if PFA apply after project creation if PFE or stage on creation",
-            "in": "query",
-            "type": "string"
-          },
-          {
-            "name": "encadrants",
-            "description": "list of encadrants of project as objectIds if PFA only encadrant that created project , PFE might contain list .",
-            "in": "query",
-            "type": "string"
-          },
-          {
-            "name": "technologies",
-            "description": "list of technologies required for project .",
-            "in": "query",
-            "type": "string"
-          },
-          {
-            "name": "body",
+            "name": "Project",
             "in": "body",
+            "description": "Add a Project",
             "schema": {
-              "type": "object",
-              "properties": {
-                "title": {
-                  "example": "any"
-                },
-                "description": {
-                  "example": "any"
-                },
-                "type": {
-                  "example": "any"
-                },
-                "students": {
-                  "example": "any"
-                },
-                "encadrants": {
-                  "example": "any"
-                },
-                "technologies": {
-                  "example": "any"
-                },
-                "societe": {
-                  "example": "any"
-                },
-                "nbr_students_max": {
-                  "example": "any"
-                },
-                "startDate": {
-                  "example": "any"
-                },
-                "endDate": {
-                  "example": "any"
-                },
-                "isValidatedByReponsable": {
-                  "example": "any"
-                }
-              }
+              "$ref": "#/definitions/Project"
             }
           }
         ],
@@ -719,6 +1138,55 @@
         "responses": {
           "200": {
             "description": "OK"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      }
+    },
+    "/project/getByTeacher": {
+      "post": {
+        "tags": [
+          "Project apis"
+        ],
+        "description": "Endpoint retun list projects teachers ",
+        "parameters": [
+         
+          {
+            "name": "teachers-refs",
+            "in": "body",
+            "description": "list of teachers refs",
+             "type":"object",
+             "example":{"teachers":[]}
+          }
+        ],
+        "responses": {}
+      }
+    },
+    "/project/AffectStudentToProject/{idStudent}/{_id}": {
+      "put": {
+        "description": "",
+        "parameters": [
+          {
+            "name": "idStudent",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "_id",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "400": {
+            "description": "Bad Request"
           },
           "500": {
             "description": "Internal Server Error"
@@ -786,15 +1254,60 @@
       }
     }
   },
-  "@schemas": {
-    "Project": {
-      "type": "object",
-      "properties": {
-        "title": {
-          "type": "String",
-          "description": "Project Title ..."
+  "definitions": {
+    "Teacher":
+      {
+        "title": "Teacher",
+        "required": [
+          "firstName",
+          "userName",
+          "password",
+          "email",
+          "phoneNumber",
+          "sex",
+          "course"
+        ],
+        "properties": {
+          "firstName": { "type": "string" },
+          "lastName": { "type": "string", "required": false },
+          "userName": { "type": "string" },
+          "password": { "type": "string" },
+          "email": { "type": "string" },
+          "phoneNumber": { "type": "number" },
+          "birthDate": { "type": "string", "required": false, "format": "date-time" },
+          "sex": { "type": "string" },
+          "isResponsable": { "type": "boolean", "required": false },
+          "course": { "type": "array", "items": ["Object"] },
+          "profilImage": { "type": "string" },
+          "_id": { "type": "string" },
+          "createdAt": { "type": "string", "format": "date-time" },
+          "updatedAt": { "type": "string", "format": "date-time" }
         }
+    },
+    "Project": {
+
+
+      "title": "Project",
+      "required": [ "type", "title", "description" ],
+      "properties": {
+        "students": { "type": "array", "items": ["Object"] },
+        "encadrants": { "type": "array", "items": ["Object"] },
+        "technologies": { "type": "array", "items": ["Object"] },
+        "societe": { "type": "string" },
+        "type": { "type": "string", "enum": ["PFA","PFE","Stage"] },
+        "title": { "type": "string" },
+        "description": { "type": "string" },
+        "nbr_students_max": { "type": "number" },
+        "startDate": { "type": "string", "format": "date-time" },
+        "endDate": { "type": "string", "format": "date-time" },
+        "isValidatedByReponsable": { "type": "boolean" },
+        "_id": { "type": "string" },
+        "createdAt": { "type": "string", "format": "date-time" },
+        "updatedAt": { "type": "string", "format": "date-time" }
       }
+
+
+      
     }
   }
 }

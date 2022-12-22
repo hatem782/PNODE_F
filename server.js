@@ -6,12 +6,18 @@ const bodyParser = require("body-parser");
 const app = express();
 const connectDB = require("./Database/mongo.connect");
 const Routes = require("./routes/AllRoutes.routes");
+const mongoose = require('mongoose');
+const m2s = require('mongoose-to-swagger');
 
 
 const swaggerUi=require('swagger-ui-express')
 //const swaggerDocument = require('./Swagger/swagger.json');
 const swaggerFile = require('./Swagger/swagger_output.json')
 
+//incomment too get swagger definition of model
+/*  const Teacher = mongoose.model('Teacher');
+const swaggerSchema = m2s(Teacher);
+console.log(swaggerSchema);  */
 
 const corstAllowAll = {
   credentials: true,

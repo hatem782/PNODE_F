@@ -2,6 +2,7 @@ const Joi = require("joi");
 const ProjectModel = require("../models/project.module");
 const studentModule = require("../models/student.module");
 const teacherModel = require("../models/teacher.model");
+var mongoose = require('mongoose');
 
 
 
@@ -13,12 +14,8 @@ const validationProject = Joi.object({
 const CreateProject = async (req, res) => {
     // #swagger.tags = ['Project apis']
     // #swagger.description = 'Endpoint Porjects either PFA , PFE or stage management and creation '
-    // #swagger.parameters['title'] = { description: 'title of project .' }
-    // #swagger.parameters['description'] = { description: 'title of project .' }
-    // #swagger.parameters['type'] = { description: 'type of project  [PFA | PFE | stage].' }
-    // #swagger.parameters['students'] = { description: 'list of objectIds of students applied to project  if PFA apply after project creation if PFE or stage on creation' }
-    // #swagger.parameters['encadrants'] = { description: 'list of encadrants  of project as objectIds if PFA only encadrant that created project , PFE might contain list .' }
-    // #swagger.parameters['technologies'] = { description: 'list of technologies required for project .' }
+
+
 
     try {
         const {
@@ -59,13 +56,6 @@ const CreateProject = async (req, res) => {
         switch (type) {
             case ('PFA'):
                 {
-                    //is created by teacher test token teacher
-                    //does encadrant 1 only exist
-                    if (encadrants) {
-                        // exists teacher
-                        const existTeacher = await teacherModel.findOne({ _id: encadrants[0] });
-                    }
-
 
 
                     const createdProject = await newProject.save();
@@ -136,9 +126,36 @@ const CreateProject = async (req, res) => {
 const GetProjectsContainingTechnologies = async (req, ress) => {
     // #swagger.tags = ['Project apis']
     // #swagger.description = 'Endpoint retun list projects by given technologies '
+    /*    #swagger.parameters['obj'] = {
+               in: 'body',
+               description: 'Adding new user.',
+               schema: { $ref: '#/definitions/AddUser' }
+       } */
+    const listProjects = await ProjectModel.find({});
+
+}
+
+
+const GetProjectsByListTeachers = async (req, res) => {
+    // #swagger.tags = ['Project apis']
+    // #swagger.description = 'Endpoint retun list projects teachers  '
+
+
+
+    try {
+        //list of projects containing all items if list teacher ids 
+        const listProjects = await ProjectModel.find({ encadrants: { $all: req.body.teachers } });
+        return res
+            .status(200)
+            .json({ Message: "Projects found successfully ", data: listProjects });
+    } catch (error) {
+        console.log("#####[ERROR]##### : ", error);
+        res.status(500).send({ Message: "Server Error", Error: error.message });
+    }
 }
 
 const GetAllProjects = async (req, res) => {
+
     // #swagger.tags = ['Project apis']
     // #swagger.description = 'Endpoint retun all projects list '
 
@@ -148,7 +165,7 @@ const GetAllProjects = async (req, res) => {
             .status(200)
             .json({ Message: "Projects found successfully ", data: Projects });
     } catch (error) {
-        console.log("##########:", error);
+        console.log("#####[ERROR]##### : ", error);
         res.status(500).send({ Message: "Server Error", Error: error.message });
     }
 };
@@ -169,8 +186,79 @@ const GetAllProjectsByType = async (req, res) => {
     }
 };
 
+
+const AffectStudentToProject=async (req,res)=>{
+ // #swagger.tags = ['Project apis']
+    // #swagger.description = 'assign student to project'
+
+    const { _id,idStudent } = req.params;
+    var idStudentObj = mongoose.Types.ObjectId(idStudent);
+
+  try{  const affectStudent = await ProjectModel.findOneAndUpdate(
+        { _id },
+        {
+            $push: {
+           students: idStudentObj,
+          },
+        },
+        { new: true } // return new project with update
+      );    if (!affectStudent) {
+        return res.status(400).json({
+          Message: "Failed to affect student to project",
+          Success: false,
+          data: affectStudent,
+        });
+      }
+      return res
+        .status(200)
+        .json({ Message: "teacher updated successfully", data: affectStudent });
+    } catch (error) {
+      console.log("##########:", error);
+      res.status(500).send({ Message: "Server Error", Error: error.message });
+    }
+      
+
+}
+
+const AffectTeacherToProject=async (req,res)=>{
+ // #swagger.tags = ['Project apis']
+    // #swagger.description = 'assign student to project'
+
+    const { _id,idTeacher } = req.params;
+    var teacher = mongoose.Types.ObjectId(idTeacher);
+
+  try{  const affectedTeacher = await ProjectModel.findOneAndUpdate(
+        { _id },
+        {
+            $push: {
+           encadrants: teacher,
+          },
+        },
+        { new: true } // return new project with update
+      );    if (!affectedTeacher) {
+        return res.status(400).json({
+          Message: "Failed to affect student to project",
+          Success: false,
+          data: affectedTeacher,
+        });
+      }
+      return res
+        .status(200)
+        .json({ Message: "teacher updated successfully", data: affectedTeacher });
+    } catch (error) {
+      console.log("##########:", error);
+      res.status(500).send({ Message: "Server Error", Error: error.message });
+    }
+      
+
+}
+
+
 module.exports = {
     CreateProject,
     GetAllProjects,
     GetAllProjectsByType,
+    GetProjectsByListTeachers,
+    AffectStudentToProject,
+    AffectTeacherToProject
 };
