@@ -15,8 +15,8 @@ const swaggerUi=require('swagger-ui-express')
 const swaggerFile = require('./Swagger/swagger_output.json')
 
 //incomment too get swagger definition of model
-/*  const Teacher = mongoose.model('Teacher');
-const swaggerSchema = m2s(Teacher);
+/*  const Position = mongoose.model('Position');
+const swaggerSchema = m2s(Position);
 console.log(swaggerSchema);  */
 
 const corstAllowAll = {
