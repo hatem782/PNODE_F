@@ -56,13 +56,14 @@ const ProjectModel = new Schema(
     },
     isValidatedByReponsable: {
       type: Boolean,
+      default: false,
+
     },
     note: {
       type: Number,
     },
     mention: {
       type: String,
-      default: "Bien",
       enum: [
         "Ajourné",       //En-dessous de 10/20
         "Passable",      //Entre 10/20 et 12/20

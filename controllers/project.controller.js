@@ -1,5 +1,7 @@
 const Joi = require("joi");
 const ProjectModel = require("../models/project.module");
+const TechnologieModel = require("../models/technologie.module");
+
 var mongoose = require('mongoose');
 const VerifToken = require("../middlewares/VerifToken");
 
@@ -101,13 +103,23 @@ const CreateProject = async (req, res) => {
 };
 
 
+const saveTechnologies=async(technologies)=>{
+  //check if list technologies items exist else save it to db 
+  technologies.forEach(async(element) => {
+    const existTechnologie=await TechnologieModel.findOne({title:element});
+    if(!existTechnologie)
+   {
+    const newTechnologie = new TechnologieModel({
+     title: element
+     });
+     const createdTechnologie = await newTechnologie.save();
+   }});
+}
+
 const CreatePFA = async (req, res) => {
 // #swagger.tags = ['Project apis']
   // #swagger.description = 'Endpoint create stage PFA by teahchers only '
-
-
-
-  try {
+ try {
     const {
       title,
       description,
@@ -118,6 +130,7 @@ const CreatePFA = async (req, res) => {
       startDate,
       endDate,
     } = req.body;
+   await saveTechnologies(technologies);
 
     const newProject = new ProjectModel({
       title: title,
@@ -166,6 +179,9 @@ const CreatePFE = async (req, res) => {
       isValidatedByReponsable,
     } = req.body;
 
+    await saveTechnologies(technologies);
+
+
     const newProject = new ProjectModel({
       title: title,
       description: description,
@@ -208,6 +224,9 @@ const CreateStage = async (req, res) => {
       startDate,
       endDate,
     } = req.body;
+
+    await saveTechnologies(technologies);
+
 
     const newProject = new ProjectModel({
       title: title,
@@ -310,6 +329,15 @@ const AffectStudentToProject = async (req, res) => {
   var idStudentObj = mongoose.Types.ObjectId(idStudent);
 
   try {
+
+    const project=await ProjectModel.findOne({_id});
+    if(project.nbr_students_max<=project.students.length)
+    //test of project max number of students reached
+    {
+      return res
+    .status(400)
+    .json({ Message: "Student max number reached", data: null });
+    }
     const affectStudent = await ProjectModel.findOneAndUpdate(
       { _id },
       {
@@ -327,7 +355,7 @@ const AffectStudentToProject = async (req, res) => {
     }
     return res
       .status(200)
-      .json({ Message: "teacher updated successfully", data: affectStudent });
+      .json({ Message: "student affected successfully", data: affectStudent });
   } catch (error) {
     console.log("##########:", error);
     res.status(500).send({ Message: "Server Error", Error: error.message });
@@ -371,6 +399,62 @@ const AffectTeacherToProject = async (req, res) => {
 }
 
 
+const validateProject=async(req,res)=>{
+  // #swagger.tags = ['Project apis']
+  // #swagger.description = 'validation of a  project by responsable eitehr validation is true or false and giving double note'
+        // #swagger.parameters['idProject'] = { description: 'project to validate' }
+        // #swagger.parameters['note'] = { description: 'project note ( mention calculated based on note )' }
+
+
+const {idProject,note,isValidated}=req.params;
+var mention="";
+switch(true){
+  case Math.trunc(note)<=9:mention="Ajourné";
+    break;
+    case Math.trunc(note)<=11:mention="Passable";
+    break;
+    case Math.trunc(note)<=13:mention="Assez bien";
+    break;
+    case Math.trunc(note)<=15:mention="Bien";
+    break;
+    case Math.trunc(note)<=17:mention="Trés bien";
+    break;
+    case Math.trunc(note)<=20:mention="Excellent";
+    break;
+    default:
+      mention="UNKOWN";
+}
+
+try {
+  const _id=idProject;
+  const affectedTeacher = await ProjectModel.findOneAndUpdate(
+    { _id },
+    {
+      $set: {
+        isValidatedByReponsable: isValidated,
+        note:note,
+        mention:mention
+      },
+    },
+    { new: true } // return new project with update
+  ); if (!affectedTeacher) {
+    return res.status(400).json({
+      Message: "Failed to validate project",
+      Success: false,
+      data: false,
+    });
+  }
+  return res
+    .status(200)
+    .json({ Message: "project validated successfully", data: affectedTeacher });
+} catch (error) {
+  console.log("##########:", error);
+  res.status(500).send({ Message: "Server Error", Error: error.message });
+}
+
+}
+
+
 module.exports = {
   CreateProject,
   GetAllProjects,
@@ -381,5 +465,6 @@ module.exports = {
   GetProjectsContainingTechnologies,
   CreatePFA,
   CreatePFE,
-  CreateStage
+  CreateStage,
+  validateProject
 };

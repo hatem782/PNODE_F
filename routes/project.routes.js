@@ -20,6 +20,9 @@ router.post("/create/PFA",
             VerifToken.isTeacher,
             ProjectController.CreatePFA);
 
+router.post("/validate/:idProject/:isValidated/:note", ProjectController.validateProject);
+
+
 router.get("/getAll/:type", ProjectController.GetAllProjectsByType);
 router.get("/getAll", ProjectController.GetAllProjects);
 router.post("/getByTeacher", ProjectController.GetProjectsByListTeachers);

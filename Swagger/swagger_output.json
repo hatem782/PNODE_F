@@ -1058,6 +1058,47 @@
         }
       }
     },
+    "/project/validate/{idProject}/{isValidated}/{note}": {
+      "post": {
+        "tags": [
+          "Project apis"
+        ],
+        "description": "validation of a project by responsable eitehr validation is true or false and giving double note",
+        "parameters": [
+          {
+            "name": "idProject",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "description": "project to validate"
+          },
+          {
+            "name": "isValidated",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "note",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "description": "project note ( mention calculated based on note )"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "400": {
+            "description": "Bad Request"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      }
+    },
     "/technologie/create": {
       "post": {
         "tags": [
