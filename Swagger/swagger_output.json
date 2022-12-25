@@ -1084,14 +1084,25 @@
             "required": true,
             "type": "string",
             "description": "project note ( mention calculated based on note )"
+          },
+          {
+            "name": "authorization",
+            "in": "header",
+            "type": "string"
           }
         ],
         "responses": {
           "200": {
             "description": "OK"
           },
+          "302": {
+            "description": "Found"
+          },
           "400": {
             "description": "Bad Request"
+          },
+          "401": {
+            "description": "Unauthorized"
           },
           "500": {
             "description": "Internal Server Error"
