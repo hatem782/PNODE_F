@@ -455,6 +455,49 @@ try {
 }
 
 
+
+const getStatProjects=async(req,res)=>{
+  // #swagger.tags = ['Project apis']
+  // #swagger.description = 'validation of a  project by responsable eitehr validation is true or false and giving double note'
+        // #swagger.parameters['critere'] = { description: 'critere de groupement' }
+
+
+  const {critere}=req.params;
+      const stat=await ProjectModel.aggregate([
+        {  $lookup: {
+          from: 'users',
+          localField: 'students',
+          foreignField: '_id',
+          as: 'studentsList',
+         
+  
+      },},
+        {$match: {students: { $exists: true, $not: { $size: 0 } }} },
+    //  {$unwind: '$studentsList'},
+
+    {
+      $group:
+         {
+             _id: `$${critere=="promotion"?"studentsList.promotion":critere=="technologie"?"technologies":"societe"}`,
+             noteMoy:
+                {
+                   $avg: "$note"
+                }
+         }
+   },
+      ])
+      return res.status(200).json({
+        Message: "list not empty",
+        Success: true,
+        data: stat,
+    });
+    
+}
+
+
+
+
+
 module.exports = {
   CreateProject,
   GetAllProjects,
@@ -466,5 +509,6 @@ module.exports = {
   CreatePFA,
   CreatePFE,
   CreateStage,
-  validateProject
+  validateProject,
+  getStatProjects
 };

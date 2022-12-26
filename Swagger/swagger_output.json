@@ -1110,6 +1110,28 @@
         }
       }
     },
+    "/project/stat/{critere}": {
+      "get": {
+        "tags": [
+          "Project apis"
+        ],
+        "description": "validation of a project by responsable eitehr validation is true or false and giving double note",
+        "parameters": [
+          {
+            "name": "critere",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "description": "critere de groupement"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
     "/technologie/create": {
       "post": {
         "tags": [

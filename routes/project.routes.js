@@ -24,6 +24,8 @@ router.post("/validate/:idProject/:isValidated/:note",
                                  VerifToken.isResponsible,
                                  ProjectController.validateProject);
 
+router.get("/stat/:critere",
+                                 ProjectController.getStatProjects);
 
 router.get("/getAll/:type", ProjectController.GetAllProjectsByType);
 router.get("/getAll", ProjectController.GetAllProjects);
