@@ -13,7 +13,7 @@ const CreateUser = async (req, res) => {
     });
     if (existUser)
       return res.status(409).json({
-        Message: "teacher already exists with that phoneNumber or email",
+        Message: "user already exists with that phoneNumber or email",
         Success: false,
       });
 
@@ -39,7 +39,7 @@ const CreateUser = async (req, res) => {
     await Mailer.Mail_Sender(email, content, subject);
 
     return res.status(200).json({
-      Message: "teacher created suucessfully",
+      Message: "user created suucessfully",
       Success: true,
       data: createdUser,
     });

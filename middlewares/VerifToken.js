@@ -24,6 +24,28 @@ const isUser = async (req, res, next) => {
   }
 };
 
+const isStudent = async (req, res, next) => {
+  if (!req.headers.authorization) {
+    return res.status(302).json({ success: false, message: "no auth" });
+  }
+
+  const token = req.headers.authorization.replace("Bearer", "").trim();
+
+  try {
+    const decoded = await jwt.verify(token, process.env.ACCESS_TOKEN_SECRET);
+
+    let user = await usertModel.findOne({ _id: decoded._id, role: "STUDENT" });
+    if (!user) {
+      return res.status(401).json({ success: false, Message: "Unauthorized" });
+    }
+    req.user = user;
+    next();
+  } catch (err) {
+    console.log(err);
+    return res.status(302).json({ success: false, Message: "not loged in" });
+  }
+};
+
 const isAluminie = async (req, res, next) => {
   if (!req.headers.authorization) {
     return res.status(302).json({ success: false, message: "no auth" });
@@ -158,6 +180,7 @@ const isSuperadmin = async (req, res, next) => {
 
 module.exports = {
   isUser,
+  isStudent,
   isAluminie,
   isTeacher,
   isResponsible,
