@@ -3,7 +3,7 @@ const usertModel = require("../models/user.module");
 
 const isUser = async (req, res, next) => {
   if (!req.headers.authorization) {
-    return res.status(302).json({ success: false, message: "no auth" });
+    return res.status(401).json({ success: false, message: "Unauthorized" });
   }
 
   const token = req.headers.authorization.replace("Bearer", "").trim();
@@ -16,17 +16,16 @@ const isUser = async (req, res, next) => {
       return res.status(401).json({ success: false, Message: "Unauthorized" });
     }
     req.user = user;
-    console.log(user);
     next();
   } catch (err) {
     console.log(err);
-    return res.status(302).json({ success: false, Message: "not loged in" });
+    return res.status(401).json({ success: false, Message: "Unauthorized" });
   }
 };
 
 const isStudent = async (req, res, next) => {
   if (!req.headers.authorization) {
-    return res.status(302).json({ success: false, message: "no auth" });
+    return res.status(401).json({ success: false, message: "Unauthorized" });
   }
 
   const token = req.headers.authorization.replace("Bearer", "").trim();
@@ -42,13 +41,13 @@ const isStudent = async (req, res, next) => {
     next();
   } catch (err) {
     console.log(err);
-    return res.status(302).json({ success: false, Message: "not loged in" });
+    return res.status(401).json({ success: false, Message: "Unauthorized" });
   }
 };
 
 const isAluminie = async (req, res, next) => {
   if (!req.headers.authorization) {
-    return res.status(302).json({ success: false, message: "no auth" });
+    return res.status(401).json({ success: false, message: "Unauthorized" });
   }
 
   const token = req.headers.authorization.replace("Bearer", "").trim();
@@ -61,17 +60,16 @@ const isAluminie = async (req, res, next) => {
       return res.status(401).json({ success: false, Message: "Unauthorized" });
     }
     req.user = user;
-    console.log(user);
     next();
   } catch (err) {
     console.log(err);
-    return res.status(302).json({ success: false, Message: "not loged in" });
+    return res.status(401).json({ success: false, Message: "Unauthorized" });
   }
 };
 
 const isTeacher = async (req, res, next) => {
   if (!req.headers.authorization) {
-    return res.status(302).json({ success: false, message: "no auth" });
+    return res.status(401).json({ success: false, message: "Unauthorized" });
   }
 
   const token = req.headers.authorization.replace("Bearer", "").trim();
@@ -84,43 +82,16 @@ const isTeacher = async (req, res, next) => {
       return res.status(401).json({ success: false, Message: "Unauthorized" });
     }
     req.user = user;
-    console.log(user);
     next();
   } catch (err) {
     console.log(err);
-    return res.status(302).json({ success: false, Message: "not loged in" });
-  }
-};
-
-const isResponsible = async (req, res, next) => {
-  if (!req.headers.authorization) {
-    return res.status(302).json({ success: false, message: "no auth" });
-  }
-
-  const token = req.headers.authorization.replace("Bearer", "").trim();
-
-  try {
-    const decoded = await jwt.verify(token, process.env.ACCESS_TOKEN_SECRET);
-
-    let user = await usertModel.findOne({
-      _id: decoded._id,
-      role: "RESPONSIBLE",
-    });
-    if (!user) {
-      return res.status(401).json({ success: false, Message: "Unauthorized" });
-    }
-    req.user = user;
-    console.log(user);
-    next();
-  } catch (err) {
-    console.log(err);
-    return res.status(302).json({ success: false, Message: "not loged in" });
+    return res.status(401).json({ success: false, Message: "Unauthorized" });
   }
 };
 
 const isAdmin = async (req, res, next) => {
   if (!req.headers.authorization) {
-    return res.status(302).json({ success: false, message: "no auth" });
+    return res.status(401).json({ success: false, message: "Unauthorized" });
   }
 
   const token = req.headers.authorization.replace("Bearer", "").trim();
@@ -133,7 +104,16 @@ const isAdmin = async (req, res, next) => {
       role: "ADMIN",
     });
 
-    if (!user) {
+    // here we have to test the permission
+    if (user) {
+      const action = req.baseUrl.split("/")[2];
+      const index = user.permessions.indexOf(action);
+      if (index === -1) {
+        return res
+          .status(401)
+          .json({ success: false, Message: "Unauthorized" });
+      }
+    } else {
       user = await usertModel.findOne({
         _id: decoded._id,
         role: "SUPERADMIN",
@@ -143,18 +123,18 @@ const isAdmin = async (req, res, next) => {
     if (!user) {
       return res.status(401).json({ success: false, Message: "Unauthorized" });
     }
+
     req.user = user;
-    console.log(user);
     next();
   } catch (err) {
     console.log(err);
-    return res.status(302).json({ success: false, Message: "not loged in" });
+    return res.status(401).json({ success: false, Message: "Unauthorized" });
   }
 };
 
 const isSuperadmin = async (req, res, next) => {
   if (!req.headers.authorization) {
-    return res.status(302).json({ success: false, message: "no auth" });
+    return res.status(401).json({ success: false, message: "Unauthorized" });
   }
 
   const token = req.headers.authorization.replace("Bearer", "").trim();
@@ -170,11 +150,10 @@ const isSuperadmin = async (req, res, next) => {
       return res.status(401).json({ success: false, Message: "Unauthorized" });
     }
     req.user = user;
-    console.log(user);
     next();
   } catch (err) {
     console.log(err);
-    return res.status(302).json({ success: false, Message: "not loged in" });
+    return res.status(401).json({ success: false, Message: "Unauthorized" });
   }
 };
 
@@ -183,7 +162,6 @@ module.exports = {
   isStudent,
   isAluminie,
   isTeacher,
-  isResponsible,
   isAdmin,
   isSuperadmin,
 };

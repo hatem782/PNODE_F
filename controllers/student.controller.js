@@ -1,6 +1,5 @@
 const UserModel = require("../models/user.module");
 const bcrypt = require("bcrypt");
-const FileUpload = require("../uploads/FileUpload");
 
 const RegisterAluminie = async (req, res) => {
   try {
@@ -33,37 +32,6 @@ const RegisterAluminie = async (req, res) => {
       Success: true,
       data: createdStudent,
     });
-  } catch (error) {
-    console.log("##########:", error);
-    res.status(500).send({ Message: "Server Error", Error: error.message });
-  }
-};
-
-const UploadCV = async (req, res) => {
-  try {
-    const _id = req.user._id;
-    const file = req.files.file;
-    const pdfData = await FileUpload.FileUpload(file, "students/cv");
-    console.log(pdfData);
-
-    const updateStudent = await UserModel.findOneAndUpdate(
-      { _id },
-      {
-        $set: {
-          cv: pdfData.url,
-        },
-      },
-      { new: true }
-    );
-    if (!updateStudent) {
-      return res.status(400).json({
-        Message: "Failed to update student",
-        Success: false,
-      });
-    }
-    return res
-      .status(200)
-      .json({ Message: "Student updated successfully", data: updateStudent });
   } catch (error) {
     console.log("##########:", error);
     res.status(500).send({ Message: "Server Error", Error: error.message });
@@ -132,7 +100,6 @@ const BecomeDeplomated = async (req, res) => {
 
 module.exports = {
   RegisterAluminie,
-  UploadCV,
   UpdatePromotion,
   BecomeDeplomated,
 };
