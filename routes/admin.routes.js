@@ -15,7 +15,7 @@ router.post(
 );
 
 router.put(
-  "/update_permissions",
+  "/update_permissions/:_id",
   VerifToken.isSuperadmin,
   validator.AdminPermissionsValidation,
   adminController.UpdateAdminPermessions

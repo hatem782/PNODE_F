@@ -134,7 +134,7 @@ const createAdminValidation = (req, res, next) => {
       .status(400)
       .json({ Message: validation.error.details[0].message, Success: false });
   }
-  req.body.role = "TEACHER";
+  req.body.role = "ADMIN";
   next();
 };
 

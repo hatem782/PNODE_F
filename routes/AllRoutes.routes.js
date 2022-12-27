@@ -2,6 +2,7 @@ const express = require("express");
 const router = express.Router();
 const StudentRoutes = require("./student.routes");
 const TeacherRoutes = require("./teacher.routes");
+const AdminRoutes = require("./admin.routes");
 const AllUsers = require("./AllUsers.routes");
 const EventRoutes = require("./event.routes");
 const ParticipationRoutes = require("./participation.routes");
@@ -17,5 +18,6 @@ router.use("/participation", ParticipationRoutes);
 router.use("/project", ProjectRoutes);
 router.use("/technologie", TechnologieRoutes);
 router.use("/cv", CvRoutes);
+router.use("/admin", AdminRoutes);
 
 module.exports = router;
