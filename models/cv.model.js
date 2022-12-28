@@ -19,6 +19,11 @@ const CvModel = new Schema(
       type: String,
       required: true,
     },
+    style: {
+      type: Number,
+      required: false,
+      default: 1,
+    },
     experiences: [
       {
         title: {
