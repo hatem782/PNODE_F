@@ -20,6 +20,12 @@ router.post(
   AllUsers.CreateUser
 );
 
+router.post(
+  // VerifToken.isAdmin,// raja3ha ba3d matesti el api
+  "/create_multiple_with_excel",
+  StudentController.CreateStudentsFromExl
+);
+
 router.put(
   "/change_promotion/:_id",
   VerifToken.isAdmin,
