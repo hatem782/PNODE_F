@@ -169,7 +169,9 @@ const CreateStudentsFromExl = async (req, res) => {
 
     if (succeeded_saved_students.length === 0 && rows.length > 1) {
       return res.status(400).json({
-        Message: "there's a problem while retreaving data from excel file",
+        Message: `
+        there's a problem while retreaving data from excel file,
+        please make sure that all data are correct.`,
         Success: false,
       });
     }
