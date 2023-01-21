@@ -1,32 +1,19 @@
-const Joi = require("joi");
 const RecruitmentModel = require("../models/recruitment.model");
-
-const validationRecruitment = Joi.object({
-  state: Joi.string().valid("Rejected", "Accepted", "In progress").required(),
-  type: Joi.string().valid("Temporary", "Expert").required(),
-  skills: Joi.array().items(Joi.string()).required(true),
-  description: Joi.string().required(),
-  date: Joi.date(),
-});
 
 const askingForRecruitment = async (req, res) => {
   try {
-    const { state, type, skills, description } = req.body;
+    const { type, skills, description, state } = req.body;
     const _idStudent = req.user._id;
+    console.log(_idStudent);
 
-    const validation = validationRecruitment.validate(req.body);
-    if (validation.error)
-      return res
-        .status(400)
-        .json({ Message: validation.error.details[0].message, Success: false });
-
+    console.log("*******");
     const existRecruitment = await RecruitmentModel.findOne({
       type,
       studentId: _idStudent,
     });
     if (existRecruitment)
       return res.status(409).json({
-        Message: "recruitment request already exist",
+        Message: "you already posted for recuirment for these position",
         Success: false,
       });
     const newRequest = new RecruitmentModel({
@@ -50,13 +37,11 @@ const GetAllTemporaryRecruitment = async (req, res) => {
     const TemporaryRecruitment = await RecruitmentModel.find({
       type: "Temporary",
     }).populate("studentId");
-    if (!Participations)
-      return res
-        .status(400)
-        .json({
-          Message: "Failed to find TemporaryRecruitment",
-          Success: false,
-        });
+    if (!TemporaryRecruitment)
+      return res.status(400).json({
+        Message: "Failed to find TemporaryRecruitment",
+        Success: false,
+      });
 
     return res.status(200).json({
       Message: "TemporaryRecruitment found successfully ",
@@ -69,17 +54,17 @@ const GetAllTemporaryRecruitment = async (req, res) => {
 };
 const GetAllExpertRecruitment = async (req, res) => {
   try {
-    const TemporaryRecruitment = await RecruitmentModel.find({
+    const ExpertRecruitment = await RecruitmentModel.find({
       type: "Expert",
     }).populate("studentId");
-    if (!Participations)
+    if (!ExpertRecruitment)
       return res
         .status(400)
         .json({ Message: "Failed to find ExpertRecruitment", Success: false });
 
     return res.status(200).json({
       Message: "ExpertRecruitment found successfully ",
-      data: TemporaryRecruitment,
+      data: ExpertRecruitment,
     });
   } catch (error) {
     console.log("##########:", error);

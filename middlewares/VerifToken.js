@@ -7,7 +7,6 @@ const isUser = async (req, res, next) => {
   }
 
   const token = req.headers.authorization.replace("Bearer", "").trim();
-
   try {
     const decoded = await jwt.verify(token, process.env.ACCESS_TOKEN_SECRET);
 

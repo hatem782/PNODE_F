@@ -1,23 +1,15 @@
-const Joi = require("joi");
 const ParticipationModel = require("../models/Participation.model");
-const studentModule = require("../models/user.module");
+const userModel = require("../models/user.module");
 const mongoose = require("mongoose");
 const eventModel = require("../models/event.model");
 const Mailer = require("../mails/Mail_Sender");
 
-const validationParticipation = Joi.object({
-  eventId: Joi.required(),
-});
-//student
+//##################### student
 const CreateParticipation = async (req, res) => {
   try {
     const { _idEvent } = req.params;
     const _idStudent = req.user._id;
-    const validation = validationRecruitment.validate(_idEvent);
-    if (validation.error)
-      return res
-        .status(400)
-        .json({ Message: validation.error.details[0].message, Success: false });
+
     const existParticipation = await ParticipationModel.findOne({
       studentId: _idStudent,
       eventId: _idEvent,
@@ -43,13 +35,43 @@ const CreateParticipation = async (req, res) => {
     res.status(500).send({ Message: "Server Error", Error: error.message });
   }
 };
+// Aluiminie w student
+const UpdateConfirmation = async (req, res) => {
+  try {
+    const { _idEvent } = req.params;
+    const _idStudent = req.user._id;
+
+    const participation = await ParticipationModel.findOne({
+      studentId: _idStudent,
+      eventId: _idEvent,
+    });
+    const updateParticipation = await ParticipationModel.findOneAndUpdate(
+      { studentId: _idStudent, eventId: _idEvent },
+      { $set: { confirmation: !participation.confirmation } },
+      { new: true }
+    );
+    if (!updateParticipation) {
+      return res.status(400).json({
+        Message: "Failed to update Participation",
+        Success: false,
+      });
+    }
+    return res.status(200).json({
+      Message: "Participation updated successfully",
+      data: updateParticipation,
+    });
+  } catch (error) {
+    console.log("##########:", error);
+    res.status(500).send({ Message: "Server Error", Error: error.message });
+  }
+};
 
 // admin lil alumnie
 const CreateInvitation = async (req, res) => {
   try {
     const { _idEvent, _idStudent } = req.params;
     console.log(_idStudent);
-    const student = await studentModule.findById({
+    const user = await userModel.findById({
       _id: _idStudent,
     });
 
@@ -57,9 +79,9 @@ const CreateInvitation = async (req, res) => {
       _id: _idEvent,
     });
 
-    if (!student || student.isAluminie == false)
+    if (!user || user.role === "ALUMINIE")
       return res.status(409).json({
-        Message: "student don't exist or is not aluminie",
+        Message: "user don't exist or is not aluminie",
         Success: false,
       });
 
@@ -83,7 +105,7 @@ const CreateInvitation = async (req, res) => {
     let subject = "Invitation";
     let content = `
     <div>
-    <h2> Hi ${student.firstName} ${student.lastName}, </h2>
+    <h2> Hi ${user.firstName} ${user.lastName}, </h2>
     <p> we hope that you are doing well </p>
     <p>Have you heard the news? Something big is coming from ISAMM.</p>
     <p>You are invited to join us at ${event.location} on  ${event.eventDate} to our big event  <b> ${event.eventName}<b>  . </p>
@@ -91,7 +113,8 @@ const CreateInvitation = async (req, res) => {
     <a href="">  confirmation </a>
      </div>`;
 
-    await Mailer.Mail_Sender(student.email, content, subject);
+    await Mailer.Mail_Sender(user.email, content, subject);
+
     const createdInvitation = await newInvitation.save();
     return res.status(200).json({
       Message: "invitation created suucessfully",
@@ -104,69 +127,6 @@ const CreateInvitation = async (req, res) => {
   }
 };
 
-// student
-const UpdateParticipation = async (req, res) => {
-  try {
-    const { _idEvent } = req.params;
-    const _idStudent = req.user._id;
-
-    const participation = await ParticipationModel.findOne({
-      studentId: _idStudent,
-      eventId: _idEvent,
-    });
-    console.log(participation.confirmation);
-    const updateParticipation = await ParticipationModel.findOneAndUpdate(
-      { studentId: _idStudent, eventId: _idEvent },
-      { confirmation: !participation.confirmation },
-      { new: true }
-    );
-    if (!updateParticipation) {
-      return res.status(400).json({
-        Message: "Failed to update Participation",
-        Success: false,
-      });
-    }
-    return res.status(200).json({
-      Message: "Participation updated successfully",
-      data: updateParticipation,
-    });
-  } catch (error) {
-    console.log("##########:", error);
-    res.status(500).send({ Message: "Server Error", Error: error.message });
-  }
-};
-
-// alumnie
-const UpdateInvitation = async (req, res) => {
-  try {
-    const { _idEvent } = req.params;
-    const _idStudent = req.user._id;
-
-    const participation = await ParticipationModel.findOne({
-      studentId: _idStudent,
-      eventId: _idEvent,
-    });
-    console.log(participation.confirmation);
-    const updateParticipation = await ParticipationModel.findOneAndUpdate(
-      { studentId: _idStudent, eventId: _idEvent },
-      { confirmation: !participation.confirmation },
-      { new: true }
-    );
-    if (!updateParticipation) {
-      return res.status(400).json({
-        Message: "Failed to update Participation",
-        Success: false,
-      });
-    }
-    return res.status(200).json({
-      Message: "confirmation to invitation  updated successfully",
-      data: updateParticipation,
-    });
-  } catch (error) {
-    console.log("##########:", error);
-    res.status(500).send({ Message: "Server Error", Error: error.message });
-  }
-};
 //admin
 const GetAllParticipationsConfirmed = async (req, res) => {
   try {
@@ -217,9 +177,8 @@ const GetAllInvitationConfirmed = async (req, res) => {
 
 module.exports = {
   CreateParticipation,
-  UpdateParticipation,
+  UpdateConfirmation,
   GetAllParticipationsConfirmed,
   CreateInvitation,
-  UpdateInvitation,
   GetAllInvitationConfirmed,
 };
