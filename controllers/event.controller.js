@@ -2,7 +2,7 @@ const EventModel = require("../models/event.model");
 
 const CreateEvent = async (req, res) => {
   try {
-    const { eventDate, eventType, description, eventName } = req.body;
+    const { eventDate, eventType } = req.body;
 
     const existEvent = await EventModel.findOne({ eventDate, eventType });
     if (existEvent)

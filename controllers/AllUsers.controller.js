@@ -3,7 +3,6 @@ const bcrypt = require("bcrypt");
 const Mailer = require("../mails/Mail_Sender");
 const GeneratePassword = require("../functions/GeneratePass");
 const FileUpload = require("../uploads/FileUpload");
-const GenereteToken = require("../functions/GenerateJWT");
 
 const CreateUser = async (req, res) => {
   try {
@@ -42,42 +41,6 @@ const CreateUser = async (req, res) => {
       Message: "teacher created suucessfully",
       Success: true,
       data: createdUser,
-    });
-  } catch (error) {
-    console.log("##########:", error);
-    res.status(500).send({ Message: "Server Error", Error: error.message });
-  }
-};
-
-const Login = async (req, res) => {
-  try {
-    const { userName, password } = req.body;
-    //--------------------------------------------------------------------------
-    // Verify user by mail
-    console.log("userName :", userName);
-    console.log("password :", password);
-    let user = await UserModel.findOne({ userName });
-    console.log(user);
-    if (!user) {
-      return res.status(400).json({
-        Message: "Please verify your username and password",
-        Success: false,
-      });
-    }
-    //--------------------------------------------------------------------------
-    // Verify user password
-    const passMatch = await bcrypt.compare(password, user?.password);
-    if (!passMatch) {
-      return res.status(400).json({
-        Message: "Please verify your username and password",
-        Success: false,
-      });
-    }
-    const token = GenereteToken({ _id: user._id }, "24h");
-    return res.status(200).json({
-      Message: "Logged successfully",
-      Success: true,
-      data: { user, token },
     });
   } catch (error) {
     console.log("##########:", error);
@@ -346,7 +309,6 @@ const ChangeEmail = async (req, res) => {
 
 module.exports = {
   CreateUser,
-  Login,
   GetAllUsersByRole,
   UpdateGeneralInfos,
   pub_priv_profile,

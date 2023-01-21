@@ -7,7 +7,6 @@ const isUser = async (req, res, next) => {
   }
 
   const token = req.headers.authorization.replace("Bearer", "").trim();
-
   try {
     const decoded = await jwt.verify(token, process.env.ACCESS_TOKEN_SECRET);
 
@@ -16,11 +15,9 @@ const isUser = async (req, res, next) => {
       return res.status(401).json({ success: false, Message: "Unauthorized" });
     }
     req.user = user;
-    console.log(user);
     next();
   } catch (err) {
-    console.log(err);
-    return res.status(302).json({ success: false, Message: "not loged in" });
+    return res.status(401).json({ success: false, Message: "not loged in" });
   }
 };
 

@@ -7,6 +7,7 @@ const EventRoutes = require("./event.routes");
 const ParticipationRoutes = require("./participation.routes");
 const ProjectRoutes = require("./project.routes");
 const TechnologieRoutes = require("./technologie.routes");
+const RecruitmentRoutes = require("./Recruitment.routes");
 
 router.use("/student", StudentRoutes);
 router.use("/teacher", TeacherRoutes);
@@ -15,5 +16,5 @@ router.use("/event", EventRoutes);
 router.use("/participation", ParticipationRoutes);
 router.use("/project", ProjectRoutes);
 router.use("/technologie", TechnologieRoutes);
-
+router.use("/recruitment", RecruitmentRoutes);
 module.exports = router;

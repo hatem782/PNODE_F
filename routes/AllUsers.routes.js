@@ -3,9 +3,12 @@ const router = express.Router();
 const AllUsers = require("../controllers/AllUsers.controller");
 const VerifToken = require("../middlewares/VerifToken");
 const validator = require("../validations/usersValidations");
+const Authentification = require("../controllers/Authentification.controller");
 
 // ################ Auth ################
-router.post("/login", validator.LoginUserValidation, AllUsers.Login);
+router.post("/login", validator.LoginUserValidation, Authentification.Login);
+// ################## refresh token API
+router.post("/refreshtoken", Authentification.RefreshToken);
 
 // ################ COMMON ################
 router.put(

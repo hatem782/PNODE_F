@@ -1,28 +1,28 @@
 const express = require("express");
 const router = express.Router();
 const ParticipationController = require("../controllers/participation.controller");
-const isStudent = require("../middlewares/VerifToken");
-const isAluminie = require("../middlewares/VerifToken");
+const verifToken = require("../middlewares/VerifToken");
+const eventValidations = require("../validations/eventValidations");
 
+// student
 router.post(
   "/create/:_idEvent",
-  isStudent.isUser,
+  verifToken.isUser,
+  eventValidations.validationParticipationCreate,
   ParticipationController.CreateParticipation
 );
+// student aluminie
+router.put(
+  "/updateConfirmation/:_idEvent",
+  verifToken.isUser,
+  ParticipationController.UpdateConfirmation
+);
+//Admin
 router.post(
   "/createInvitation/:_idEvent/:_idStudent",
   ParticipationController.CreateInvitation
 );
-router.put(
-  "/update/:_idEvent",
-  isStudent.isUser,
-  ParticipationController.UpdateParticipation
-);
-router.put(
-  "/updateConfirInvit/:_idEvent",
-  isAluminie.isUser,
-  ParticipationController.UpdateInvitation
-);
+
 router.get(
   "/getAllConfirmed/:_idEvent",
   ParticipationController.GetAllParticipationsConfirmed

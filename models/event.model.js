@@ -14,7 +14,7 @@ const EventModel = new Schema(
     },
     eventType: {
       type: String,
-      enum: ["JPO", "journéé d'integration ", "formation"],
+      enum: ["JPO", "Journée d'integration", "Formation"],
       default: "JPO",
       required: true,
     },
