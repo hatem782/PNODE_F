@@ -40,6 +40,7 @@ const UserModel = new Schema(
     isPublic: { type: Boolean, default: true },
     // ################ ALUMINIE FIELDS ######################
     diplome: { type: String, required: false, default: "" },
+    diplomeDate: { type: Date, required: false },
     // ################# TEACHER FIELDS ######################
     course: { type: [String], required: true },
     // ################### ADMIN FIELDS ######################
@@ -55,6 +56,7 @@ const UserModel = new Schema(
         "project",
         "technologie",
         "cv",
+        "saison",
       ],
     },
   },

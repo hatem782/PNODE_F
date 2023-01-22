@@ -36,7 +36,7 @@ const askingForRecruitment = async (req, res) => {
 const GetAllTemporaryRecruitment = async (req, res) => {
   try {
     const { saison } = req.query;
-    let filter = filt_year_parser({ type: "Temporary" }, saison);
+    let filter = await filt_year_parser({ type: "Temporary" }, saison);
     const TemporaryRecruitment = await RecruitmentModel.find(filter).populate(
       "studentId"
     );
@@ -58,7 +58,7 @@ const GetAllTemporaryRecruitment = async (req, res) => {
 const GetAllExpertRecruitment = async (req, res) => {
   try {
     const { saison } = req.query;
-    let filter = filt_year_parser({ type: "Expert" }, saison);
+    let filter = await filt_year_parser({ type: "Expert" }, saison);
     const ExpertRecruitment = await RecruitmentModel.find(filter).populate(
       "studentId"
     );
