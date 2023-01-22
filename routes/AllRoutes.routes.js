@@ -11,6 +11,7 @@ const TechnologieRoutes = require("./technologie.routes");
 const CvRoutes = require("./Cv.routes");
 const RecruitmentRoutes = require("./Recruitment.routes");
 const EmployementRoutes = require("./employment.routes");
+const OfferRoutes = require("./offer.routes");
 
 router.use("/student", StudentRoutes);
 router.use("/teacher", TeacherRoutes);
@@ -23,4 +24,6 @@ router.use("/cv", CvRoutes);
 router.use("/admin", AdminRoutes);
 router.use("/employement", EmployementRoutes);
 router.use("/recruitment", RecruitmentRoutes);
+router.use("/offer", OfferRoutes);
+
 module.exports = router;
