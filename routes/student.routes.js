@@ -1,9 +1,13 @@
 const express = require("express");
 const router = express.Router();
 const StudentController = require("../controllers/student.controller");
+const UsersController = require("../controllers/AllUsers.controller");
 const AllUsers = require("../controllers/AllUsers.controller");
 const validator = require("../validations/usersValidations");
 const VerifToken = require("../middlewares/VerifToken");
+
+// #################### GET PUBLIC ACCOUNTS #################
+router.get("/getallpublic", StudentController.GetAllPublicAccounts);
 
 // #################### ALUMINIE ROUTES #################
 router.post(
@@ -21,8 +25,8 @@ router.post(
 );
 
 router.post(
-  // VerifToken.isAdmin,// raja3ha ba3d matesti el api
   "/create_multiple_with_excel",
+  VerifToken.isAdmin,
   StudentController.CreateStudentsFromExl
 );
 

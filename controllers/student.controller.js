@@ -3,6 +3,27 @@ const bcrypt = require("bcrypt");
 const readXlsxFile = require("read-excel-file/node");
 const Mailer = require("../mails/Mail_Sender");
 
+const GetAllPublicAccounts = async (req, res) => {
+  try {
+    const allpublicStrudents = await UserModel.find({
+      role: "STUDENT",
+      isPublic: true,
+    });
+    const allpublicAluminies = await UserModel.find({
+      role: "ALUMINIE",
+      isPublic: true,
+    });
+    return res.status(200).json({
+      Message: "All Public Accounts",
+      Success: true,
+      data: { allpublicStrudents, allpublicAluminies },
+    });
+  } catch (error) {
+    console.log("##########:", error);
+    res.status(500).send({ Message: "Server Error", Error: error.message });
+  }
+};
+
 const RegisterAluminie = async (req, res) => {
   try {
     const { phoneNumber, email, password } = req.body;
@@ -77,7 +98,6 @@ const BecomeDeplomated = async (req, res) => {
       {
         $set: {
           ...req.body,
-          role: "ALUMINIE",
           classe: "",
           niveau: "",
           numero_classe: "",
@@ -189,9 +209,35 @@ const CreateStudentsFromExl = async (req, res) => {
   }
 };
 
+const NotifMailWorkUpdate = async () => {
+  try {
+    const students = await UserModel.find({
+      role: "STUDENT" /*, diplome: !""*/,
+    });
+
+    console.log(students);
+
+    for (let i = 1; i < students.length; i++) {
+      let student = students[i];
+
+      let subject = "Reminder to update your work";
+      let content = `
+      <div>
+      <h2>Good morning ${student.firstName} ${student.lastName}</h2>
+      <p>we want to remind you to update your work in our platform</p>
+      </div>`;
+      await Mailer.Mail_Sender(student.email, content, subject);
+    }
+  } catch (error) {
+    console.log("##########:", error);
+  }
+};
+
 module.exports = {
   RegisterAluminie,
   UpdatePromotion,
   BecomeDeplomated,
   CreateStudentsFromExl,
+  GetAllPublicAccounts,
+  NotifMailWorkUpdate,
 };

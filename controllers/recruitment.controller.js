@@ -1,4 +1,5 @@
 const RecruitmentModel = require("../models/recruitment.model");
+const { filt_year_parser } = require("../functions/FiltYearParser");
 
 const askingForRecruitment = async (req, res) => {
   try {
@@ -34,9 +35,11 @@ const askingForRecruitment = async (req, res) => {
 
 const GetAllTemporaryRecruitment = async (req, res) => {
   try {
-    const TemporaryRecruitment = await RecruitmentModel.find({
-      type: "Temporary",
-    }).populate("studentId");
+    const { saison } = req.query;
+    let filter = filt_year_parser({ type: "Temporary" }, saison);
+    const TemporaryRecruitment = await RecruitmentModel.find(filter).populate(
+      "studentId"
+    );
     if (!TemporaryRecruitment)
       return res.status(400).json({
         Message: "Failed to find TemporaryRecruitment",
@@ -54,9 +57,11 @@ const GetAllTemporaryRecruitment = async (req, res) => {
 };
 const GetAllExpertRecruitment = async (req, res) => {
   try {
-    const ExpertRecruitment = await RecruitmentModel.find({
-      type: "Expert",
-    }).populate("studentId");
+    const { saison } = req.query;
+    let filter = filt_year_parser({ type: "Expert" }, saison);
+    const ExpertRecruitment = await RecruitmentModel.find(filter).populate(
+      "studentId"
+    );
     if (!ExpertRecruitment)
       return res
         .status(400)

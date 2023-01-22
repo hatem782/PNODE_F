@@ -3,6 +3,7 @@ const bcrypt = require("bcrypt");
 const Mailer = require("../mails/Mail_Sender");
 const GeneratePassword = require("../functions/GeneratePass");
 const FileUpload = require("../uploads/FileUpload");
+const { filt_year_parser } = require("../functions/FiltYearParser");
 
 const CreateUser = async (req, res) => {
   try {
@@ -50,8 +51,10 @@ const CreateUser = async (req, res) => {
 
 const GetAllUsersByRole = async (req, res) => {
   try {
-    const { role } = req.query;
-    const users = await UserModel.find({ role });
+    const { role, saison } = req.query;
+    let filter = filt_year_parser({ role }, saison);
+    console.log(filter);
+    const users = await UserModel.find(filter);
     return res.status(200).json({
       Message: `all ${role.toLowerCase()}`,
       Success: true,

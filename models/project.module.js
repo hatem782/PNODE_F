@@ -1,3 +1,4 @@
+const { number, string } = require("joi");
 const mongoose = require("mongoose");
 const Schema = mongoose.Schema;
 
@@ -18,9 +19,9 @@ const ProjectModel = new Schema(
     ],
     technologies: [
       {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: "Technologie",
-      },
+        type: String,
+
+      }
     ],
 
     societe: {
@@ -55,6 +56,22 @@ const ProjectModel = new Schema(
     },
     isValidatedByReponsable: {
       type: Boolean,
+      default: false,
+
+    },
+    note: {
+      type: Number,
+    },
+    mention: {
+      type: String,
+      enum: [
+        "Ajourné",       //En-dessous de 10/20
+        "Passable",      //Entre 10/20 et 12/20
+        "Assez bien",   //Entre 12/20 et 14/20
+        "Bien",        //Entre 14/20 et 16/20*
+        "Trés bien",   //Entre 16/20 et 18/20*
+        "Excellent",   //18/20 et plus* 
+      ],
     },
   },
   {
