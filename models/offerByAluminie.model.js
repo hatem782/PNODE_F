@@ -22,11 +22,6 @@ const offerModel = new Schema(
       type: String,
       required: true,
     },
-    societe: {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: "User",
-      required: true,
-    },
   },
   {
     timestamps: true,
