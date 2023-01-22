@@ -215,11 +215,10 @@ const NotifMailWorkUpdate = async () => {
       role: "STUDENT",
       diplome: { $ne: "" },
     });
-
-    console.log(students);
-
-    for (let i = 1; i < students.length; i++) {
+    console.log(students.length);
+    for (let i = 0; i < students.length; i++) {
       let student = students[i];
+      console.log(student.firstName);
 
       let subject = "Reminder to update your work";
       let content = `
@@ -228,6 +227,7 @@ const NotifMailWorkUpdate = async () => {
       <p>we want to remind you to update your work in our platform</p>
       </div>`;
       await Mailer.Mail_Sender(student.email, content, subject);
+      console.log("i have sent email");
     }
   } catch (error) {
     console.log("##########:", error);
@@ -240,9 +240,7 @@ const NotifMailUpdateCompAndProf = async () => {
       role: "STUDENT",
     });
 
-    console.log(students);
-
-    for (let i = 1; i < students.length; i++) {
+    for (let i = 0; i < students.length; i++) {
       let student = students[i];
 
       let subject = "Reminder to update your profile and ";
@@ -267,7 +265,7 @@ const VerifObtDateDip = async () => {
 
     console.log(students);
 
-    for (let i = 1; i < students.length; i++) {
+    for (let i = 0; i < students.length; i++) {
       let student = students[i];
 
       let subject = "Reminder to update your diplome date ";

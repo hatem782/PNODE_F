@@ -90,6 +90,7 @@ const CreateInvitation = async (req, res) => {
       studentId: _idStudent,
       isInvitation: true,
     });
+    console.log(existInvitation);
     if (existInvitation)
       return res.status(409).json({
         Message: "invitation already exist for that event",

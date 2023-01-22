@@ -13,9 +13,9 @@ const StudentController = require("../controllers/student.controller");
 const NotifMailUpdateWorkEvery6M = () => {
   // at 00:00 in day N°1 of months 1 and 7
   var task = cron.schedule(
-    "0 0 1 1,7 *",
-    () => {
-      StudentController.NotifMailWorkUpdate();
+    "0 0 1 1,7 *", // "0-59 * * * * *"
+    async () => {
+      await StudentController.NotifMailWorkUpdate();
     },
     {
       scheduled: false,

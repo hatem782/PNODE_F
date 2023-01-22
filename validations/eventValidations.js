@@ -2,10 +2,10 @@ const Joi = require("joi");
 
 // ######### Participations
 const validationParticipation = Joi.object({
-  eventId: Joi.required(),
+  _idEvent: Joi.required(),
 });
 const validationParticipationCreate = (req, res, next) => {
-  const validation = validationParticipation.validate(req.body);
+  const validation = validationParticipation.validate(req.params);
   if (validation.error)
     return res
       .status(400)

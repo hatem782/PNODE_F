@@ -57,11 +57,15 @@ const UpdateSaison = async (req, res) => {
 
     console.log({ title, startDate, endDate });
 
-    const updatedSaison = await SaisonModel.findOneAndUpdate({
-      startDate,
-      endDate,
-      title,
-    });
+    const updatedSaison = await SaisonModel.findOneAndUpdate(
+      { _id },
+      {
+        startDate,
+        endDate,
+        title,
+      },
+      { new: true }
+    );
     if (!updatedSaison) {
       return res.status(400).json({
         Message: "Failed to saison",
