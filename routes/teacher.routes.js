@@ -5,12 +5,20 @@ const TeacherController = require("../controllers/teacher.controller");
 const VerifToken = require("../middlewares/VerifToken");
 const validator = require("../validations/usersValidations");
 
-router.post("/create", validator.createTeacherValidation, AllUsers.CreateUser);
+// ################ TEACHER ROUTES ################
 router.put(
   "/update_course",
   VerifToken.isTeacher,
   validator.CourseUpdateValidation,
   TeacherController.UpdateTeacherCourse
+);
+
+// ################ ONLY BY ADMIN ################
+router.post(
+  "/create",
+  VerifToken.isAdmin,
+  validator.createTeacherValidation,
+  AllUsers.CreateUser
 );
 
 module.exports = router;
