@@ -28,7 +28,7 @@ const Login = async (req, res) => {
         Success: false,
       });
     }
-    const token = GenereteToken({ _id: user._id }, "30s");
+    const token = GenereteToken({ _id: user._id }, "2h");
     const refreshToken = GenereteRefreshToken({ _id: user._id }, "3000h");
     // await new refreshTokenModel({ refreshToken: refreshToken }).save();
 
