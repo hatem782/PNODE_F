@@ -122,8 +122,7 @@ const validationCreateAdmin = Joi.object({
         "participation",
         "project",
         "technologie",
-        "cv",
-        "saison"
+        "cv"
       )
     ),
 });
@@ -153,8 +152,7 @@ const PermissionsValidation = Joi.object({
         "participation",
         "project",
         "technologie",
-        "cv",
-        "saison"
+        "cv"
       )
     ),
 });

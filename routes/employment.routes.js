@@ -9,4 +9,6 @@ router.post("/startPosition", employmentController.startPositionInSociete);
 router.post("/getPositionsByAlumini", employmentController.getAllPositionsByAllumini);
 router.get("/getStatChommage/:critere", employmentController.getStatChommage);
 
+router.get("/getAluminiStats/:critere", employmentController.getAluminiStats);
+
 module.exports = router;
