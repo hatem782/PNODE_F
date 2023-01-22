@@ -113,6 +113,70 @@ const getAllPositionsByAllumini = async (req,res) => {
 }
 
 
+const getAluminiStats=async(req,res)=>{
+   //employement stat depending on selection critéria ( societe / pays /diplome )
+ // #swagger.tags = ['employement apis']
+    // #swagger.description = 'Moyenne des anneés de chommage des allumini calculé en fonction du cirtére donneé'
+        // #swagger.parameters['critere'] = { description: 'critére du groupement : [societe  / pays/diplome]' }
+
+    const { critere } = req.params;
+    console.log(critere)
+    try{      //can be grouped by diplome / promotion //skills
+        const result=await PositionModel.aggregate([
+            
+           {  $lookup: {
+              //  from: 'positions',
+                from: 'users',
+
+                localField: 'alumini',
+                foreignField: '_id',
+                as: 'Employee',
+               // "pipeline" : [{ "$sort": {"startDate":1}}, { "$limit" : 1 }] ,
+        
+            },},
+            {  $lookup: {
+                //  from: 'positions',
+                  from: 'societes',
+  
+                  localField: 'societe',
+                  foreignField: '_id',
+                  as: 'Soceiete',
+                 // "pipeline" : [{ "$sort": {"startDate":1}}, { "$limit" : 1 }] ,
+          
+              },},
+            {$unwind: '$Employee'},   
+            {$unwind: '$Soceiete'},   
+
+            {$project:{
+                societe: '$Soceiete.title',
+                post:"$designation",
+                pays: '$Soceiete.pays',
+                employe:'$Employee.firstName',
+            diplome:'$Employee.deplome',
+            }},
+            {$group:{
+               _id: `$${critere}`,
+               "number": {"$sum": 1}
+            }}
+
+          
+            
+        
+        ])
+            
+             return res.status(200).json({
+               Message: "list not empty",
+               Success: true,
+               data: result,
+           });
+           
+        }
+        catch(error)
+        {
+        console.log(JSON.stringify(error))
+        }
+}
+
 const getStatChommage=async(req,res)=>{
 //average chommage moyenne depending on selection critéria ( diplome / promotion / technologie )
  // #swagger.tags = ['employement apis']
@@ -150,7 +214,7 @@ const result=await userModule.aggregate([
                            $dateDiff:
                               {
                                   //change start date to date obtion diplome
-                                  startDate: "$createdAt",
+                                  startDate: "$diplomeDate",
                                   endDate: "$positions.startDate",
                                   unit: "year"
                               }
@@ -181,5 +245,6 @@ module.exports = {
     getAllSociete,
     startPositionInSociete,
     getAllPositionsByAllumini,
-    getStatChommage
+    getStatChommage,
+    getAluminiStats
 };
