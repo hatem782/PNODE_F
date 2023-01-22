@@ -74,7 +74,7 @@ const DeleteEvent = async (req, res) => {
 
 const GetAllEvents = async (req, res) => {
   const { saison } = req.query;
-  let filter = filt_year_parser({}, saison);
+  let filter = await filt_year_parser({}, saison);
   try {
     const Events = await EventModel.find(filter);
     return res

@@ -212,7 +212,8 @@ const CreateStudentsFromExl = async (req, res) => {
 const NotifMailWorkUpdate = async () => {
   try {
     const students = await UserModel.find({
-      role: "STUDENT" /*, diplome: !""*/,
+      role: "STUDENT",
+      diplome: { $ne: "" },
     });
 
     console.log(students);
@@ -233,6 +234,57 @@ const NotifMailWorkUpdate = async () => {
   }
 };
 
+const NotifMailUpdateCompAndProf = async () => {
+  try {
+    const students = await UserModel.find({
+      role: "STUDENT",
+    });
+
+    console.log(students);
+
+    for (let i = 1; i < students.length; i++) {
+      let student = students[i];
+
+      let subject = "Reminder to update your profile and ";
+      let content = `
+      <div>
+      <h2>Good morning ${student.firstName} ${student.lastName}</h2>
+      <p>we want to remind you to update your profile and </p>
+      </div>`;
+      await Mailer.Mail_Sender(student.email, content, subject);
+    }
+  } catch (error) {
+    console.log("##########:", error);
+  }
+};
+
+const VerifObtDateDip = async () => {
+  try {
+    const students = await UserModel.find({
+      role: "STUDENT",
+      diplomeDate: null,
+    });
+
+    console.log(students);
+
+    for (let i = 1; i < students.length; i++) {
+      let student = students[i];
+
+      let subject = "Reminder to update your diplome date ";
+      let content = `
+      <div>
+      <h2>Good morning ${student.firstName} ${student.lastName}</h2>
+      <p>we want to remind you to update your diplome date</p>
+      <p>please use the link below to update it</p>
+      <p>currently the website is under dev , no link provided</p>
+      </div>`;
+      await Mailer.Mail_Sender(student.email, content, subject);
+    }
+  } catch (error) {
+    console.log("##########:", error);
+  }
+};
+
 module.exports = {
   RegisterAluminie,
   UpdatePromotion,
@@ -240,4 +292,6 @@ module.exports = {
   CreateStudentsFromExl,
   GetAllPublicAccounts,
   NotifMailWorkUpdate,
+  NotifMailUpdateCompAndProf,
+  VerifObtDateDip,
 };
