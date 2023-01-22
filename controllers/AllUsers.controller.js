@@ -52,7 +52,7 @@ const CreateUser = async (req, res) => {
 const GetAllUsersByRole = async (req, res) => {
   try {
     const { role, saison } = req.query;
-    let filter = filt_year_parser({ role }, saison);
+    let filter = await filt_year_parser({ role }, saison);
     console.log(filter);
     const users = await UserModel.find(filter);
     return res.status(200).json({
