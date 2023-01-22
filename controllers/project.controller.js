@@ -2,6 +2,7 @@ const Joi = require("joi");
 const ProjectModel = require("../models/project.module");
 const studentModule = require("../models/user.module");
 const teacherModel = require("../models/user.module");
+const { filt_year_parser } = require("../functions/FiltYearParser");
 
 const validationProject = Joi.object({
   title: Joi.date().required(),
@@ -137,9 +138,11 @@ const GetProjectsContainingTechnologies = async (req, ress) => {
 const GetAllProjects = async (req, res) => {
   // #swagger.tags = ['Project apis']
   // #swagger.description = 'Endpoint retun all projects list '
+  const { saison } = req.query;
+  let filter = filt_year_parser({}, saison);
 
   try {
-    const Projects = await ProjectModel.find();
+    const Projects = await ProjectModel.find(filter);
     return res
       .status(200)
       .json({ Message: "Projects found successfully ", data: Projects });
@@ -154,8 +157,10 @@ const GetAllProjectsByType = async (req, res) => {
   // #swagger.tags = ['Project apis']
   // #swagger.description = 'Endpoint return  projects list by given type'
   // #swagger.parameters['type'] = { description: 'type of projects to return  .' }
+  const { saison } = req.query;
+  let filter = filt_year_parser({ type }, saison);
   try {
-    const Projects = await ProjectModel.find({ type });
+    const Projects = await ProjectModel.find(filter);
     return res
       .status(200)
       .json({ Message: "Projects found successfully ", data: Projects });

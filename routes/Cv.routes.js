@@ -5,12 +5,14 @@ const VerifToken = require("../middlewares/VerifToken");
 const CvValidation = require("../validations/cv.validation");
 
 // ################ CV ROUTES ################
+router.get("/getall_for_teacher", VerifToken.isTeacher, CvController.GetAllCvs); // totest
 router.post(
   "/create",
   CvValidation.create_and_update_Cv_Validation,
   VerifToken.isUser,
   CvController.CreateCv
 );
+
 router.get("/get_cv_by_user", VerifToken.isUser, CvController.getcvbyuser);
 
 router.put(

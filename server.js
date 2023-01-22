@@ -6,12 +6,11 @@ const bodyParser = require("body-parser");
 const app = express();
 const connectDB = require("./Database/mongo.connect");
 const Routes = require("./routes/AllRoutes.routes");
+const Timer = require("./Tasks/Timer");
 
-
-const swaggerUi=require('swagger-ui-express')
+const swaggerUi = require("swagger-ui-express");
 //const swaggerDocument = require('./Swagger/swagger.json');
-const swaggerFile = require('./Swagger/swagger_output.json')
-
+const swaggerFile = require("./Swagger/swagger_output.json");
 
 const corstAllowAll = {
   credentials: true,
@@ -37,13 +36,12 @@ app.use(
   })
 );
 
-
-app.use('/doc', swaggerUi.serve, swaggerUi.setup(swaggerFile))
-
+app.use("/doc", swaggerUi.serve, swaggerUi.setup(swaggerFile));
 
 app.listen(process.env.PORT || 8080, () => {
   console.log(process.env.PORT);
   connectDB();
+  Timer.Timer();
 });
 
 app.get("/", (req, res) => {
