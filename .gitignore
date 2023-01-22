@@ -7,6 +7,8 @@
 .package-lock.json
 # testing
 /coverage
+.env
+swagger_output.json
 
 # next.js
 /.next/

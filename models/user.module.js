@@ -36,15 +36,29 @@ const UserModel = new Schema(
     classe: { type: String, required: false },
     niveau: { type: String, required: false },
     numero_classe: { type: Number, required: false },
-    cv: { type: String, required: false },
     promotion: { type: String, required: false },
     isPublic: { type: Boolean, default: true },
     // ################ ALUMINIE FIELDS ######################
     diplome: { type: String, required: false, default: "" },
+    diplomeDate: { type: Date, required: false },
     // ################# TEACHER FIELDS ######################
     course: { type: [String], required: true },
     // ################### ADMIN FIELDS ######################
-    permessions: { type: [String], required: true },
+    permessions: {
+      type: [String],
+      required: true,
+      enum: [
+        "student",
+        "teacher",
+        "user",
+        "event",
+        "participation",
+        "project",
+        "technologie",
+        "cv",
+        "saison",
+      ],
+    },
   },
   {
     timestamps: true,

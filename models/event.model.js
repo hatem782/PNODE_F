@@ -1,4 +1,3 @@
-const { required, string } = require("joi");
 const mongoose = require("mongoose");
 const Schema = mongoose.Schema;
 
@@ -14,7 +13,7 @@ const EventModel = new Schema(
     },
     eventType: {
       type: String,
-      enum: ["JPO", "journéé d'integration ", "formation"],
+      enum: ["JPO", "Journée d'integration", "Formation"],
       default: "JPO",
       required: true,
     },

@@ -18,7 +18,6 @@ const UpdateTeacherCourse = async (req, res) => {
       return res.status(400).json({
         Message: "Failed to update teacher",
         Success: false,
-        data: updateTeacher,
       });
     }
     return res

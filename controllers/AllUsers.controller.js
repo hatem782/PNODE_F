@@ -3,7 +3,7 @@ const bcrypt = require("bcrypt");
 const Mailer = require("../mails/Mail_Sender");
 const GeneratePassword = require("../functions/GeneratePass");
 const FileUpload = require("../uploads/FileUpload");
-const GenereteToken = require("../functions/GenerateJWT");
+const { filt_year_parser } = require("../functions/FiltYearParser");
 
 const CreateUser = async (req, res) => {
   try {
@@ -13,7 +13,7 @@ const CreateUser = async (req, res) => {
     });
     if (existUser)
       return res.status(409).json({
-        Message: "teacher already exists with that phoneNumber or email",
+        Message: "user already exists with that phoneNumber or email",
         Success: false,
       });
 
@@ -39,7 +39,7 @@ const CreateUser = async (req, res) => {
     await Mailer.Mail_Sender(email, content, subject);
 
     return res.status(200).json({
-      Message: "teacher created suucessfully",
+      Message: "user created suucessfully",
       Success: true,
       data: createdUser,
     });
@@ -49,46 +49,12 @@ const CreateUser = async (req, res) => {
   }
 };
 
-const Login = async (req, res) => {
-  try {
-    const { userName, password } = req.body;
-    //--------------------------------------------------------------------------
-    // Verify user by mail
-    console.log("userName :", userName);
-    console.log("password :", password);
-    let user = await UserModel.findOne({ userName });
-    console.log(user);
-    if (!user) {
-      return res.status(400).json({
-        Message: "Please verify your username and password",
-        Success: false,
-      });
-    }
-    //--------------------------------------------------------------------------
-    // Verify user password
-    const passMatch = await bcrypt.compare(password, user?.password);
-    if (!passMatch) {
-      return res.status(400).json({
-        Message: "Please verify your username and password",
-        Success: false,
-      });
-    }
-    const token = GenereteToken({ _id: user._id }, "24h");
-    return res.status(200).json({
-      Message: "Logged successfully",
-      Success: true,
-      data: { user, token },
-    });
-  } catch (error) {
-    console.log("##########:", error);
-    res.status(500).send({ Message: "Server Error", Error: error.message });
-  }
-};
-
 const GetAllUsersByRole = async (req, res) => {
   try {
-    const { role } = req.query;
-    const users = await UserModel.find({ role });
+    const { role, saison } = req.query;
+    let filter = await filt_year_parser({ role }, saison);
+    console.log(filter);
+    const users = await UserModel.find(filter);
     return res.status(200).json({
       Message: `all ${role.toLowerCase()}`,
       Success: true,
@@ -346,7 +312,6 @@ const ChangeEmail = async (req, res) => {
 
 module.exports = {
   CreateUser,
-  Login,
   GetAllUsersByRole,
   UpdateGeneralInfos,
   pub_priv_profile,

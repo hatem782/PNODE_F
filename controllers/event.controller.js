@@ -1,8 +1,9 @@
 const EventModel = require("../models/event.model");
+const { filt_year_parser } = require("../functions/FiltYearParser");
 
 const CreateEvent = async (req, res) => {
   try {
-    const { eventDate, eventType, description, eventName } = req.body;
+    const { eventDate, eventType } = req.body;
 
     const existEvent = await EventModel.findOne({ eventDate, eventType });
     if (existEvent)
@@ -72,8 +73,10 @@ const DeleteEvent = async (req, res) => {
 };
 
 const GetAllEvents = async (req, res) => {
+  const { saison } = req.query;
+  let filter = await filt_year_parser({}, saison);
   try {
-    const Events = await EventModel.find();
+    const Events = await EventModel.find(filter);
     return res
       .status(200)
       .json({ Message: "Events found successfully ", data: Events });
