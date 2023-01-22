@@ -1,6 +1,28 @@
 const UserModel = require("../models/user.module");
 const bcrypt = require("bcrypt");
-const FileUpload = require("../uploads/FileUpload");
+const readXlsxFile = require("read-excel-file/node");
+const Mailer = require("../mails/Mail_Sender");
+
+const GetAllPublicAccounts = async (req, res) => {
+  try {
+    const allpublicStrudents = await UserModel.find({
+      role: "STUDENT",
+      isPublic: true,
+    });
+    const allpublicAluminies = await UserModel.find({
+      role: "ALUMINIE",
+      isPublic: true,
+    });
+    return res.status(200).json({
+      Message: "All Public Accounts",
+      Success: true,
+      data: { allpublicStrudents, allpublicAluminies },
+    });
+  } catch (error) {
+    console.log("##########:", error);
+    res.status(500).send({ Message: "Server Error", Error: error.message });
+  }
+};
 
 const RegisterAluminie = async (req, res) => {
   try {
@@ -33,37 +55,6 @@ const RegisterAluminie = async (req, res) => {
       Success: true,
       data: createdStudent,
     });
-  } catch (error) {
-    console.log("##########:", error);
-    res.status(500).send({ Message: "Server Error", Error: error.message });
-  }
-};
-
-const UploadCV = async (req, res) => {
-  try {
-    const _id = req.user._id;
-    const file = req.files.file;
-    const pdfData = await FileUpload.FileUpload(file, "students/cv");
-    console.log(pdfData);
-
-    const updateStudent = await UserModel.findOneAndUpdate(
-      { _id },
-      {
-        $set: {
-          cv: pdfData.url,
-        },
-      },
-      { new: true }
-    );
-    if (!updateStudent) {
-      return res.status(400).json({
-        Message: "Failed to update student",
-        Success: false,
-      });
-    }
-    return res
-      .status(200)
-      .json({ Message: "Student updated successfully", data: updateStudent });
   } catch (error) {
     console.log("##########:", error);
     res.status(500).send({ Message: "Server Error", Error: error.message });
@@ -107,7 +98,6 @@ const BecomeDeplomated = async (req, res) => {
       {
         $set: {
           ...req.body,
-          role: "ALUMINIE",
           classe: "",
           niveau: "",
           numero_classe: "",
@@ -130,9 +120,124 @@ const BecomeDeplomated = async (req, res) => {
   }
 };
 
+const CreateStudentsFromExl = async (req, res) => {
+  try {
+    let rows = await readXlsxFile(req.files.file.data);
+    let failed_saved_students = [];
+    let succeeded_saved_students = [];
+    const salt = Number(process.env.SALT);
+
+    for (let i = 1; i < rows.length; i++) {
+      let row = rows[i];
+      let student = {
+        firstName: row[0],
+        lastName: row[1],
+        email: row[2],
+        phoneNumber: row[3],
+        birthDate: row[4],
+        sex: row[5],
+        classe: row[6],
+        niveau: row[7],
+        numero_classe: row[8],
+        promotion: row[9],
+        role: "STUDENT",
+      };
+
+      const existUser = await UserModel.findOne({
+        $or: [{ email: student.email }, { phoneNumber: student.phoneNumber }],
+      });
+
+      if (existUser) {
+        failed_saved_students.push({
+          email: student.email,
+          phoneNumber: student.phoneNumber,
+        });
+      } else {
+        const cryptedMdp = await bcrypt.hash(
+          student.phoneNumber.toString(),
+          salt
+        );
+
+        const newStudent = await UserModel({
+          ...student,
+          password: cryptedMdp,
+          userName: student.phoneNumber,
+        });
+
+        const createdStudent = await newStudent.save();
+        if (!createdStudent) {
+          failed_saved_students.push({
+            email: student.email,
+            phoneNumber: student.phoneNumber,
+          });
+        } else {
+          succeeded_saved_students.push(createdStudent);
+
+          let subject = "Authentication information";
+          let content = `
+          <div>
+          <h2>Welcome ${student.firstName} ${student.lastName} to our plateforme</h2>
+          <p>here you will find the informations about new account</p>
+          <p>your login is : <b>${student.phoneNumber}</b> </p>
+          <p>your M-D-P is : <b>${student.phoneNumber}</b> </p>
+          <p>please make sure to change your password after you access to your account</p>
+          </div>`;
+          await Mailer.Mail_Sender(student.email, content, subject);
+        }
+      }
+    }
+
+    if (succeeded_saved_students.length === 0 && rows.length > 1) {
+      return res.status(400).json({
+        Message: `
+        there's a problem while retreaving data from excel file,
+        please make sure that all data are correct.`,
+        Success: false,
+      });
+    }
+
+    return res.status(200).json({
+      Message: "excel file successfully retreaved",
+      data: {
+        succeeded_saved_students,
+        failed_saved_students,
+      },
+    });
+  } catch (error) {
+    console.log("##########:", error);
+    res.status(500).send({ Message: "Server Error", Error: error.message });
+  }
+};
+
+const NotifMailWorkUpdate = async () => {
+  try {
+    const students = await UserModel.find({
+      role: "STUDENT" /*, diplome: !""*/,
+    });
+
+    console.log(students);
+
+    for (let i = 1; i < students.length; i++) {
+      let student = students[i];
+
+      let subject = "Reminder to update your work";
+      let content = `
+      <div>
+      <h2>Good morning ${student.firstName} ${student.lastName}</h2>
+      <p>we want to remind you to update your work in our platform</p>
+      </div>`;
+      await Mailer.Mail_Sender(student.email, content, subject);
+    }
+  } catch (error) {
+    console.log("##########:", error);
+  }
+};
+
 module.exports = {
   RegisterAluminie,
-  UploadCV,
   UpdatePromotion,
   BecomeDeplomated,
+  CreateStudentsFromExl,
+  GetAllPublicAccounts,
+  NotifMailWorkUpdate,
 };

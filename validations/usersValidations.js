@@ -102,6 +102,71 @@ const CourseUpdateValidation = (req, res, next) => {
   next();
 };
 
+// ############################ validationCreateTeacher ############################
+
+const validationCreateAdmin = Joi.object({
+  firstName: Joi.string().required(),
+  lastName: Joi.string(),
+  birthDate: Joi.string(),
+  phoneNumber: Joi.number().integer(),
+  sex: Joi.string().valid("MEN", "WOMEN"),
+  email: Joi.string().required().email(),
+  permessions: Joi.array()
+    .required()
+    .items(
+      Joi.string().valid(
+        "student",
+        "teacher",
+        "user",
+        "event",
+        "participation",
+        "project",
+        "technologie",
+        "cv"
+      )
+    ),
+});
+
+const createAdminValidation = (req, res, next) => {
+  const validation = validationCreateAdmin.validate(req.body);
+  if (validation.error) {
+    return res
+      .status(400)
+      .json({ Message: validation.error.details[0].message, Success: false });
+  }
+  req.body.role = "ADMIN";
+  next();
+};
+
+// ############################ PermissionsUpdateValidation ############################
+
+const PermissionsValidation = Joi.object({
+  permessions: Joi.array()
+    .required()
+    .items(
+      Joi.string().valid(
+        "student",
+        "teacher",
+        "user",
+        "event",
+        "participation",
+        "project",
+        "technologie",
+        "cv"
+      )
+    ),
+});
+
+const AdminPermissionsValidation = (req, res, next) => {
+  const validation = PermissionsValidation.validate(req.body);
+  if (validation.error) {
+    return res
+      .status(400)
+      .json({ Message: validation.error.details[0].message, Success: false });
+  }
+  next();
+};
+
 // ############################ UpdateStudentValidation ############################
 
 const validationUpdateStudentPromotion = Joi.object({
@@ -177,4 +242,6 @@ module.exports = {
   CourseUpdateValidation,
   LoginUserValidation,
   UpdateStudentValidationPromotion,
+  AdminPermissionsValidation,
+  createAdminValidation,
 };

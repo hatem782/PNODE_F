@@ -1,11 +1,11 @@
 const Joi = require("joi");
 const ProjectModel = require("../models/project.module");
+const studentModule = require("../models/user.module");
+const teacherModel = require("../models/user.module");
+const { filt_year_parser } = require("../functions/FiltYearParser");
 const TechnologieModel = require("../models/technologie.module");
 
-var mongoose = require('mongoose');
-const VerifToken = require("../middlewares/VerifToken");
-
-
+var mongoose = require("mongoose");
 
 const validationProject = Joi.object({
   title: Joi.date().required(),
@@ -16,8 +16,6 @@ const validationProject = Joi.object({
 const CreateProject = async (req, res) => {
   // #swagger.tags = ['Project apis']
   // #swagger.description = 'Endpoint Porjects either PFA , PFE or stage management and creation '
-
-
 
   try {
     const {
@@ -34,13 +32,17 @@ const CreateProject = async (req, res) => {
       isValidatedByReponsable,
     } = req.body;
 
-    const existProject = await ProjectModel.findOne({ encadrants, students, startDate });
+    const existProject = await ProjectModel.findOne({
+      encadrants,
+      students,
+      startDate,
+    });
     if (existProject)
       return res.status(409).json({
         Message: "Project already exist",
         Success: false,
       });
-    console.log(req.params)
+    console.log(req.params);
     const newProject = new ProjectModel({
       title: title,
       description: description,
@@ -56,70 +58,61 @@ const CreateProject = async (req, res) => {
     console.log("######[" + JSON.stringify(newProject) + "]######:");
 
     switch (type) {
-      case ('PFA'):
+      case "PFA":
         {
           //verify if teacher
 
-
           const createdProject = await newProject.save();
           return res.status(200).json({
             Message: "Project created suucessfully",
             Success: true,
             data: createdProject,
           });
-
         }
         break;
-      case ('PFE'):
+      case "PFE":
         {
-
           const createdProject = await newProject.save();
           return res.status(200).json({
             Message: "Project created suucessfully",
             Success: true,
             data: createdProject,
           });
-
         }
         break;
-      //stage 
-      default:
-        {
-
-          const createdProject = await newProject.save();
-          return res.status(200).json({
-            Message: "Project created suucessfully",
-            Success: true,
-            data: createdProject,
-          });
-        }
+      //stage
+      default: {
+        const createdProject = await newProject.save();
+        return res.status(200).json({
+          Message: "Project created suucessfully",
+          Success: true,
+          data: createdProject,
+        });
+      }
     }
-
-
   } catch (error) {
     console.log("##########:", error);
     res.status(500).send({ Message: "Server Error", Error: error.message });
   }
 };
 
-
-const saveTechnologies=async(technologies)=>{
-  //check if list technologies items exist else save it to db 
-  technologies.forEach(async(element) => {
-    const existTechnologie=await TechnologieModel.findOne({title:element});
-    if(!existTechnologie)
-   {
-    const newTechnologie = new TechnologieModel({
-     title: element
-     });
-     const createdTechnologie = await newTechnologie.save();
-   }});
-}
+const saveTechnologies = async (technologies) => {
+  //check if list technologies items exist else save it to db
+  technologies.forEach(async (element) => {
+    const existTechnologie = await TechnologieModel.findOne({ title: element });
+    if (!existTechnologie) {
+      const newTechnologie = new TechnologieModel({
+        title: element,
+      });
+      const createdTechnologie = await newTechnologie.save();
+    }
+  });
+};
 
 const CreatePFA = async (req, res) => {
-// #swagger.tags = ['Project apis']
+  // #swagger.tags = ['Project apis']
   // #swagger.description = 'Endpoint create stage PFA by teahchers only '
- try {
+  try {
     const {
       title,
       description,
@@ -130,7 +123,7 @@ const CreatePFA = async (req, res) => {
       startDate,
       endDate,
     } = req.body;
-   await saveTechnologies(technologies);
+    await saveTechnologies(technologies);
 
     const newProject = new ProjectModel({
       title: title,
@@ -143,26 +136,18 @@ const CreatePFA = async (req, res) => {
       endDate: endDate,
     });
 
-
     const createdProject = await newProject.save();
     return res.status(200).json({
       Message: "Project PFE created suucessfully",
       Success: true,
       data: createdProject,
     });
-
-  }
-  catch (error) {
-
-  }
-}
-
+  } catch (error) {}
+};
 
 const CreatePFE = async (req, res) => {
-// #swagger.tags = ['Project apis']
+  // #swagger.tags = ['Project apis']
   // #swagger.description = 'Endpoint Create stage PFE '
-
-
 
   try {
     const {
@@ -181,7 +166,6 @@ const CreatePFE = async (req, res) => {
 
     await saveTechnologies(technologies);
 
-
     const newProject = new ProjectModel({
       title: title,
       description: description,
@@ -193,25 +177,18 @@ const CreatePFE = async (req, res) => {
       endDate: endDate,
     });
 
-
     const createdProject = await newProject.save();
     return res.status(200).json({
       Message: "Project PFE created suucessfully",
       Success: true,
       data: createdProject,
     });
-
-  }
-  catch (error) {
-
-  }
-}
+  } catch (error) {}
+};
 
 const CreateStage = async (req, res) => {
-
   // #swagger.tags = ['Project apis']
   // #swagger.description = 'Endpoint Create Stage'
-
 
   try {
     const {
@@ -227,7 +204,6 @@ const CreateStage = async (req, res) => {
 
     await saveTechnologies(technologies);
 
-
     const newProject = new ProjectModel({
       title: title,
       description: description,
@@ -239,46 +215,23 @@ const CreateStage = async (req, res) => {
       endDate: endDate,
     });
 
-
     const createdProject = await newProject.save();
     return res.status(200).json({
       Message: "Project PFE created suucessfully",
       Success: true,
       data: createdProject,
     });
-
-  }
-  catch (error) {
-
-  }
-}
+  } catch (error) {}
+};
 
 const GetProjectsContainingTechnologies = async (req, res) => {
   // #swagger.tags = ['Project apis']
   // #swagger.description = 'Endpoint retun list projects by given technologies '
 
   try {
-    const listProjects = await ProjectModel.find({ technologies: { $all: req.body.technologies } });
-    return res
-      .status(200)
-      .json({ Message: "Projects found successfully ", data: listProjects });
-  }
-  catch (error) {
-    console.log("#####[ERROR]##### : ", error);
-    res.status(500).send({ Message: "Server Error", Error: error.message });
-  }
-}
-
-
-const GetProjectsByListTeachers = async (req, res) => {
-  // #swagger.tags = ['Project apis']
-  // #swagger.description = 'Endpoint retun list projects teachers  '
-
-
-
-  try {
-    //list of projects containing all items if list teacher ids 
-    const listProjects = await ProjectModel.find({ encadrants: { $all: req.body.teachers } });
+    const listProjects = await ProjectModel.find({
+      technologies: { $all: req.body.technologies },
+    });
     return res
       .status(200)
       .json({ Message: "Projects found successfully ", data: listProjects });
@@ -286,15 +239,34 @@ const GetProjectsByListTeachers = async (req, res) => {
     console.log("#####[ERROR]##### : ", error);
     res.status(500).send({ Message: "Server Error", Error: error.message });
   }
-}
+};
 
-const GetAllProjects = async (req, res) => {
-
+const GetProjectsByListTeachers = async (req, res) => {
   // #swagger.tags = ['Project apis']
-  // #swagger.description = 'Endpoint retun all projects list '
+  // #swagger.description = 'Endpoint retun list projects teachers  '
 
   try {
-    const Projects = await ProjectModel.find();
+    //list of projects containing all items if list teacher ids
+    const listProjects = await ProjectModel.find({
+      encadrants: { $all: req.body.teachers },
+    });
+    return res
+      .status(200)
+      .json({ Message: "Projects found successfully ", data: listProjects });
+  } catch (error) {
+    console.log("#####[ERROR]##### : ", error);
+    res.status(500).send({ Message: "Server Error", Error: error.message });
+  }
+};
+
+const GetAllProjects = async (req, res) => {
+  // #swagger.tags = ['Project apis']
+  // #swagger.description = 'Endpoint retun all projects list '
+  const { saison } = req.query;
+  let filter = filt_year_parser({}, saison);
+
+  try {
+    const Projects = await ProjectModel.find(filter);
     return res
       .status(200)
       .json({ Message: "Projects found successfully ", data: Projects });
@@ -309,8 +281,10 @@ const GetAllProjectsByType = async (req, res) => {
   // #swagger.tags = ['Project apis']
   // #swagger.description = 'Endpoint return  projects list by given type'
   // #swagger.parameters['type'] = { description: 'type of projects to return  .' }
+  const { saison } = req.query;
+  let filter = filt_year_parser({ type }, saison);
   try {
-    const Projects = await ProjectModel.find({ type });
+    const Projects = await ProjectModel.find(filter);
     return res
       .status(200)
       .json({ Message: "Projects found successfully ", data: Projects });
@@ -320,7 +294,6 @@ const GetAllProjectsByType = async (req, res) => {
   }
 };
 
-
 const AffectStudentToProject = async (req, res) => {
   // #swagger.tags = ['Project apis']
   // #swagger.description = 'assign student to project'
@@ -329,14 +302,12 @@ const AffectStudentToProject = async (req, res) => {
   var idStudentObj = mongoose.Types.ObjectId(idStudent);
 
   try {
-
-    const project=await ProjectModel.findOne({_id});
-    if(project.nbr_students_max<=project.students.length)
-    //test of project max number of students reached
-    {
+    const project = await ProjectModel.findOne({ _id });
+    if (project.nbr_students_max <= project.students.length) {
+      //test of project max number of students reached
       return res
-    .status(400)
-    .json({ Message: "Student max number reached", data: null });
+        .status(400)
+        .json({ Message: "Student max number reached", data: null });
     }
     const affectStudent = await ProjectModel.findOneAndUpdate(
       { _id },
@@ -346,7 +317,8 @@ const AffectStudentToProject = async (req, res) => {
         },
       },
       { new: true } // return new project with update
-    ); if (!affectStudent) {
+    );
+    if (!affectStudent) {
       return res.status(400).json({
         Message: "Failed to affect student to project",
         Success: false,
@@ -360,9 +332,7 @@ const AffectStudentToProject = async (req, res) => {
     console.log("##########:", error);
     res.status(500).send({ Message: "Server Error", Error: error.message });
   }
-
-
-}
+};
 
 const AffectTeacherToProject = async (req, res) => {
   // #swagger.tags = ['Project apis']
@@ -380,7 +350,8 @@ const AffectTeacherToProject = async (req, res) => {
         },
       },
       { new: true } // return new project with update
-    ); if (!affectedTeacher) {
+    );
+    if (!affectedTeacher) {
       return res.status(400).json({
         Message: "Failed to affect student to project",
         Success: false,
@@ -394,109 +365,110 @@ const AffectTeacherToProject = async (req, res) => {
     console.log("##########:", error);
     res.status(500).send({ Message: "Server Error", Error: error.message });
   }
+};
 
-
-}
-
-
-const validateProject=async(req,res)=>{
+const validateProject = async (req, res) => {
   // #swagger.tags = ['Project apis']
   // #swagger.description = 'validation of a  project by responsable eitehr validation is true or false and giving double note'
-        // #swagger.parameters['idProject'] = { description: 'project to validate' }
-        // #swagger.parameters['note'] = { description: 'project note ( mention calculated based on note )' }
+  // #swagger.parameters['idProject'] = { description: 'project to validate' }
+  // #swagger.parameters['note'] = { description: 'project note ( mention calculated based on note )' }
 
-
-const {idProject,note,isValidated}=req.params;
-var mention="";
-switch(true){
-  case Math.trunc(note)<=9:mention="Ajourné";
-    break;
-    case Math.trunc(note)<=11:mention="Passable";
-    break;
-    case Math.trunc(note)<=13:mention="Assez bien";
-    break;
-    case Math.trunc(note)<=15:mention="Bien";
-    break;
-    case Math.trunc(note)<=17:mention="Trés bien";
-    break;
-    case Math.trunc(note)<=20:mention="Excellent";
-    break;
+  const { idProject, note, isValidated } = req.params;
+  var mention = "";
+  switch (true) {
+    case Math.trunc(note) <= 9:
+      mention = "Ajourné";
+      break;
+    case Math.trunc(note) <= 11:
+      mention = "Passable";
+      break;
+    case Math.trunc(note) <= 13:
+      mention = "Assez bien";
+      break;
+    case Math.trunc(note) <= 15:
+      mention = "Bien";
+      break;
+    case Math.trunc(note) <= 17:
+      mention = "Trés bien";
+      break;
+    case Math.trunc(note) <= 20:
+      mention = "Excellent";
+      break;
     default:
-      mention="UNKOWN";
-}
+      mention = "UNKOWN";
+  }
 
-try {
-  const _id=idProject;
-  const affectedTeacher = await ProjectModel.findOneAndUpdate(
-    { _id },
+  try {
+    const _id = idProject;
+    const affectedTeacher = await ProjectModel.findOneAndUpdate(
+      { _id },
+      {
+        $set: {
+          isValidatedByReponsable: isValidated,
+          note: note,
+          mention: mention,
+        },
+      },
+      { new: true } // return new project with update
+    );
+    if (!affectedTeacher) {
+      return res.status(400).json({
+        Message: "Failed to validate project",
+        Success: false,
+        data: false,
+      });
+    }
+    return res
+      .status(200)
+      .json({
+        Message: "project validated successfully",
+        data: affectedTeacher,
+      });
+  } catch (error) {
+    console.log("##########:", error);
+    res.status(500).send({ Message: "Server Error", Error: error.message });
+  }
+};
+
+const getStatProjects = async (req, res) => {
+  // #swagger.tags = ['Project apis']
+  // #swagger.description = 'validation of a  project by responsable eitehr validation is true or false and giving double note'
+  // #swagger.parameters['critere'] = { description: 'critere de groupement' }
+
+  const { critere } = req.params;
+  const stat = await ProjectModel.aggregate([
     {
-      $set: {
-        isValidatedByReponsable: isValidated,
-        note:note,
-        mention:mention
+      $lookup: {
+        from: "users",
+        localField: "students",
+        foreignField: "_id",
+        as: "studentsList",
       },
     },
-    { new: true } // return new project with update
-  ); if (!affectedTeacher) {
-    return res.status(400).json({
-      Message: "Failed to validate project",
-      Success: false,
-      data: false,
-    });
-  }
-  return res
-    .status(200)
-    .json({ Message: "project validated successfully", data: affectedTeacher });
-} catch (error) {
-  console.log("##########:", error);
-  res.status(500).send({ Message: "Server Error", Error: error.message });
-}
-
-}
-
-
-
-const getStatProjects=async(req,res)=>{
-  // #swagger.tags = ['Project apis']
-  // #swagger.description = 'validation of a  project by responsable eitehr validation is true or false and giving double note'
-        // #swagger.parameters['critere'] = { description: 'critere de groupement' }
-
-
-  const {critere}=req.params;
-      const stat=await ProjectModel.aggregate([
-        {  $lookup: {
-          from: 'users',
-          localField: 'students',
-          foreignField: '_id',
-          as: 'studentsList',
-         
-  
-      },},
-        {$match: {students: { $exists: true, $not: { $size: 0 } }} },
+    { $match: { students: { $exists: true, $not: { $size: 0 } } } },
     //  {$unwind: '$studentsList'},
 
     {
-      $group:
-         {
-             _id: `$${critere=="promotion"?"studentsList.promotion":critere=="technologie"?"technologies":"societe"}`,
-             noteMoy:
-                {
-                   $avg: "$note"
-                }
-         }
-   },
-      ])
-      return res.status(200).json({
-        Message: "list not empty",
-        Success: true,
-        data: stat,
-    });
-    
-}
-
-
-
-
+      $group: {
+        _id: `$${
+          critere == "promotion"
+            ? "studentsList.promotion"
+            : critere == "technologie"
+            ? "technologies"
+            : "societe"
+        }`,
+        noteMoy: {
+          $avg: "$note",
+        },
+      },
+    },
+  ]);
+  return res.status(200).json({
+    Message: "list not empty",
+    Success: true,
+    data: stat,
+  });
+};
 
 module.exports = {
   CreateProject,
@@ -510,5 +482,5 @@ module.exports = {
   CreatePFE,
   CreateStage,
   validateProject,
-  getStatProjects
+  getStatProjects,
 };
