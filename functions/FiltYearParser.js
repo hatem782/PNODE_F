@@ -1,11 +1,9 @@
 const SaisonModel = require("../models/saison.model");
 
 exports.filt_year_parser = async (params, saison) => {
-  const { startDate, endDate } = await SaisonModel.findOne({ title: saison });
-  console.log({ startDate, endDate });
-  if (saison) {
-    let start = saison.split("-")[0];
-    let end = saison.split("-")[1];
+  let allSdata = await SaisonModel.findOne({ title: saison });
+  if (allSdata) {
+    const { startDate, endDate } = allSdata;
     return {
       createdAt: {
         $gte: new Date(startDate),

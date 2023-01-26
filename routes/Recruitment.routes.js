@@ -7,7 +7,7 @@ const verifToken = require("../middlewares/VerifToken");
 
 router.post(
   "/create",
-  verifToken.isAdmin,
+  verifToken.isAluminie,
   recruitmentValidations.validationAskingRecruitment,
   RecruitmentController.askingForRecruitment
 );
@@ -20,6 +20,7 @@ router.get(
 );
 router.get(
   "/GetAllExpertRecruitment",
+  verifToken.isAdmin,
   RecruitmentController.GetAllExpertRecruitment
 );
 
