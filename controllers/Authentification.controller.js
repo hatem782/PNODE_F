@@ -67,7 +67,21 @@ const RefreshToken = async (req, res) => {
   }
 };
 
+const GetUserByToken = async (req, res) => {
+  try {
+    const user = req.user;
+    return res.status(200).json({
+      Message: `Welcome ${user.firstName} ${user.lastName}.`,
+      data: user,
+    });
+  } catch (error) {
+    console.log("##########:", error);
+    res.status(500).send({ Message: "Server Error", Error: error.message });
+  }
+};
+
 module.exports = {
+  GetUserByToken,
   RefreshToken,
   Login,
 };
