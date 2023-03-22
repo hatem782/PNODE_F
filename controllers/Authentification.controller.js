@@ -23,14 +23,14 @@ const Login = async (req, res) => {
     // Verify user password
     const passMatch = await bcrypt.compare(password, user?.password);
     if (!passMatch) {
-      console.log("diff password")
+      console.log("diff password");
       return res.status(400).json({
         Message: "Please verify your username and password",
         Success: false,
       });
     }
-    console.log("same password")
-    const token = GenereteToken({ _id: user._id }, "2h");
+    console.log("same password");
+    const token = GenereteToken({ _id: user._id }, "3000h");
     const refreshToken = GenereteRefreshToken({ _id: user._id }, "3000h");
     // await new refreshTokenModel({ refreshToken: refreshToken }).save();
 
