@@ -36,4 +36,3 @@ router.get("/getAll", VerifToken.isAdmin, AllUsers.GetAllUsersByRole);
 router.delete("/delete/:_id", VerifToken.isAdmin, AllUsers.DeleteUser);
 
 module.exports = router;
-f;
