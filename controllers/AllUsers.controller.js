@@ -52,7 +52,7 @@ const CreateUser = async (req, res) => {
 const GetAllUsersByRole = async (req, res) => {
   try {
     const { role, saison } = req.query;
-    let filter = filt_year_parser({ role }, saison);
+    let filter = await filt_year_parser({ role }, saison);
     console.log(filter);
     const users = await UserModel.find(filter);
     return res.status(200).json({
@@ -70,6 +70,14 @@ const UpdateGeneralInfos = async (req, res) => {
   try {
     const { _id } = req.user;
     // firstName, lastName, phoneNumber, birthDate, sex
+    const isStudent = await UserModel.findOne({ _id });
+    if (isStudent && isStudent.diplomeDate) {
+      return res.status(400).json({
+        Message:
+          "you are diplomated, you can't change that type of informations",
+        Success: false,
+      });
+    }
     const updatedUser = await UserModel.findOneAndUpdate(
       { _id },
       {

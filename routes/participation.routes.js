@@ -14,7 +14,7 @@ router.post(
 // student aluminie
 router.put(
   "/updateConfirmation/:_idEvent",
-  verifToken.isAluminie,
+  verifToken.isUser,
   ParticipationController.UpdateConfirmation
 );
 //Admin

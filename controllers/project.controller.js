@@ -263,7 +263,7 @@ const GetAllProjects = async (req, res) => {
   // #swagger.tags = ['Project apis']
   // #swagger.description = 'Endpoint retun all projects list '
   const { saison } = req.query;
-  let filter = filt_year_parser({}, saison);
+  let filter = await filt_year_parser({}, saison);
 
   try {
     const Projects = await ProjectModel.find(filter);
@@ -282,7 +282,7 @@ const GetAllProjectsByType = async (req, res) => {
   // #swagger.description = 'Endpoint return  projects list by given type'
   // #swagger.parameters['type'] = { description: 'type of projects to return  .' }
   const { saison } = req.query;
-  let filter = filt_year_parser({ type }, saison);
+  let filter = await filt_year_parser({ type }, saison);
   try {
     const Projects = await ProjectModel.find(filter);
     return res

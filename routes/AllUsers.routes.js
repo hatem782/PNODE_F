@@ -9,6 +9,12 @@ const Authentification = require("../controllers/Authentification.controller");
 router.post("/login", validator.LoginUserValidation, Authentification.Login);
 // ################## refresh token API
 router.post("/refreshtoken", Authentification.RefreshToken);
+// ################## get user by token API
+router.get(
+  "/get_user_by_token",
+  VerifToken.isUser,
+  Authentification.GetUserByToken
+);
 
 // ################ Updates ################
 router.put("/change_pass", VerifToken.isUser, AllUsers.ChangePassword);

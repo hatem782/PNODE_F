@@ -11,7 +11,6 @@ const offerModel = new Schema(
     offerType: {
       type: String,
       enum: ["Conseil", "Offre", "Opportunité", "Offre d'emploi"],
-      default: "JPO",
       required: true,
     },
     description: {
