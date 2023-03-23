@@ -418,12 +418,10 @@ const validateProject = async (req, res) => {
         data: false,
       });
     }
-    return res
-      .status(200)
-      .json({
-        Message: "project validated successfully",
-        data: affectedTeacher,
-      });
+    return res.status(200).json({
+      Message: "project validated successfully",
+      data: affectedTeacher,
+    });
   } catch (error) {
     console.log("##########:", error);
     res.status(500).send({ Message: "Server Error", Error: error.message });

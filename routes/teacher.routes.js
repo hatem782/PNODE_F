@@ -20,5 +20,6 @@ router.post(
   validator.createTeacherValidation,
   AllUsers.CreateUser
 );
+router.get("/get_all", TeacherController.GetAllTeacher);
 
 module.exports = router;
