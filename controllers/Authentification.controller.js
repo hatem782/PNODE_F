@@ -23,12 +23,14 @@ const Login = async (req, res) => {
     // Verify user password
     const passMatch = await bcrypt.compare(password, user?.password);
     if (!passMatch) {
+      console.log("diff password");
       return res.status(400).json({
         Message: "Please verify your username and password",
         Success: false,
       });
     }
-    const token = GenereteToken({ _id: user._id }, "2h");
+    console.log("same password");
+    const token = GenereteToken({ _id: user._id }, "3000h");
     const refreshToken = GenereteRefreshToken({ _id: user._id }, "3000h");
     // await new refreshTokenModel({ refreshToken: refreshToken }).save();
 
@@ -67,7 +69,21 @@ const RefreshToken = async (req, res) => {
   }
 };
 
+const GetUserByToken = async (req, res) => {
+  try {
+    const user = req.user;
+    return res.status(200).json({
+      Message: `Welcome ${user.firstName} ${user.lastName}.`,
+      data: user,
+    });
+  } catch (error) {
+    console.log("##########:", error);
+    res.status(500).send({ Message: "Server Error", Error: error.message });
+  }
+};
+
 module.exports = {
+  GetUserByToken,
   RefreshToken,
   Login,
 };

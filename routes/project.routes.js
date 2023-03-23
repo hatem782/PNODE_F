@@ -2,33 +2,33 @@ const express = require("express");
 const router = express.Router();
 const ProjectController = require("../controllers/Project.controller");
 const VerifToken = require("../middlewares/VerifToken");
-//const validator = require("../validations/projectValidations");
+// const validator = require("../validations/projectValidations");
 
 router.post("/create", ProjectController.CreateProject);
 router.post(
   "/create/PFE",
-  // validator.validateCreatePFE,
+  //   validator.validateCreatePFE,
   VerifToken.isUser,
   ProjectController.CreatePFE
 );
 
 router.post(
   "/create/Stage",
-  //  validator.validateCreateStage,
+  //   validator.validateCreateStage,
   VerifToken.isTeacher,
   ProjectController.CreateStage
 );
 
 router.post(
   "/create/PFA",
-  //  validator.validateCreatePFA,
+  //   validator.validateCreatePFA,
   VerifToken.isTeacher,
   ProjectController.CreatePFA
 );
 
 router.post(
   "/validate/:idProject/:isValidated/:note",
-  //  VerifToken.isResponsible,
+  //VerifToken.isResponsible,
   ProjectController.validateProject
 );
 

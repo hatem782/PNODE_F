@@ -7,6 +7,8 @@
 .package-lock.json
 # testing
 /coverage
+.env
+swagger_output.json
 
 # next.js
 /.next/
@@ -19,7 +21,7 @@
 # misc
 .DS_Store
 *.pem
-
+package-lock.json
 # debug
 npm-debug.log*
 yarn-debug.log*

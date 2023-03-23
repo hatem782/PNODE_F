@@ -1300,6 +1300,24 @@
           }
         }
       }
+    },
+    "/employement/getAluminiStats/{critere}": {
+      "get": {
+        "description": "",
+        "parameters": [
+          {
+            "name": "critere",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
     }
   },
   "definitions": {
