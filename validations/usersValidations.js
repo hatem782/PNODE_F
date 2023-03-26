@@ -65,14 +65,16 @@ const LoginUserValidation = (req, res, next) => {
 const validationCreateStudent = Joi.object({
   firstName: Joi.string().required(),
   lastName: Joi.string(),
-  birthDate: Joi.string(),
+  birthDate: Joi.date()
+    .less(`${new Date().getFullYear() - 17}-01-01`)
+    .greater(`${new Date().getFullYear() - 26}-01-01`),
   phoneNumber: Joi.number().integer(),
   sex: Joi.string().valid("MEN", "WOMEN"),
   email: Joi.string().required().email(),
-  classe: Joi.string().required(),
-  niveau: Joi.string().required(),
-  numero_classe: Joi.number(),
   promotion: Joi.string().required(),
+  classe: Joi.string().required(),
+  niveau: Joi.number().required(),
+  numero_classe: Joi.number(),
 });
 
 const createStudentValidation = (req, res, next) => {
