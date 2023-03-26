@@ -66,7 +66,25 @@ const UpdateTeacherToResp = async (req, res) => {
   }
 };
 
+const GetAllTeacher = async (req, res) => {
+  try {
+    const teachers = await UserModel.find({
+      role: "TEACHER",
+    });
+
+    return res.status(200).json({
+      Message: "Teacher found succesfully",
+      Success: true,
+      data: teachers,
+    });
+  } catch (error) {
+    console.log("##########:", error);
+    res.status(500).send({ Message: "Server Error", Error: error.message });
+  }
+};
+
 module.exports = {
   UpdateTeacherCourse,
   UpdateTeacherToResp,
+  GetAllTeacher,
 };
