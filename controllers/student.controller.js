@@ -24,6 +24,25 @@ const GetAllPublicAccounts = async (req, res) => {
   }
 };
 
+const GetAllAccounts = async (req, res) => {
+  try {
+    const allpublicStrudents = await UserModel.find({
+      role: "STUDENT",
+    });
+    const allpublicAluminies = await UserModel.find({
+      role: "ALUMINIE",
+    });
+    return res.status(200).json({
+      Message: "All Accounts",
+      Success: true,
+      data: { allpublicStrudents, allpublicAluminies },
+    });
+  } catch (error) {
+    console.log("##########:", error);
+    res.status(500).send({ Message: "Server Error", Error: error.message });
+  }
+};
+
 const RegisterAluminie = async (req, res) => {
   try {
     const { phoneNumber, email, password } = req.body;
@@ -65,7 +84,7 @@ const UpdatePromotion = async (req, res) => {
   try {
     const { _id } = req.params;
     // { classe, niveau, numero_classe, promotion }
-
+    console.log(req.body);
     const updateStudent = await UserModel.findOneAndUpdate(
       { _id },
       {
@@ -91,16 +110,14 @@ const UpdatePromotion = async (req, res) => {
 const BecomeDeplomated = async (req, res) => {
   try {
     const { _id } = req.params;
-    // { promotion, deplome }
-
     const updateStudent = await UserModel.findOneAndUpdate(
       { _id },
       {
         $set: {
           ...req.body,
-          classe: "",
-          niveau: "",
-          numero_classe: "",
+          // classe: "",
+          // niveau: "",
+          // numero_classe: "",
         },
       },
       { new: true }
@@ -292,4 +309,5 @@ module.exports = {
   NotifMailWorkUpdate,
   NotifMailUpdateCompAndProf,
   VerifObtDateDip,
+  GetAllAccounts,
 };

@@ -9,6 +9,13 @@ const VerifToken = require("../middlewares/VerifToken");
 // #################### GET PUBLIC ACCOUNTS #################
 router.get("/getallpublic", StudentController.GetAllPublicAccounts);
 
+// ########## GET All STUDENTS ACCOUNTS BY ALL BUT STU/ALU ###########
+router.get(
+  "/getall",
+  VerifToken.isSuperThanStudent,
+  StudentController.GetAllAccounts
+);
+
 // #################### ALUMINIE ROUTES #################
 router.post(
   "/register_aluminie",
@@ -38,8 +45,16 @@ router.put(
 );
 
 router.put(
+  "/update_student/:_id",
+  VerifToken.isAdmin,
+  validator.createStudentValidation,
+  StudentController.UpdatePromotion
+);
+
+router.put(
   "/become_deplomated/:_id",
   VerifToken.isAdmin,
+  validator.UpdateDiplomeValidation,
   StudentController.BecomeDeplomated
 );
 

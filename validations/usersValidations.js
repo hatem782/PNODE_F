@@ -88,6 +88,24 @@ const createStudentValidation = (req, res, next) => {
   next();
 };
 
+// ############################ UpdateDiplome ############################
+
+const UpdateDiplome = Joi.object({
+  diplome: Joi.string(),
+  diplomeDate: Joi.date(),
+});
+
+const UpdateDiplomeValidation = (req, res, next) => {
+  const validation = UpdateDiplome.validate(req.body);
+  if (validation.error) {
+    return res
+      .status(400)
+      .json({ Message: validation.error.details[0].message, Success: false });
+  }
+  req.body.role = "STUDENT";
+  next();
+};
+
 // ############################ CourseUpdateValidation ############################
 
 const CourseValidation = Joi.object({
@@ -241,6 +259,7 @@ module.exports = {
   createAlumnieValidation,
   updateAlumnieValidation,
   validationGeneralUpdate,
+  UpdateDiplomeValidation,
   CourseUpdateValidation,
   LoginUserValidation,
   UpdateStudentValidationPromotion,

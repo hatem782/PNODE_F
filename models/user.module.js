@@ -39,7 +39,7 @@ const UserModel = new Schema(
     promotion: { type: String, required: false },
     isPublic: { type: Boolean, default: true },
     // ################ ALUMINIE FIELDS ######################
-    diplome: { type: String, required: false, default: "" },
+    diplome: { type: String, required: false, default: "None" },
     diplomeDate: { type: Date, required: false, default: null },
     // ################# TEACHER FIELDS ######################
     course: { type: [String], required: true },
