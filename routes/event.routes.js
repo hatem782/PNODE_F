@@ -6,17 +6,26 @@ const verifToken = require("../middlewares/VerifToken");
 
 router.post(
   "/create",
-  verifToken.isAdmin,
+  verifToken.isSuperadmin,
   eventValidations.createEventValidation,
   EventController.CreateEvent
 );
 router.put(
   "/update/:_id",
-  verifToken.isAdmin,
+  verifToken.isSuperadmin,
   eventValidations.createEventValidation,
   EventController.UpdateEvent
 );
-router.delete("/delete/:_id", verifToken.isAdmin, EventController.DeleteEvent);
-router.get("/getAll", verifToken.isAdmin, EventController.GetAllEvents);
+router.delete(
+  "/delete/:_id",
+  verifToken.isSuperadmin,
+  EventController.DeleteEvent
+);
+router.get("/getAll", verifToken.isSuperadmin, EventController.GetAllEvents);
+router.get(
+  "/getOne/:_id",
+  verifToken.isSuperadmin,
+  EventController.GetOneEvent
+);
 
 module.exports = router;

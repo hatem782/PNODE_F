@@ -30,8 +30,11 @@ const Login = async (req, res) => {
       });
     }
     console.log("same password");
-    const token = GenereteToken({ _id: user._id }, "3000h");
-    const refreshToken = GenereteRefreshToken({ _id: user._id }, "3000h");
+    const token = GenereteToken({ _id: user._id }, process.env.TOKEN_TIME);
+    const refreshToken = GenereteRefreshToken(
+      { _id: user._id },
+      process.env.REFRESH_TOKEN_TIME
+    );
     // await new refreshTokenModel({ refreshToken: refreshToken }).save();
 
     return res.status(200).json({
@@ -58,10 +61,10 @@ const RefreshToken = async (req, res) => {
         return res.status(401).json({ err: "RefreshToken expired ! " });
       }
       // find in DB
-      console.log(user);
       delete user.iat;
       delete user.exp;
-      const accessToken = GenereteToken(user, "3600s");
+      const accessToken = GenereteToken(user, process.env.TOKEN_TIME);
+
       res.send({
         token: accessToken,
       });

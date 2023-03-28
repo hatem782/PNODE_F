@@ -3,9 +3,12 @@ const { filt_year_parser } = require("../functions/FiltYearParser");
 
 const CreateEvent = async (req, res) => {
   try {
-    const { eventDate, eventType } = req.body;
+    const { eventDateDebut, eventDateFin, eventType } = req.body;
 
-    const existEvent = await EventModel.findOne({ eventDate, eventType });
+    const existEvent = await EventModel.findOne({
+      eventDateDebut,
+      eventType,
+    });
     if (existEvent)
       return res.status(409).json({
         Message: "Event already exist",
@@ -27,13 +30,15 @@ const CreateEvent = async (req, res) => {
 const UpdateEvent = async (req, res) => {
   try {
     const { _id } = req.params;
-    const { eventDate, eventType, description, eventName } = req.body;
+    const { eventDateDebut, eventDateFin, eventType, description, eventName } =
+      req.body;
 
     const updateEvent = await EventModel.findOneAndUpdate(
       { _id },
       {
         $set: {
-          eventDate,
+          eventDateDebut,
+          eventDateFin,
           eventType,
           description,
           eventName,
@@ -86,9 +91,24 @@ const GetAllEvents = async (req, res) => {
   }
 };
 
+const GetOneEvent = async (req, res) => {
+  try {
+    const { _id } = req.params;
+
+    const Event = await EventModel.findOne({ _id });
+    return res
+      .status(200)
+      .json({ Message: "Event found successfully ", data: Event });
+  } catch (error) {
+    console.log("##########:", error);
+    res.status(500).send({ Message: "Server Error", Error: error.message });
+  }
+};
+
 module.exports = {
   CreateEvent,
   UpdateEvent,
   DeleteEvent,
   GetAllEvents,
+  GetOneEvent,
 };

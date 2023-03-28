@@ -27,7 +27,7 @@ const CreateUser = async (req, res) => {
     });
     const createdUser = await newUser.save();
 
-    let subject = "Authentication information";
+    /* let subject = "Authentication information";
     let content = `
     <div>
     <h2>Welcome ${firstName} ${lastName} to our plateforme</h2>
@@ -36,7 +36,7 @@ const CreateUser = async (req, res) => {
     <p>your M-D-P is : <b>${phoneNumber}</b> </p>
     <p>please make sure to change your password after you access to your account</p>
     </div>`;
-    await Mailer.Mail_Sender(email, content, subject);
+    await Mailer.Mail_Sender(email, content, subject);*/
 
     return res.status(200).json({
       Message: "user created suucessfully",

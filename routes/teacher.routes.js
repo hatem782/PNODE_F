@@ -16,10 +16,18 @@ router.put(
 // ################ ONLY BY ADMIN ################
 router.post(
   "/create",
-  VerifToken.isAdmin,
+  VerifToken.isSuperadmin,
   validator.createTeacherValidation,
   AllUsers.CreateUser
 );
-router.get("/get_all", TeacherController.GetAllTeacher);
-
+router.get(
+  "/get_all",
+  VerifToken.isSuperadmin,
+  TeacherController.GetAllTeacher
+);
+router.put(
+  "/update_info/:_id",
+  VerifToken.isSuperadmin,
+  TeacherController.UpdateTeacherToResp
+);
 module.exports = router;

@@ -33,21 +33,10 @@ const UpdateTeacherToResp = async (req, res) => {
   try {
     const { _id } = req.params;
 
-    const teacher = await UserModel.findOne({ _id });
-
-    if (!teacher) {
-      return res.status(400).json({
-        Message: "teacher not found",
-        Success: false,
-      });
-    }
-
     const updateTeacher = await UserModel.findOneAndUpdate(
       { _id },
       {
-        $set: {
-          isResponsable: !teacher.isResponsable,
-        },
+        $set: req.body,
       },
       { new: true } // return new teacher with update
     );
