@@ -2,21 +2,33 @@
   "name": "hatem---farah",
   "version": "1.0.0",
   "description": "",
-  "main": "index.js",
+  "main": "server.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "nodemon server.js",
+    "swagger-autogen": "node Swagger/swagger.js"
   },
   "author": "",
   "license": "ISC",
   "dependencies": {
     "bcrypt": "^5.1.0",
+    "cloudinary": "^1.32.0",
     "cookie-parser": "^1.4.6",
     "cors": "^2.8.5",
     "dotenv": "^16.0.3",
     "express": "^4.18.2",
+    "express-fileupload": "^1.4.0",
     "joi": "^17.7.0",
     "jsonwebtoken": "^8.5.1",
     "mongoose": "^6.7.3",
-    "nodemailer": "^6.8.0"
+    "mongoose-to-swagger": "^1.4.0",
+    "multer": "^1.4.5-lts.1",
+    "node-cron": "^3.0.2",
+    "nodemailer": "^6.8.0",
+    "read-excel-file": "^5.5.3",
+    "streamifier": "^0.1.1",
+    "swagger-autogen": "^2.22.0",
+    "swagger-jsdoc": "^6.2.5",
+    "swagger-ui-express": "^4.6.0"
   }
 }

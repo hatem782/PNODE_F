@@ -5,7 +5,7 @@ const ParticipationModel = new Schema(
   {
     studentId: {
       type: mongoose.Schema.Types.ObjectId,
-      ref: "Student",
+      ref: "User",
       required: true,
     },
     eventId: {
@@ -17,6 +17,17 @@ const ParticipationModel = new Schema(
       type: Boolean,
       required: true,
       default: false,
+    },
+
+    isInvitation: {
+      type: Boolean,
+      required: true,
+      default: false,
+    },
+    location: {
+      type: String,
+      required: true,
+      default: "ISAMM",
     },
   },
   {

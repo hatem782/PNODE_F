@@ -1,4 +1,3 @@
-const { required, string } = require("joi");
 const mongoose = require("mongoose");
 const Schema = mongoose.Schema;
 
@@ -8,19 +7,41 @@ const EventModel = new Schema(
       type: String,
       required: true,
     },
-    eventDate: {
+    eventDateDebut: {
       type: Date,
       required: true,
     },
+    eventDateFin: {
+      type: Date,
+      required: false,
+    },
     eventType: {
       type: String,
-      enum: ["JPO", "journéé d'integration ", "formation"],
+      enum: ["JPO", "Journée d'integration", "Formation"],
       default: "JPO",
       required: true,
     },
     description: {
       type: String,
       required: true,
+    },
+    location: {
+      type: String,
+      required: true,
+      default: "isamm",
+    },
+    duration: {
+      type: String,
+      required: false,
+    },
+    bgImage: {
+      type: String,
+      required: false,
+      default: "",
+    },
+    organizedBy: {
+      type: String,
+      required: false,
     },
   },
   {

@@ -1,14 +1,61 @@
 const express = require("express");
 const router = express.Router();
 const StudentController = require("../controllers/student.controller");
-const isStudent = require("../middlewares/isStudent");
+const UsersController = require("../controllers/AllUsers.controller");
+const AllUsers = require("../controllers/AllUsers.controller");
+const validator = require("../validations/usersValidations");
+const VerifToken = require("../middlewares/VerifToken");
 
-router.post("/register_aluminie", StudentController.RegisterAluminie);
-router.get("/login", StudentController.StudentLogin);
-router.get("/getAll", StudentController.GetAllStudents);
-router.get("/getOne/:_id", StudentController.GetOneStudent);
-router.delete("/delete/:_id", StudentController.DeleteStudent);
+// #################### GET PUBLIC ACCOUNTS #################
+router.get("/getallpublic", StudentController.GetAllPublicAccounts);
 
-router.put("/update/:_id", isStudent, StudentController.UpdateStudent);
+// ########## GET All STUDENTS ACCOUNTS BY ALL BUT STU/ALU ###########
+router.get(
+  "/getall",
+  VerifToken.isSuperThanStudent,
+  StudentController.GetAllAccounts
+);
+
+// #################### ALUMINIE ROUTES #################
+router.post(
+  "/register_aluminie",
+  validator.createAlumnieValidation,
+  StudentController.RegisterAluminie
+);
+
+// ################ ONLY BY ADMIN ################
+router.post(
+  "/create",
+  VerifToken.isAdmin,
+  validator.createStudentValidation,
+  AllUsers.CreateUser
+);
+
+router.post(
+  "/create_multiple_with_excel",
+  VerifToken.isAdmin,
+  StudentController.CreateStudentsFromExl
+);
+
+router.put(
+  "/change_promotion/:_id",
+  VerifToken.isAdmin,
+  validator.UpdateStudentValidationPromotion,
+  StudentController.UpdatePromotion
+);
+
+router.put(
+  "/update_student/:_id",
+  VerifToken.isAdmin,
+  validator.createStudentValidation,
+  StudentController.UpdatePromotion
+);
+
+router.put(
+  "/become_deplomated/:_id",
+  VerifToken.isAdmin,
+  validator.UpdateDiplomeValidation,
+  StudentController.BecomeDeplomated
+);
 
 module.exports = router;

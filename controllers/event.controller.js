@@ -1,34 +1,20 @@
-const Joi = require("joi");
 const EventModel = require("../models/event.model");
-
-const validationEvent = Joi.object({
-  eventDate: Joi.date().required(),
-  eventType: Joi.string().valid("JPO", "journéé d'integration ", "formation"),
-  description: Joi.string().required(),
-  eventName: Joi.string().required(),
-});
+const { filt_year_parser } = require("../functions/FiltYearParser");
 
 const CreateEvent = async (req, res) => {
   try {
-    const { eventDate, eventType, description, eventName } = req.body;
-    const validation = validationEvent.validate(req.body);
-    if (validation.error)
-      return res
-        .status(400)
-        .json({ Message: validation.error.details[0].message, Success: false });
+    const { eventDateDebut, eventDateFin, eventType } = req.body;
 
-    const existEvent = await EventModel.findOne({ eventDate, eventType });
+    const existEvent = await EventModel.findOne({
+      eventDateDebut,
+      eventType,
+    });
     if (existEvent)
       return res.status(409).json({
         Message: "Event already exist",
         Success: false,
       });
-    const newEvent = new EventModel({
-      eventDate,
-      eventType,
-      description,
-      eventName,
-    });
+    const newEvent = new EventModel(req.body);
     const createdEvent = await newEvent.save();
     return res.status(200).json({
       Message: "Event created suucessfully",
@@ -44,13 +30,15 @@ const CreateEvent = async (req, res) => {
 const UpdateEvent = async (req, res) => {
   try {
     const { _id } = req.params;
-    const { eventDate, eventType, description, eventName } = req.body;
+    const { eventDateDebut, eventDateFin, eventType, description, eventName } =
+      req.body;
 
     const updateEvent = await EventModel.findOneAndUpdate(
       { _id },
       {
         $set: {
-          eventDate,
+          eventDateDebut,
+          eventDateFin,
           eventType,
           description,
           eventName,
@@ -90,11 +78,27 @@ const DeleteEvent = async (req, res) => {
 };
 
 const GetAllEvents = async (req, res) => {
+  const { saison } = req.query;
+  let filter = await filt_year_parser({}, saison);
   try {
-    const Events = await EventModel.find();
+    const Events = await EventModel.find(filter);
     return res
       .status(200)
       .json({ Message: "Events found successfully ", data: Events });
+  } catch (error) {
+    console.log("##########:", error);
+    res.status(500).send({ Message: "Server Error", Error: error.message });
+  }
+};
+
+const GetOneEvent = async (req, res) => {
+  try {
+    const { _id } = req.params;
+
+    const Event = await EventModel.findOne({ _id });
+    return res
+      .status(200)
+      .json({ Message: "Event found successfully ", data: Event });
   } catch (error) {
     console.log("##########:", error);
     res.status(500).send({ Message: "Server Error", Error: error.message });
@@ -106,4 +110,5 @@ module.exports = {
   UpdateEvent,
   DeleteEvent,
   GetAllEvents,
+  GetOneEvent,
 };

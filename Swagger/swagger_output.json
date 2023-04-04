@@ -1,0 +1,1393 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "title": "ISAMM Backend",
+    "description": "This project is a node js backend dedicated to ..",
+    "version": "1.0.0"
+  },
+  "host": "localhost:8085/api",
+  "basePath": "/",
+  "schemes": [
+    "http"
+  ],
+  "paths": {
+    "/student/create": {
+      "post": {
+        "description": "",
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "role": {
+                  "example": "any"
+                },
+                "phoneNumber": {
+                  "example": "any"
+                },
+                "email": {
+                  "example": "any"
+                },
+                "firstName": {
+                  "example": "any"
+                },
+                "lastName": {
+                  "example": "any"
+                }
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "400": {
+            "description": "Bad Request"
+          },
+          "409": {
+            "description": "Conflict"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      }
+    },
+    "/student/change_promotion/{_id}": {
+      "put": {
+        "description": "",
+        "parameters": [
+          {
+            "name": "_id",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "400": {
+            "description": "Bad Request"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      }
+    },
+    "/student/become_deplomated/{_id}": {
+      "put": {
+        "description": "",
+        "parameters": [
+          {
+            "name": "_id",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "400": {
+            "description": "Bad Request"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      }
+    },
+    "/student/register_aluminie": {
+      "post": {
+        "description": "",
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "role": {
+                  "example": "any"
+                },
+                "phoneNumber": {
+                  "example": "any"
+                },
+                "email": {
+                  "example": "any"
+                },
+                "password": {
+                  "example": "any"
+                }
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "400": {
+            "description": "Bad Request"
+          },
+          "409": {
+            "description": "Conflict"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      }
+    },
+    "/teacher/create": {
+      "post": {
+        "description": "",
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "role": {
+                  "example": "any"
+                },
+                "phoneNumber": {
+                  "example": "any"
+                },
+                "email": {
+                  "example": "any"
+                },
+                "firstName": {
+                  "example": "any"
+                },
+                "lastName": {
+                  "example": "any"
+                }
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "400": {
+            "description": "Bad Request"
+          },
+          "409": {
+            "description": "Conflict"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      }
+    },
+    "/teacher/update_course": {
+      "put": {
+        "description": "",
+        "parameters": [
+          {
+            "name": "authorization",
+            "in": "header",
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "302": {
+            "description": "Found"
+          },
+          "400": {
+            "description": "Bad Request"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      }
+    },
+    "/user/login": {
+      "post": {
+        "description": "",
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "userName": {
+                  "example": "any"
+                },
+                "password": {
+                  "example": "any"
+                }
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "400": {
+            "description": "Bad Request"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      }
+    },
+    "/user/update_general": {
+      "put": {
+        "description": "",
+        "parameters": [
+          {
+            "name": "authorization",
+            "in": "header",
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "302": {
+            "description": "Found"
+          },
+          "400": {
+            "description": "Bad Request"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      }
+    },
+    "/user/delete/{_id}": {
+      "delete": {
+        "description": "",
+        "parameters": [
+          {
+            "name": "_id",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "400": {
+            "description": "Bad Request"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      }
+    },
+    "/user/getAll": {
+      "get": {
+        "description": "",
+        "parameters": [
+          {
+            "name": "role",
+            "in": "query",
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      }
+    },
+    "/user/profile_img": {
+      "put": {
+        "description": "",
+        "parameters": [
+          {
+            "name": "authorization",
+            "in": "header",
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "302": {
+            "description": "Found"
+          },
+          "400": {
+            "description": "Bad Request"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      }
+    },
+    "/user/change_pass": {
+      "put": {
+        "description": "",
+        "parameters": [
+          {
+            "name": "authorization",
+            "in": "header",
+            "type": "string"
+          },
+          {
+            "name": "body",
+            "in": "body",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "password": {
+                  "example": "any"
+                },
+                "oldpassword": {
+                  "example": "any"
+                },
+                "confpassword": {
+                  "example": "any"
+                }
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "302": {
+            "description": "Found"
+          },
+          "400": {
+            "description": "Bad Request"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      }
+    },
+    "/user/change_mail": {
+      "put": {
+        "description": "",
+        "parameters": [
+          {
+            "name": "authorization",
+            "in": "header",
+            "type": "string"
+          },
+          {
+            "name": "body",
+            "in": "body",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "email": {
+                  "example": "any"
+                }
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "302": {
+            "description": "Found"
+          },
+          "400": {
+            "description": "Bad Request"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "406": {
+            "description": "Not Acceptable"
+          },
+          "409": {
+            "description": "Conflict"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      }
+    },
+    "/user/forget_pass": {
+      "put": {
+        "description": "",
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "email": {
+                  "example": "any"
+                }
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "400": {
+            "description": "Bad Request"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      }
+    },
+    "/user/pub_priv": {
+      "put": {
+        "description": "",
+        "parameters": [
+          {
+            "name": "authorization",
+            "in": "header",
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "302": {
+            "description": "Found"
+          },
+          "400": {
+            "description": "Bad Request"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      }
+    },
+    "/event/create": {
+      "post": {
+        "description": "",
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "eventDate": {
+                  "example": "any"
+                },
+                "eventType": {
+                  "example": "any"
+                },
+                "description": {
+                  "example": "any"
+                },
+                "eventName": {
+                  "example": "any"
+                }
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "400": {
+            "description": "Bad Request"
+          },
+          "409": {
+            "description": "Conflict"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      }
+    },
+    "/event/update/{_id}": {
+      "put": {
+        "description": "",
+        "parameters": [
+          {
+            "name": "_id",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "body",
+            "in": "body",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "eventDate": {
+                  "example": "any"
+                },
+                "eventType": {
+                  "example": "any"
+                },
+                "description": {
+                  "example": "any"
+                },
+                "eventName": {
+                  "example": "any"
+                }
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "400": {
+            "description": "Bad Request"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      }
+    },
+    "/event/delete/{_id}": {
+      "delete": {
+        "description": "",
+        "parameters": [
+          {
+            "name": "_id",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "400": {
+            "description": "Bad Request"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      }
+    },
+    "/event/getAll": {
+      "get": {
+        "description": "",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      }
+    },
+    "/participation/create/{_idEvent}": {
+      "post": {
+        "description": "",
+        "parameters": [
+          {
+            "name": "_idEvent",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "authorization",
+            "in": "header",
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "302": {
+            "description": "Found"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "409": {
+            "description": "Conflict"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      }
+    },
+    "/participation/createInvitation/{_idEvent}/{_idStudent}": {
+      "post": {
+        "description": "",
+        "parameters": [
+          {
+            "name": "_idEvent",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "_idStudent",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "409": {
+            "description": "Conflict"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      }
+    },
+    "/participation/update/{_idEvent}": {
+      "put": {
+        "description": "",
+        "parameters": [
+          {
+            "name": "_idEvent",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "authorization",
+            "in": "header",
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "302": {
+            "description": "Found"
+          },
+          "400": {
+            "description": "Bad Request"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      }
+    },
+    "/participation/updateConfirInvit/{_idEvent}": {
+      "put": {
+        "description": "",
+        "parameters": [
+          {
+            "name": "_idEvent",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "authorization",
+            "in": "header",
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "302": {
+            "description": "Found"
+          },
+          "400": {
+            "description": "Bad Request"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      }
+    },
+    "/participation/getAllConfirmed/{_idEvent}": {
+      "get": {
+        "description": "",
+        "parameters": [
+          {
+            "name": "_idEvent",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "400": {
+            "description": "Bad Request"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      }
+    },
+    "/participation/getAllConfirmedInvit/{_idEvent}": {
+      "get": {
+        "description": "",
+        "parameters": [
+          {
+            "name": "_idEvent",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "400": {
+            "description": "Bad Request"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      }
+    },
+    "/project/create": {
+      "post": {
+        "tags": [
+          "Project apis"
+        ],
+        "description": "Endpoint Porjects either PFA , PFE or stage management and creation ",
+        "parameters": [
+          {
+            "name": "authorization",
+            "in": "header",
+            "type": "string"
+          },
+          {
+            "name": "Project",
+            "in": "body",
+            "description": "Add a Project",
+            "schema": {
+              "$ref": "#/definitions/Project"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "302": {
+            "description": "Found"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "409": {
+            "description": "Conflict"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      }
+    },
+    "/project/create/PFE": {
+      "post": {
+        "tags": [
+          "Project apis"
+        ],
+        "description": "Endpoint Create stage PFE ",
+        "parameters": [
+          {
+            "name": "authorization",
+            "in": "header",
+            "type": "string"
+          },
+          {
+            "name": "Project",
+            "in": "body",
+            "description": "Add a Project",
+            "schema": {
+              "$ref": "#/definitions/Project"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "302": {
+            "description": "Found"
+          },
+          "400": {
+            "description": "Bad Request"
+          },
+          "401": {
+            "description": "Unauthorized"
+          }
+        }
+      }
+    },
+    "/project/create/Stage": {
+      "post": {
+        "tags": [
+          "Project apis"
+        ],
+        "description": "Endpoint Create Stage",
+        "parameters": [
+          {
+            "name": "authorization",
+            "in": "header",
+            "type": "string"
+          },
+          {
+            "name": "Project",
+            "in": "body",
+            "description": "Add a Project",
+            "schema": {
+              "$ref": "#/definitions/Project"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "302": {
+            "description": "Found"
+          },
+          "400": {
+            "description": "Bad Request"
+          },
+          "401": {
+            "description": "Unauthorized"
+          }
+        }
+      }
+    },
+    "/project/create/PFA": {
+      "post": {
+        "tags": [
+          "Project apis"
+        ],
+        "description": "Endpoint create stage PFA by teahchers only ",
+        "parameters": [
+          {
+            "name": "authorization",
+            "in": "header",
+            "type": "string"
+          },
+          {
+            "name": "Project",
+            "in": "body",
+            "description": "Add a Project",
+            "schema": {
+              "$ref": "#/definitions/Project"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "302": {
+            "description": "Found"
+          },
+          "400": {
+            "description": "Bad Request"
+          },
+          "401": {
+            "description": "Unauthorized"
+          }
+        }
+      }
+    },
+    "/project/getAll/{type}": {
+      "get": {
+        "tags": [
+          "Project apis"
+        ],
+        "description": "Endpoint return projects list by given type",
+        "parameters": [
+          {
+            "name": "type",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "description": "type of projects to return ."
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      }
+    },
+    "/project/getAll": {
+      "get": {
+        "tags": [
+          "Project apis"
+        ],
+        "description": "Endpoint retun all projects list ",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      }
+    },
+    "/project/getByTeacher": {
+      "post": {
+        "tags": [
+          "Project apis"
+        ],
+        "description": "Endpoint retun list projects teachers ",
+        "parameters": [
+         
+          {
+            "name": "teachers-refs",
+            "in": "body",
+            "description": "list of teachers refs",
+             "type":"object",
+             "example":{"teachers":[]}
+          }
+        ],
+        "responses": {}
+      }
+    },
+    "/project/AffectStudentToProject/{idStudent}/{_id}": {
+      "put": {
+        "description": "",
+        "parameters": [
+          {
+            "name": "idStudent",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "_id",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "400": {
+            "description": "Bad Request"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      }
+    },
+    "/project/validate/{idProject}/{isValidated}/{note}": {
+      "post": {
+        "tags": [
+          "Project apis"
+        ],
+        "description": "validation of a project by responsable eitehr validation is true or false and giving double note",
+        "parameters": [
+          {
+            "name": "idProject",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "description": "project to validate"
+          },
+          {
+            "name": "isValidated",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "note",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "description": "project note ( mention calculated based on note )"
+          },
+          {
+            "name": "authorization",
+            "in": "header",
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "302": {
+            "description": "Found"
+          },
+          "400": {
+            "description": "Bad Request"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      }
+    },
+    "/project/stat/{critere}": {
+      "get": {
+        "tags": [
+          "Project apis"
+        ],
+        "description": "validation of a project by responsable eitehr validation is true or false and giving double note",
+        "parameters": [
+          {
+            "name": "critere",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "description": "critere de groupement"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/technologie/create": {
+      "post": {
+        "tags": [
+          "Technologie apis"
+        ],
+        "description": "Endpoint for creation of Technologie \\n Example : Node js , React js, Next js , Flutter ",
+        "parameters": [
+          {
+            "name": "title",
+            "description": "title of Technologie .",
+            "in": "query",
+            "type": "string"
+          },
+          {
+            "name": "body",
+            "in": "body",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "title": {
+                  "example": "any"
+                }
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "400": {
+            "description": "Bad Request"
+          },
+          "409": {
+            "description": "Conflict"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      }
+    },
+    "/technologie/getAll": {
+      "get": {
+        "tags": [
+          "Technologie apis"
+        ],
+        "description": "Endpoint return list technologies ",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      }
+    },
+    "/employement/create": {
+      "post": {
+        "tags": [
+          "employement apis"
+        ],
+        "description": "Endpoint for creation of Societe ",
+        "parameters": [
+          {
+            "name": "Societe",
+            "in": "body",
+            "description": "Create a societe",
+            "schema": {
+              "$ref": "#/definitions/Societe"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "409": {
+            "description": "Conflict"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      }
+    },
+    "/employement/getAll": {
+      "get": {
+        "tags": [
+          "employement apis"
+        ],
+        "description": "Endpoint return list of entreprises ",
+        "parameters": [],
+        "responses": {}
+      }
+    },
+    "/employement/startPosition": {
+      "post": {
+        "tags": [
+          "employement apis"
+        ],
+        "description": "affect an alumini to a new position in an entreprise ( societe) ",
+        "parameters": [
+          {
+            "name": "Position",
+            "in": "body",
+            "description": "affectation of allumini to a new position",
+            "schema": {
+              "$ref": "#/definitions/Position"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      }
+    },
+    "/employement/getPositionsByAlumini": {
+      "post": {
+        "tags": [
+          "employement apis"
+        ],
+        "description": "Endpoint return list of positions and societe by Alumini ",
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "idAlumini": {
+                  "example": "any"
+                }
+              }
+            }
+          }
+        ],
+        "responses": {}
+      }
+    },
+    "/employement/getStatChommage/{critere}": {
+      "get": {
+        "tags": [
+          "employement apis"
+        ],
+        "description": "Moyenne des anneés de chommage des allumini calculé en fonction du cirtére donneé",
+        "parameters": [
+          {
+            "name": "critere",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "description": "critére du groupement : [diplome / promotion / technologie]"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/employement/getAluminiStats/{critere}": {
+      "get": {
+        "description": "",
+        "parameters": [
+          {
+            "name": "critere",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    }
+  },
+  "definitions": {
+    "Teacher":
+      {
+        "title": "Teacher",
+        "required": [
+          "firstName",
+          "userName",
+          "password",
+          "email",
+          "phoneNumber",
+          "sex",
+          "course"
+        ],
+        "properties": {
+          "firstName": { "type": "string" },
+          "lastName": { "type": "string", "required": false },
+          "userName": { "type": "string" },
+          "password": { "type": "string" },
+          "email": { "type": "string" },
+          "phoneNumber": { "type": "number" },
+          "birthDate": { "type": "string", "required": false, "format": "date-time" },
+          "sex": { "type": "string" },
+          "isResponsable": { "type": "boolean", "required": false },
+          "course": { "type": "array", "items": ["Object"] },
+          "profilImage": { "type": "string" }
+        }
+    },
+    "Project": {
+
+
+      "title": "Project",
+      "required": [ "type", "title", "description" ],
+      "properties": {
+        "students": { "type": "array", "items": ["Object"] },
+        "encadrants": { "type": "array", "items": ["Object"] },
+        "technologies": { "type": "array", "items": ["Object"] },
+        "societe": { "type": "string" },
+        "type": { "type": "string", "enum": ["PFA","PFE","Stage"] },
+        "title": { "type": "string" },
+        "description": { "type": "string" },
+        "nbr_students_max": { "type": "number" },
+        "startDate": { "type": "string", "format": "date-time" },
+        "endDate": { "type": "string", "format": "date-time" },
+        "isValidatedByReponsable": { "type": "boolean" }
+      }
+
+
+      
+    },
+    "Societe":{
+      "title": "Societe",
+      "required": [ "title", "pays" ],
+      "properties": {
+        "title": { "type": "string" },
+        "pays": { "type": "string" } 
+      }
+    },
+    "Position":{
+      "title": "Position",
+  "required": [ "designation", "societe", "alumini" ],
+  "properties": {
+    "designation": { "type": "string" },
+    "societe": { "type": "string" },
+    "alumini": { "type": "string" },
+    "startDate": { "type": "string", "format": "date-time" },
+    "endDate": { "type": "string", "format": "date-time" }
+    }
+  }
+  
+  }
+}
