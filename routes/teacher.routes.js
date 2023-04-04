@@ -15,7 +15,7 @@ router.put(
 
 // ################ ONLY BY ADMIN ################
 router.post(
-  "/create",
+  "/createTeacher",
   VerifToken.isSuperadmin,
   validator.createTeacherValidation,
   AllUsers.CreateUser
@@ -30,4 +30,13 @@ router.put(
   VerifToken.isSuperadmin,
   TeacherController.UpdateTeacherToResp
 );
+
+// ######## RESPONSABLE ROUTES###########
+router.post(
+  "/createTeacherResponsible",
+  VerifToken.isSuperadmin,
+  validator.createResponsableValidation,
+  AllUsers.CreateUser
+);
+
 module.exports = router;

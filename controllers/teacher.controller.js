@@ -58,7 +58,7 @@ const UpdateTeacherToResp = async (req, res) => {
 const GetAllTeacher = async (req, res) => {
   try {
     const teachers = await UserModel.find({
-      role: "TEACHER",
+      role: { $in: ["TEACHER", "RESPONSIBLE"] },
     });
 
     return res.status(200).json({

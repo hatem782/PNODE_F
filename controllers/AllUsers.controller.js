@@ -8,15 +8,19 @@ const { filt_year_parser } = require("../functions/FiltYearParser");
 const CreateUser = async (req, res) => {
   try {
     const { phoneNumber, email, firstName, lastName } = req.body;
-    const existUser = await UserModel.findOne({
-      $or: [{ email }, { phoneNumber }],
-    });
-    if (existUser)
+    const existEmail = await UserModel.findOne({ email });
+    if (existEmail)
       return res.status(409).json({
-        Message: "user already exists with that phoneNumber or email",
+        Message: "email error",
         Success: false,
       });
+    const existPhoneNumber = await UserModel.findOne({ phoneNumber });
 
+    if (existPhoneNumber)
+      return res.status(409).json({
+        Message: "phoneNumber error",
+        Success: false,
+      });
     const salt = Number(process.env.SALT);
     const cryptedMdp = await bcrypt.hash(phoneNumber.toString(), salt);
 
