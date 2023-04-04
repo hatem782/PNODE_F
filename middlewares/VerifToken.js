@@ -78,6 +78,7 @@ const isSuperThanStudent = async (req, res, next) => {
     const decoded = await jwt.verify(token, process.env.ACCESS_TOKEN_SECRET);
 
     let user = await usertModel.findOne({ _id: decoded._id });
+    console.log(user);
     if (!user || allowed_roles.indexOf(user.role) === -1) {
       return res.status(401).json({ success: false, Message: "Unauthorized" });
     }
