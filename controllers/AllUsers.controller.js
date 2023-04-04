@@ -8,15 +8,19 @@ const { filt_year_parser } = require("../functions/FiltYearParser");
 const CreateUser = async (req, res) => {
   try {
     const { phoneNumber, email, firstName, lastName } = req.body;
-    const existUser = await UserModel.findOne({
-      $or: [{ email }, { phoneNumber }],
-    });
-    if (existUser)
+    const existEmail = await UserModel.findOne({ email });
+    if (existEmail)
       return res.status(409).json({
-        Message: "user already exists with that phoneNumber or email",
+        Message: "email error",
         Success: false,
       });
+    const existPhoneNumber = await UserModel.findOne({ phoneNumber });
 
+    if (existPhoneNumber)
+      return res.status(409).json({
+        Message: "phoneNumber error",
+        Success: false,
+      });
     const salt = Number(process.env.SALT);
     const cryptedMdp = await bcrypt.hash(phoneNumber.toString(), salt);
 
@@ -27,7 +31,7 @@ const CreateUser = async (req, res) => {
     });
     const createdUser = await newUser.save();
 
-    let subject = "Authentication information";
+    /* let subject = "Authentication information";
     let content = `
     <div>
     <h2>Welcome ${firstName} ${lastName} to our plateforme</h2>
@@ -36,7 +40,7 @@ const CreateUser = async (req, res) => {
     <p>your M-D-P is : <b>${phoneNumber}</b> </p>
     <p>please make sure to change your password after you access to your account</p>
     </div>`;
-    await Mailer.Mail_Sender(email, content, subject);
+    await Mailer.Mail_Sender(email, content, subject);*/
 
     return res.status(200).json({
       Message: "user created suucessfully",

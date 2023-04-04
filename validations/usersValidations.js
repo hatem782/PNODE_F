@@ -43,6 +43,16 @@ const createTeacherValidation = (req, res, next) => {
   next();
 };
 
+const createResponsableValidation = (req, res, next) => {
+  const validation = validationCreateTeacher.validate(req.body);
+  if (validation.error) {
+    return res
+      .status(400)
+      .json({ Message: validation.error.details[0].message, Success: false });
+  }
+  req.body.role = "RESPONSIBLE";
+  next();
+};
 // ############################ LoginValidation ############################
 
 const LoginValidation = Joi.object({
@@ -255,6 +265,7 @@ const updateAlumnieValidation = (req, res, next) => {
 
 module.exports = {
   createTeacherValidation,
+  createResponsableValidation,
   createStudentValidation,
   createAlumnieValidation,
   updateAlumnieValidation,

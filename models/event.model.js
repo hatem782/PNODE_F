@@ -7,9 +7,13 @@ const EventModel = new Schema(
       type: String,
       required: true,
     },
-    eventDate: {
+    eventDateDebut: {
       type: Date,
       required: true,
+    },
+    eventDateFin: {
+      type: Date,
+      required: false,
     },
     eventType: {
       type: String,
@@ -25,6 +29,19 @@ const EventModel = new Schema(
       type: String,
       required: true,
       default: "isamm",
+    },
+    duration: {
+      type: String,
+      required: false,
+    },
+    bgImage: {
+      type: String,
+      required: false,
+      default: "",
+    },
+    organizedBy: {
+      type: String,
+      required: false,
     },
   },
   {

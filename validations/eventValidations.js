@@ -17,11 +17,14 @@ const validationParticipationCreate = (req, res, next) => {
 //#################  Event
 
 const validationEvent = Joi.object({
-  eventDate: Joi.date().required(),
+  eventDateDebut: Joi.date().required(),
+  eventDateFin: Joi.required(),
   eventType: Joi.string().valid("JPO", "Journée d'integration", "Formation"),
   description: Joi.string().required(),
   eventName: Joi.string().required(),
   location: Joi.string(),
+  organizedBy: Joi.string(),
+  duration: Joi.string(),
 });
 
 const createEventValidation = (req, res, next) => {

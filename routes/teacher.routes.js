@@ -15,11 +15,28 @@ router.put(
 
 // ################ ONLY BY ADMIN ################
 router.post(
-  "/create",
-  VerifToken.isAdmin,
+  "/createTeacher",
+  VerifToken.isSuperadmin,
   validator.createTeacherValidation,
   AllUsers.CreateUser
 );
-router.get("/get_all", TeacherController.GetAllTeacher);
+router.get(
+  "/get_all",
+  VerifToken.isSuperadmin,
+  TeacherController.GetAllTeacher
+);
+router.put(
+  "/update_info/:_id",
+  VerifToken.isSuperadmin,
+  TeacherController.UpdateTeacherToResp
+);
+
+// ######## RESPONSABLE ROUTES###########
+router.post(
+  "/createTeacherResponsible",
+  VerifToken.isSuperadmin,
+  validator.createResponsableValidation,
+  AllUsers.CreateUser
+);
 
 module.exports = router;
