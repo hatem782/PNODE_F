@@ -39,7 +39,7 @@ const CreateCv = async (req, res) => {
 
 const getcvbyuser = async (req, res) => {
   try {
-    const userId = req.user.cv;
+    const userId = req.user._id;
     const cvAlreadyExist = await CvModule.findOne({ student: userId });
     if (!cvAlreadyExist) {
       return res.status(400).json({
