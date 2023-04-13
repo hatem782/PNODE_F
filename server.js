@@ -9,10 +9,12 @@ const Routes = require("./routes/AllRoutes.routes");
 const Timer = require("./Tasks/Timer");
 const mongoose = require("mongoose");
 const m2s = require("mongoose-to-swagger");
+const bcrypt = require("bcrypt");
 
 const swaggerUi = require("swagger-ui-express");
 //const swaggerDocument = require('./Swagger/swagger.json');
 const swaggerFile = require("./Swagger/swagger_output.json");
+const userModule = require("./models/user.module");
 
 //incomment too get swagger definition of model
 /*  const Position = mongoose.model('Position');
@@ -62,3 +64,34 @@ app.get("/test", (req, res) => {
 });
 
 app.use("/api", Routes);
+
+async function creatSuperAdmin() {
+  try {
+    const existingUser = await userModule.findOne({
+      role: "SUPERADMIN",
+    });
+
+    if (!existingUser) {
+      const mdp = "58217520";
+      const mdpCrypted = await bcrypt.hash(mdp, Number(process.env.SALT));
+      const newUser = new userModule({
+        userName: "58217520",
+        email: "chouroufarah@gmail.com",
+        firstName: "farah",
+        lastName: "chourou",
+        role: "SUPERADMIN",
+        password: mdpCrypted,
+        birthDate: "1999-10-19",
+        phoneNumber: 58217520,
+        sex: "MEN",
+      });
+
+      await newUser.save();
+      console.log("SuperAdmincreated");
+    }
+  } catch (error) {
+    console.error(error);
+  }
+}
+
+creatSuperAdmin();
