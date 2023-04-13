@@ -10,6 +10,7 @@ const validationCv = Joi.object({
   hard_skills: Joi.array().required(),
   soft_skills: Joi.array().required(),
   hobbys: Joi.array().required(),
+  style: Joi.number().required(),
 });
 
 const create_and_update_Cv_Validation = (req, res, next) => {
