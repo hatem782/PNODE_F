@@ -4,6 +4,7 @@ const Mailer = require("../mails/Mail_Sender");
 const GeneratePassword = require("../functions/GeneratePass");
 const FileUpload = require("../uploads/FileUpload");
 const { filt_year_parser } = require("../functions/FiltYearParser");
+const cvModel = require("../models/cv.model");
 
 const CreateUser = async (req, res) => {
   try {
@@ -37,6 +38,23 @@ const CreateUser = async (req, res) => {
     <p>please make sure to change your password after you access to your account</p>
     </div>`;
     await Mailer.Mail_Sender(email, content, subject);
+
+    if (createdUser.role === "STUDENT" || createdUser === "ALUMINIE") {
+      const newCv = await cvModel.create({
+        student: createdUser._id,
+        bio: "",
+        localisation: "",
+        linkedIn: "",
+        style: 1,
+        experiences: [],
+        formations: [],
+        languages: [],
+        hard_skills: [],
+        soft_skills: [],
+        hobbys: [],
+      });
+      await newCv.save();
+    }
 
     return res.status(200).json({
       Message: "user created suucessfully",
