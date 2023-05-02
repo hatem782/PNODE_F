@@ -3,7 +3,6 @@ const Joi = require("joi");
 const validationProject = Joi.object({
   title: Joi.string().required(),
   description: Joi.string().required(),
-  encadrant_id: Joi.string().allow(null, "", ""),
   technologies: Joi.array().required(),
   societe: Joi.string().required(),
   type: Joi.string().valid("PFE", "PFA", "STAGE").required(),

@@ -133,7 +133,7 @@ const ValiderPFE_Enseignant = async (req, res) => {
   }
 };
 
-const ValiderpRrojet_Admin = async (req, res) => {
+const ValiderProjet_Admin = async (req, res) => {
   try {
     const { _id } = req.body;
 
@@ -157,12 +157,13 @@ const ValiderpRrojet_Admin = async (req, res) => {
   }
 };
 
-const GetMyProjects = async (req, res) => {
+const GetPfeStudent = async (req, res) => {
   try {
     const student = req.user;
 
     const MyProjects = await ProjectModel.find({
       student: student._id,
+      type: "PFE",
     }).populate("encadrant");
 
     console.log("######[" + JSON.stringify(MyProjects) + "]######:");
@@ -172,6 +173,64 @@ const GetMyProjects = async (req, res) => {
       Success: true,
       data: MyProjects,
     });
+  } catch (error) {
+    console.log("##########:", error);
+    res.status(500).send({ Message: "Server Error", Error: error.message });
+  }
+};
+
+const GetPfaStudent = async (req, res) => {
+  try {
+    const student = req.user;
+
+    const MyProjects = await ProjectModel.find({
+      student: student._id,
+      type: "PFA",
+    }).populate("encadrant");
+
+    console.log("######[" + JSON.stringify(MyProjects) + "]######:");
+
+    return res.status(200).json({
+      Message: "Project created suucessfully",
+      Success: true,
+      data: MyProjects,
+    });
+  } catch (error) {
+    console.log("##########:", error);
+    res.status(500).send({ Message: "Server Error", Error: error.message });
+  }
+};
+
+const GetStageStudent = async (req, res) => {
+  try {
+    const student = req.user;
+
+    const MyProjects = await ProjectModel.find({
+      student: student._id,
+      type: "STAGE",
+    }).populate("encadrant");
+
+    console.log("######[" + JSON.stringify(MyProjects) + "]######:");
+
+    return res.status(200).json({
+      Message: "Project created suucessfully",
+      Success: true,
+      data: MyProjects,
+    });
+  } catch (error) {
+    console.log("##########:", error);
+    res.status(500).send({ Message: "Server Error", Error: error.message });
+  }
+};
+
+const DeleteProject = async (req, res) => {
+  try {
+    const { _id } = req.params;
+    const removedProject = await ProjectModel.deleteOne({ _id });
+    if (!removedProject) {
+      return res.status(400).json({ Message: "Failed to delete project" });
+    }
+    return res.status(200).json({ Message: "project deleted successfully" });
   } catch (error) {
     console.log("##########:", error);
     res.status(500).send({ Message: "Server Error", Error: error.message });
@@ -432,8 +491,11 @@ module.exports = {
   GetProjectsContainingTechnologies,
   validateProject,
   getStatProjects,
-  GetMyProjects,
+  GetPfeStudent,
+  GetPfaStudent,
+  GetStageStudent,
   UpdateMyProject,
   ValiderPFE_Enseignant,
-  ValiderpRrojet_Admin,
+  ValiderProjet_Admin,
+  DeleteProject,
 };

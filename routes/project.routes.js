@@ -29,35 +29,25 @@ router.post(
   "/approve_by_admin",
   VerifToken.isAdmin,
   validator.validate_validate_by_adminFunc,
-  ProjectController.ValiderpRrojet_Admin
+  ProjectController.ValiderProjet_Admin
 );
 
-router.get("/getMy", VerifToken.isStudent, ProjectController.GetMyProjects);
-router.get("/get_my_projects/:type", ProjectController.GetAllProjectsByType);
-router.get("/get_pfe_teacher/", ProjectController.GetProjectsByListTeachers);
+router.get(
+  "/get_pfe_student",
+  VerifToken.isStudent,
+  ProjectController.GetPfeStudent
+);
 
-// router.post(
-//   "/validate/:idProject/:isValidated/:note",
-//   //VerifToken.isResponsible,
-//   ProjectController.validateProject
-// );
+router.get(
+  "/get_stage_student",
+  VerifToken.isStudent,
+  ProjectController.GetStageStudent
+);
 
-router.get("/stat/:critere", ProjectController.getStatProjects);
-
-router.get("/getAll", ProjectController.GetAllProjects);
-router.post("/getByTeacher", ProjectController.GetProjectsByListTeachers);
-
-// router.post(
-//   "/GetProjectsContainingTechnologies",
-//   ProjectController.GetProjectsContainingTechnologies
-// );
-// router.put(
-//   "/AffectStudentToProject/:idStudent/:_id",
-//   ProjectController.AffectStudentToProject
-// );
-// router.put(
-//   "/AffectStudentToProject/:idTeacher/:_id",
-//   ProjectController.AffectTeacherToProject
-// );
+router.delete(
+  "/delete/:_id",
+  VerifToken.isStudent,
+  ProjectController.DeleteProject
+);
 
 module.exports = router;
