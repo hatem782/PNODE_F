@@ -1,227 +1,181 @@
-const Joi = require("joi");
 const ProjectModel = require("../models/project.module");
-const studentModule = require("../models/user.module");
-const teacherModel = require("../models/user.module");
 const { filt_year_parser } = require("../functions/FiltYearParser");
-const TechnologieModel = require("../models/technologie.module");
 
 var mongoose = require("mongoose");
 
-const validationProject = Joi.object({
-  title: Joi.date().required(),
-  type: Joi.string().valid("PFA", "PFE", "Stage"),
-  description: Joi.string().required(),
-});
-
 const CreateProject = async (req, res) => {
-  // #swagger.tags = ['Project apis']
-  // #swagger.description = 'Endpoint Porjects either PFA , PFE or stage management and creation '
-
   try {
     const {
       title,
       description,
-      type,
-      students,
-      encadrants,
       technologies,
       societe,
-      nbr_students_max,
       startDate,
       endDate,
-      isValidatedByReponsable,
+      type,
+      promotion,
     } = req.body;
 
+    /* what to do here ?
+    - find if there's a project in same year and pfe and same student => one PFE in the year 
+    */
+    const student = req.user;
+
     const existProject = await ProjectModel.findOne({
-      encadrants,
-      students,
-      startDate,
+      promotion,
+      student: student._id,
+      type: "PFE",
     });
+
     if (existProject)
       return res.status(409).json({
-        Message: "Project already exist",
+        Message: "You already created a PFE for this promotion, update it",
         Success: false,
       });
-    console.log(req.params);
+
+    const project_life_cycle =
+      type === "STAGE" ? "Pending_Validation" : "Pending_Teacher";
+
     const newProject = new ProjectModel({
       title: title,
       description: description,
       type: type,
-      students: students,
-      encadrants: encadrants,
+      student: student._id,
+      encadrant: null,
       technologies: technologies,
-      nbr_students_max: nbr_students_max,
       startDate: startDate,
       endDate: endDate,
-      isValidatedByReponsable: isValidatedByReponsable,
+      societe: societe,
+      promotion: promotion,
+      project_life_cycle: project_life_cycle,
     });
     console.log("######[" + JSON.stringify(newProject) + "]######:");
 
-    switch (type) {
-      case "PFA":
-        {
-          //verify if teacher
-
-          const createdProject = await newProject.save();
-          return res.status(200).json({
-            Message: "Project created suucessfully",
-            Success: true,
-            data: createdProject,
-          });
-        }
-        break;
-      case "PFE":
-        {
-          const createdProject = await newProject.save();
-          return res.status(200).json({
-            Message: "Project created suucessfully",
-            Success: true,
-            data: createdProject,
-          });
-        }
-        break;
-      //stage
-      default: {
-        const createdProject = await newProject.save();
-        return res.status(200).json({
-          Message: "Project created suucessfully",
-          Success: true,
-          data: createdProject,
-        });
-      }
-    }
+    const createdProject = await newProject.save();
+    return res.status(200).json({
+      Message: "Project created suucessfully",
+      Success: true,
+      data: createdProject,
+    });
   } catch (error) {
     console.log("##########:", error);
     res.status(500).send({ Message: "Server Error", Error: error.message });
   }
 };
 
-const saveTechnologies = async (technologies) => {
-  //check if list technologies items exist else save it to db
-  technologies.forEach(async (element) => {
-    const existTechnologie = await TechnologieModel.findOne({ title: element });
-    if (!existTechnologie) {
-      const newTechnologie = new TechnologieModel({
-        title: element,
-      });
-      const createdTechnologie = await newTechnologie.save();
-    }
-  });
-};
-
-const CreatePFA = async (req, res) => {
-  // #swagger.tags = ['Project apis']
-  // #swagger.description = 'Endpoint create stage PFA by teahchers only '
+const UpdateMyProject = async (req, res) => {
   try {
     const {
+      _id,
       title,
       description,
-      type,
-      encadrants,
-      technologies,
-      nbr_students_max,
-      startDate,
-      endDate,
-    } = req.body;
-    await saveTechnologies(technologies);
-
-    const newProject = new ProjectModel({
-      title: title,
-      description: description,
-      type: type,
-      encadrants: encadrants,
-      technologies: technologies,
-      nbr_students_max: nbr_students_max,
-      startDate: startDate,
-      endDate: endDate,
-    });
-
-    const createdProject = await newProject.save();
-    return res.status(200).json({
-      Message: "Project PFE created suucessfully",
-      Success: true,
-      data: createdProject,
-    });
-  } catch (error) {}
-};
-
-const CreatePFE = async (req, res) => {
-  // #swagger.tags = ['Project apis']
-  // #swagger.description = 'Endpoint Create stage PFE '
-
-  try {
-    const {
-      title,
-      description,
-      type,
-      students,
-      encadrants,
-      technologies,
-      societe,
-      nbr_students_max,
-      startDate,
-      endDate,
-      isValidatedByReponsable,
-    } = req.body;
-
-    await saveTechnologies(technologies);
-
-    const newProject = new ProjectModel({
-      title: title,
-      description: description,
-      type: type,
-      societe: societe,
-      students: students,
-      technologies: technologies,
-      startDate: startDate,
-      endDate: endDate,
-    });
-
-    const createdProject = await newProject.save();
-    return res.status(200).json({
-      Message: "Project PFE created suucessfully",
-      Success: true,
-      data: createdProject,
-    });
-  } catch (error) {}
-};
-
-const CreateStage = async (req, res) => {
-  // #swagger.tags = ['Project apis']
-  // #swagger.description = 'Endpoint Create Stage'
-
-  try {
-    const {
-      title,
-      description,
-      type,
-      students,
       technologies,
       societe,
       startDate,
       endDate,
+      type,
+      promotion,
     } = req.body;
 
-    await saveTechnologies(technologies);
+    const student = req.user;
 
-    const newProject = new ProjectModel({
-      title: title,
-      description: description,
-      type: type,
-      societe: societe,
-      students: students,
-      technologies: technologies,
-      startDate: startDate,
-      endDate: endDate,
-    });
+    const updatedProject = await ProjectModel.findOneAndUpdate(
+      { _id: _id },
+      {
+        title: title,
+        description: description,
+        type: type,
+        student: student._id,
+        encadrant: null,
+        technologies: technologies,
+        startDate: startDate,
+        endDate: endDate,
+        societe: societe,
+        promotion: promotion,
+      },
+      { new: true }
+    );
+    console.log("######[" + JSON.stringify(updatedProject) + "]######:");
 
-    const createdProject = await newProject.save();
     return res.status(200).json({
-      Message: "Project PFE created suucessfully",
+      Message: "Project Updated suucessfully",
       Success: true,
-      data: createdProject,
+      data: updatedProject,
     });
-  } catch (error) {}
+  } catch (error) {
+    console.log("##########:", error);
+    res.status(500).send({ Message: "Server Error", Error: error.message });
+  }
+};
+
+const ValiderPFE_Enseignant = async (req, res) => {
+  try {
+    const { _id, encadrant } = req.body;
+
+    const updatedProject = await ProjectModel.findOneAndUpdate(
+      { _id: _id },
+      {
+        encadrant: encadrant,
+        project_life_cycle: "Pending_Validation",
+      },
+      { new: true }
+    );
+    console.log("######[" + JSON.stringify(updatedProject) + "]######:");
+
+    return res.status(200).json({
+      Message: "Project Updated successfully",
+      Success: true,
+      data: updatedProject,
+    });
+  } catch (error) {
+    console.log("##########:", error);
+    res.status(500).send({ Message: "Server Error", Error: error.message });
+  }
+};
+
+const ValiderpRrojet_Admin = async (req, res) => {
+  try {
+    const { _id } = req.body;
+
+    const updatedProject = await ProjectModel.findOneAndUpdate(
+      { _id: _id },
+      {
+        project_life_cycle: "Validated",
+      },
+      { new: true }
+    );
+    console.log("######[" + JSON.stringify(updatedProject) + "]######:");
+
+    return res.status(200).json({
+      Message: "Project Updated successfully",
+      Success: true,
+      data: updatedProject,
+    });
+  } catch (error) {
+    console.log("##########:", error);
+    res.status(500).send({ Message: "Server Error", Error: error.message });
+  }
+};
+
+const GetMyProjects = async (req, res) => {
+  try {
+    const student = req.user;
+
+    const MyProjects = await ProjectModel.find({
+      student: student._id,
+    }).populate("encadrant");
+
+    console.log("######[" + JSON.stringify(MyProjects) + "]######:");
+
+    return res.status(200).json({
+      Message: "Project created suucessfully",
+      Success: true,
+      data: MyProjects,
+    });
+  } catch (error) {
+    console.log("##########:", error);
+    res.status(500).send({ Message: "Server Error", Error: error.message });
+  }
 };
 
 const GetProjectsContainingTechnologies = async (req, res) => {
@@ -476,9 +430,10 @@ module.exports = {
   AffectStudentToProject,
   AffectTeacherToProject,
   GetProjectsContainingTechnologies,
-  CreatePFA,
-  CreatePFE,
-  CreateStage,
   validateProject,
   getStatProjects,
+  GetMyProjects,
+  UpdateMyProject,
+  ValiderPFE_Enseignant,
+  ValiderpRrojet_Admin,
 };

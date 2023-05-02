@@ -20,11 +20,7 @@ router.post(
   validator.createTeacherValidation,
   AllUsers.CreateUser
 );
-router.get(
-  "/get_all",
-  VerifToken.isSuperadmin,
-  TeacherController.GetAllTeacher
-);
+router.get("/get_all", VerifToken.isUser, TeacherController.GetAllTeacher);
 router.put(
   "/update_info/:_id",
   VerifToken.isSuperadmin,
