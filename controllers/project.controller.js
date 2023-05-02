@@ -23,7 +23,7 @@ const CreateProject = async (req, res) => {
 
     const existProject = await ProjectModel.findOne({
       promotion,
-      student: student._id,
+      students: [student._id],
       type: "PFE",
     });
 
@@ -40,7 +40,7 @@ const CreateProject = async (req, res) => {
       title: title,
       description: description,
       type: type,
-      student: student._id,
+      students: [student._id],
       encadrant: null,
       technologies: technologies,
       startDate: startDate,
@@ -48,6 +48,52 @@ const CreateProject = async (req, res) => {
       societe: societe,
       promotion: promotion,
       project_life_cycle: project_life_cycle,
+    });
+    console.log("######[" + JSON.stringify(newProject) + "]######:");
+
+    const createdProject = await newProject.save();
+    return res.status(200).json({
+      Message: "Project created suucessfully",
+      Success: true,
+      data: createdProject,
+    });
+  } catch (error) {
+    console.log("##########:", error);
+    res.status(500).send({ Message: "Server Error", Error: error.message });
+  }
+};
+
+const CreatePFA = async (req, res) => {
+  try {
+    const {
+      title,
+      description,
+      technologies,
+      societe,
+      startDate,
+      endDate,
+      promotion,
+      max_students,
+    } = req.body;
+
+    const teacher = req.user;
+
+    // here you have to chech if ther's a new techno => add it
+    // code here of add techno
+
+    const newProject = new ProjectModel({
+      title: title,
+      description: description,
+      max_students: max_students,
+      type: "PFA",
+      students: [],
+      encadrant: teacher._id,
+      technologies: technologies,
+      startDate: startDate,
+      endDate: endDate,
+      societe: societe,
+      promotion: promotion,
+      project_life_cycle: "Pending_Accept_By_Resp",
     });
     console.log("######[" + JSON.stringify(newProject) + "]######:");
 
@@ -77,15 +123,12 @@ const UpdateMyProject = async (req, res) => {
       promotion,
     } = req.body;
 
-    const student = req.user;
-
     const updatedProject = await ProjectModel.findOneAndUpdate(
       { _id: _id },
       {
         title: title,
         description: description,
         type: type,
-        student: student._id,
         encadrant: null,
         technologies: technologies,
         startDate: startDate,
@@ -162,7 +205,7 @@ const GetPfeStudent = async (req, res) => {
     const student = req.user;
 
     const MyProjects = await ProjectModel.find({
-      student: student._id,
+      students: [student._id],
       type: "PFE",
     }).populate("encadrant");
 
@@ -179,6 +222,7 @@ const GetPfeStudent = async (req, res) => {
   }
 };
 
+/*
 const GetPfaStudent = async (req, res) => {
   try {
     const student = req.user;
@@ -200,13 +244,13 @@ const GetPfaStudent = async (req, res) => {
     res.status(500).send({ Message: "Server Error", Error: error.message });
   }
 };
-
+*/
 const GetStageStudent = async (req, res) => {
   try {
     const student = req.user;
 
     const MyProjects = await ProjectModel.find({
-      student: student._id,
+      students: [student._id],
       type: "STAGE",
     }).populate("encadrant");
 
@@ -483,6 +527,7 @@ const getStatProjects = async (req, res) => {
 
 module.exports = {
   CreateProject,
+  CreatePFA,
   GetAllProjects,
   GetAllProjectsByType,
   GetProjectsByListTeachers,
@@ -492,7 +537,6 @@ module.exports = {
   validateProject,
   getStatProjects,
   GetPfeStudent,
-  GetPfaStudent,
   GetStageStudent,
   UpdateMyProject,
   ValiderPFE_Enseignant,

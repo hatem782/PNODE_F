@@ -4,10 +4,17 @@ const Schema = mongoose.Schema;
 
 const ProjectModel = new Schema(
   {
-    student: {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: "User",
-      required: true,
+    students: [
+      {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "User",
+        required: true,
+      },
+    ],
+
+    max_students: {
+      type: Number,
+      default: 1,
     },
 
     encadrant: {
@@ -57,7 +64,13 @@ const ProjectModel = new Schema(
     },
     project_life_cycle: {
       type: String,
-      enum: ["Pending_Teacher", "Pending_Validation", "Validated"],
+      enum: [
+        "Pending_Teacher",
+        "Pending_Validation",
+        "Validated",
+        "Accepted_By_Resp",
+        "Pending_Accept_By_Resp",
+      ],
       default: "Pending_Teacher",
     },
 
