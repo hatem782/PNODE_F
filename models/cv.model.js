@@ -9,19 +9,15 @@ const CvModel = new Schema(
     },
     bio: {
       type: String,
-      required: true,
     },
     localisation: {
       type: String,
-      required: true,
     },
     linkedIn: {
       type: String,
-      required: true,
     },
     style: {
       type: Number,
-      required: false,
       default: 1,
     },
     experiences: [
