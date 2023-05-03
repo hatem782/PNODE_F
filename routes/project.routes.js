@@ -32,6 +32,8 @@ router.post(
   ProjectController.ValiderProjet_Admin
 );
 
+router.get("/get_societes", VerifToken.isUser, ProjectController.GetSocietes);
+
 router.get(
   "/get_pfe_student",
   VerifToken.isStudent,

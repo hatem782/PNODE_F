@@ -9,11 +9,9 @@ const SocieteModel = new Schema(
       required: true,
     },
     pays: {
-        type: String,
-        required: true,
-      },
-
-  
+      type: String,
+      required: true,
+    },
   },
   {
     timestamps: true,

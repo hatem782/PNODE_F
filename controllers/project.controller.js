@@ -1,4 +1,5 @@
 const ProjectModel = require("../models/project.module");
+const TechnoModel = require("../models/technologie.module");
 const { filt_year_parser } = require("../functions/FiltYearParser");
 
 var mongoose = require("mongoose");
@@ -16,9 +17,6 @@ const CreateProject = async (req, res) => {
       promotion,
     } = req.body;
 
-    /* what to do here ?
-    - find if there's a project in same year and pfe and same student => one PFE in the year 
-    */
     const student = req.user;
 
     const existProject = await ProjectModel.findOne({
@@ -27,11 +25,22 @@ const CreateProject = async (req, res) => {
       type: "PFE",
     });
 
-    if (existProject)
+    if (existProject && type !== "STAGE")
       return res.status(409).json({
         Message: "You already created a PFE for this promotion, update it",
         Success: false,
       });
+
+    for (let i = 0; i < technologies.length; i++) {
+      let exist = await TechnoModel.findOne({ title: technologies[i] });
+
+      if (!exist) {
+        const newTech = await new TechnoModel({
+          title: technologies[i],
+        }).save();
+        console.log(newTech);
+      }
+    }
 
     const project_life_cycle =
       type === "STAGE" ? "Pending_Validation" : "Pending_Teacher";
@@ -73,7 +82,6 @@ const CreatePFA = async (req, res) => {
       startDate,
       endDate,
       promotion,
-      max_students,
     } = req.body;
 
     const teacher = req.user;
@@ -84,7 +92,6 @@ const CreatePFA = async (req, res) => {
     const newProject = new ProjectModel({
       title: title,
       description: description,
-      max_students: max_students,
       type: "PFA",
       students: [],
       encadrant: teacher._id,
@@ -119,16 +126,25 @@ const UpdateMyProject = async (req, res) => {
       societe,
       startDate,
       endDate,
-      type,
       promotion,
     } = req.body;
+
+    for (let i = 0; i < technologies.length; i++) {
+      let exist = await TechnoModel.findOne({ title: technologies[i] });
+
+      if (!exist) {
+        const newTech = await new TechnoModel({
+          title: technologies[i],
+        }).save();
+        console.log(newTech);
+      }
+    }
 
     const updatedProject = await ProjectModel.findOneAndUpdate(
       { _id: _id },
       {
         title: title,
         description: description,
-        type: type,
         encadrant: null,
         technologies: technologies,
         startDate: startDate,
@@ -215,6 +231,27 @@ const GetPfeStudent = async (req, res) => {
       Message: "Project created suucessfully",
       Success: true,
       data: MyProjects,
+    });
+  } catch (error) {
+    console.log("##########:", error);
+    res.status(500).send({ Message: "Server Error", Error: error.message });
+  }
+};
+
+const GetSocietes = async (req, res) => {
+  try {
+    const Projects = await ProjectModel.find();
+
+    const societes = [
+      ...new Set(Projects.map((proj) => proj.societe.toLowerCase())),
+    ];
+
+    console.log("######[" + JSON.stringify(Projects) + "]######:");
+
+    return res.status(200).json({
+      Message: "les societes",
+      Success: true,
+      data: societes,
     });
   } catch (error) {
     console.log("##########:", error);
@@ -528,6 +565,7 @@ const getStatProjects = async (req, res) => {
 module.exports = {
   CreateProject,
   CreatePFA,
+  GetSocietes,
   GetAllProjects,
   GetAllProjectsByType,
   GetProjectsByListTeachers,
