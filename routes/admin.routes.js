@@ -20,5 +20,6 @@ router.put(
   validator.AdminPermissionsValidation,
   adminController.UpdateAdminPermessions
 );
+router.get("/getAll", VerifToken.isSuperadmin, adminController.GetAllAccounts);
 
 module.exports = router;
