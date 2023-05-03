@@ -21,11 +21,7 @@ router.delete(
   verifToken.isSuperadmin,
   EventController.DeleteEvent
 );
-router.get("/getAll", verifToken.isSuperadmin, EventController.GetAllEvents);
-router.get(
-  "/getOne/:_id",
-  verifToken.isSuperadmin,
-  EventController.GetOneEvent
-);
+router.get("/getAll", verifToken.isUser, EventController.GetAllEvents);
+router.get("/getOne/:_id", verifToken.isUser, EventController.GetOneEvent);
 
 module.exports = router;

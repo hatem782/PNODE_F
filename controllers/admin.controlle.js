@@ -26,6 +26,23 @@ const UpdateAdminPermessions = async (req, res) => {
   }
 };
 
+const GetAllAccounts = async (req, res) => {
+  try {
+    const admins = await UserModel.find({
+      role: "ADMIN",
+    });
+
+    return res.status(200).json({
+      Message: "All Accounts",
+      Success: true,
+      data: admins,
+    });
+  } catch (error) {
+    console.log("##########:", error);
+    res.status(500).send({ Message: "Server Error", Error: error.message });
+  }
+};
 module.exports = {
   UpdateAdminPermessions,
+  GetAllAccounts,
 };

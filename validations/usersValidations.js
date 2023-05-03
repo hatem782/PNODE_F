@@ -171,6 +171,12 @@ const createAdminValidation = (req, res, next) => {
 // ############################ PermissionsUpdateValidation ############################
 
 const PermissionsValidation = Joi.object({
+  firstName: Joi.string().required(),
+  lastName: Joi.string(),
+  birthDate: Joi.string(),
+  phoneNumber: Joi.number().integer(),
+  sex: Joi.string().valid("MEN", "WOMEN"),
+  email: Joi.string().required().email(),
   permessions: Joi.array()
     .required()
     .items(
@@ -208,6 +214,24 @@ const validationUpdateStudentPromotion = Joi.object({
 
 const UpdateStudentValidationPromotion = (req, res, next) => {
   const validation = validationUpdateStudentPromotion.validate(req.body);
+  if (validation.error)
+    return res
+      .status(400)
+      .json({ Message: validation.error.details[0].message, Success: false });
+
+  next();
+};
+// ############################ UpdateStudentYearValidation ############################
+
+const validationUpdateStudentYear = Joi.object({
+  classe: Joi.string().required(),
+  niveau: Joi.string().required(),
+  numero_classe: Joi.number(),
+  diplome: Joi.string().allow("").optional(),
+});
+
+const UpdateStudentValidationYear = (req, res, next) => {
+  const validation = validationUpdateStudentYear.validate(req.body);
   if (validation.error)
     return res
       .status(400)
@@ -274,6 +298,7 @@ module.exports = {
   CourseUpdateValidation,
   LoginUserValidation,
   UpdateStudentValidationPromotion,
+  UpdateStudentValidationYear,
   AdminPermissionsValidation,
   createAdminValidation,
 };
