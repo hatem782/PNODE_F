@@ -31,7 +31,7 @@ const ProjectModel = new Schema(
 
     societe: {
       type: String,
-      required: true,
+      required: false,
       // type: mongoose.Schema.Types.ObjectId,
       // ref: "Socite",
     },

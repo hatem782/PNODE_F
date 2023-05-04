@@ -23,6 +23,16 @@ const validationProject2 = Joi.object({
   endDate: Joi.date().required(),
 });
 
+const pfa_validation = Joi.object({
+  title: Joi.string().required(),
+  description: Joi.string().required(),
+  technologies: Joi.array().required(),
+  promotion: Joi.string().required(),
+  startDate: Joi.date().required(),
+  endDate: Joi.date().required(),
+  max_students: Joi.number().required(),
+});
+
 const validate_validate_by_ensg = Joi.object({
   _id: Joi.string().required(),
   encadrant: Joi.string().required(),
@@ -34,6 +44,16 @@ const validate_validate_by_admin = Joi.object({
 
 const validateCreateProject = (req, res, next) => {
   const validation = validationProject.validate(req.body);
+  if (validation.error)
+    return res
+      .status(400)
+      .json({ Message: validation.error.details[0].message, Success: false });
+
+  next();
+};
+
+const validateCreatePfa = (req, res, next) => {
+  const validation = pfa_validation.validate(req.body);
   if (validation.error)
     return res
       .status(400)
@@ -73,6 +93,7 @@ const validate_validate_by_adminFunc = (req, res, next) => {
 };
 
 module.exports = {
+  validateCreatePfa,
   validateCreateProject,
   validateUpdateProject,
   validate_validate_by_ensgFunc,

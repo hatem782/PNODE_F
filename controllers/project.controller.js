@@ -1,4 +1,5 @@
 const ProjectModel = require("../models/project.module");
+const TechnoModel = require("../models/technologie.module");
 const { filt_year_parser } = require("../functions/FiltYearParser");
 
 var mongoose = require("mongoose");
@@ -68,8 +69,7 @@ const CreatePFA = async (req, res) => {
     const {
       title,
       description,
-      technologies,
-      societe,
+      technologies = [],
       startDate,
       endDate,
       promotion,
@@ -78,8 +78,15 @@ const CreatePFA = async (req, res) => {
 
     const teacher = req.user;
 
-    // here you have to chech if ther's a new techno => add it
-    // code here of add techno
+    for (let i = 0; i < technologies.length; i++) {
+      let exist = await TechnoModel.findOne({ title: technologies[i] });
+      if (!exist) {
+        const newTech = await new ProjectModel({
+          title: technologies[i],
+        }).save();
+        console.log(newTech);
+      }
+    }
 
     const newProject = new ProjectModel({
       title: title,
@@ -91,7 +98,6 @@ const CreatePFA = async (req, res) => {
       technologies: technologies,
       startDate: startDate,
       endDate: endDate,
-      societe: societe,
       promotion: promotion,
       project_life_cycle: "Pending_Accept_By_Resp",
     });

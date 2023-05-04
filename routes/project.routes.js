@@ -12,6 +12,13 @@ router.post(
 );
 
 router.post(
+  "/create_pfa",
+  VerifToken.isTeacher,
+  validator.validateCreatePfa,
+  ProjectController.CreatePFA
+);
+
+router.post(
   "/update",
   VerifToken.isStudent,
   validator.validateUpdateProject,
