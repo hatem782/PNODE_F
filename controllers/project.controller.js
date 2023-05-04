@@ -169,12 +169,13 @@ const UpdateMyProject = async (req, res) => {
 
 const ValiderPFE_Enseignant = async (req, res) => {
   try {
-    const { _id, encadrant } = req.body;
+    const { _id } = req.params;
+    const teacher = req.user;
 
     const updatedProject = await ProjectModel.findOneAndUpdate(
       { _id: _id },
       {
-        encadrant: encadrant,
+        encadrant: teacher._id,
         project_life_cycle: "Pending_Validation",
       },
       { new: true }
@@ -194,12 +195,29 @@ const ValiderPFE_Enseignant = async (req, res) => {
 
 const ValiderProjet_Admin = async (req, res) => {
   try {
-    const { _id } = req.body;
+    const { note } = req.body;
+    const { _id } = req.params;
+    let mention = "Ajourné";
+    if (note < 10) {
+      mention = "Ajourné";
+    } else if (note >= 10 && note < 12) {
+      mention = "Passable";
+    } else if (note >= 12 && note < 14) {
+      mention = "Assez bien";
+    } else if (note >= 14 && note < 16) {
+      mention = "Bien";
+    } else if (note >= 16 && note < 18) {
+      mention = "Trés bien";
+    } else if (note > 18) {
+      mention = "Excellent";
+    }
 
     const updatedProject = await ProjectModel.findOneAndUpdate(
       { _id: _id },
       {
         project_life_cycle: "Validated",
+        note: note,
+        mention,
       },
       { new: true }
     );
@@ -229,6 +247,27 @@ const GetPfeStudent = async (req, res) => {
 
     return res.status(200).json({
       Message: "Project created suucessfully",
+      Success: true,
+      data: MyProjects,
+    });
+  } catch (error) {
+    console.log("##########:", error);
+    res.status(500).send({ Message: "Server Error", Error: error.message });
+  }
+};
+
+const GetProjectAll = async (req, res) => {
+  try {
+    const MyProjects = await ProjectModel.find({
+      ...req.query,
+    })
+      .populate("students")
+      .populate("encadrant");
+
+    console.log("######[" + JSON.stringify(MyProjects) + "]######:");
+
+    return res.status(200).json({
+      Message: "Project retreaved suucessfully",
       Success: true,
       data: MyProjects,
     });
@@ -566,7 +605,7 @@ module.exports = {
   CreateProject,
   CreatePFA,
   GetSocietes,
-  GetAllProjects,
+  GetProjectAll,
   GetAllProjectsByType,
   GetProjectsByListTeachers,
   AffectStudentToProject,
