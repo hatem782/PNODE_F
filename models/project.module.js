@@ -12,11 +12,6 @@ const ProjectModel = new Schema(
       },
     ],
 
-    max_students: {
-      type: Number,
-      default: 1,
-    },
-
     encadrant: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "User",

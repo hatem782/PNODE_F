@@ -16,7 +16,6 @@ const CreateCv = async (req, res) => {
       ...req.body,
       student: req.user._id,
     });
-
     const cv = await newCv.save();
 
     if (!cv) {
@@ -59,6 +58,30 @@ const getcvbyuser = async (req, res) => {
   }
 };
 
+const getcvbyid = async (req, res) => {
+  try {
+    const _id = req.params;
+    const cvAlreadyExist = await CvModule.findOne({ student: _id }).populate(
+      "student"
+    );
+    if (!cvAlreadyExist) {
+      return res.status(400).json({
+        Message: "that user dosen't have a cv please create it",
+        Success: false,
+      });
+    }
+
+    return res.status(200).json({
+      Message: "cv retreaved successfully",
+      Success: true,
+      data: cvAlreadyExist,
+    });
+  } catch (error) {
+    console.log("##########:", error);
+    res.status(500).send({ Message: "Server Error", Error: error.message });
+  }
+};
+
 const GetAllCvs = async (req, res) => {
   try {
     const cvs = await CvModule.find().populate("student");
@@ -79,8 +102,9 @@ const UpdateCv = async (req, res) => {
       {
         $set: req.body,
       },
-      { new: true }
+      { new: true, upsert: true }
     );
+    console.log(updatedCv);
 
     if (!updatedCv) {
       return res.status(400).json({
@@ -105,4 +129,5 @@ module.exports = {
   CreateCv,
   GetAllCvs,
   UpdateCv,
+  getcvbyid,
 };

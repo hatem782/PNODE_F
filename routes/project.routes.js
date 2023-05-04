@@ -26,18 +26,19 @@ router.post(
 );
 
 router.post(
-  "/approve_by_enseig",
+  "/approve_by_enseig/:_id",
   VerifToken.isTeacher,
-  validator.validate_validate_by_ensgFunc,
   ProjectController.ValiderPFE_Enseignant
 );
 
 router.post(
-  "/approve_by_admin",
+  "/approve_by_admin/:_id",
   VerifToken.isAdmin,
   validator.validate_validate_by_adminFunc,
   ProjectController.ValiderProjet_Admin
 );
+
+router.get("/get_societes", VerifToken.isUser, ProjectController.GetSocietes);
 
 router.get(
   "/get_pfe_student",
@@ -50,6 +51,8 @@ router.get(
   VerifToken.isStudent,
   ProjectController.GetStageStudent
 );
+
+router.get("/get_all", VerifToken.isUser, ProjectController.GetProjectAll);
 
 router.delete(
   "/delete/:_id",
