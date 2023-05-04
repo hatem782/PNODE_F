@@ -58,4 +58,11 @@ router.put(
   StudentController.BecomeDeplomated
 );
 
+router.put(
+  "/update_year_univer",
+  VerifToken.isStudent,
+  validator.UpdateStudentValidationYear,
+  StudentController.UpdateAnneeUniv
+);
+
 module.exports = router;

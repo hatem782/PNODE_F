@@ -151,6 +151,7 @@ const pub_priv_profile = async (req, res) => {
       return res.status(400).json({
         Message: "Failed to update user",
         Success: false,
+        Data: updateUser,
       });
     }
     return res

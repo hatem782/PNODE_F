@@ -299,7 +299,34 @@ const VerifObtDateDip = async () => {
     console.log("##########:", error);
   }
 };
-
+const UpdateAnneeUniv = async (req, res) => {
+  try {
+    const { _id } = req.user;
+    // { classe, niveau, numero_classe, diplome }
+    const updateStudent = await UserModel.findOneAndUpdate(
+      { _id },
+      {
+        $set: {
+          ...req.body,
+          isUpdated: true,
+        },
+      },
+      { new: true }
+    );
+    if (!updateStudent) {
+      return res.status(400).json({
+        Message: "Failed to update student",
+        Success: false,
+      });
+    }
+    return res
+      .status(200)
+      .json({ Message: "Student updated successfully", data: updateStudent });
+  } catch (error) {
+    console.log("##########:", error);
+    res.status(500).send({ Message: "Server Error", Error: error.message });
+  }
+};
 module.exports = {
   RegisterAluminie,
   UpdatePromotion,
@@ -310,4 +337,5 @@ module.exports = {
   NotifMailUpdateCompAndProf,
   VerifObtDateDip,
   GetAllAccounts,
+  UpdateAnneeUniv,
 };

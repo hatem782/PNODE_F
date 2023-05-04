@@ -38,6 +38,7 @@ const UserModel = new Schema(
     numero_classe: { type: Number, required: false },
     promotion: { type: String, required: false },
     isPublic: { type: Boolean, default: true },
+    isUpdated: { type: Boolean, default: false },
     // ################ ALUMINIE FIELDS ######################
     diplome: { type: String, required: false, default: "None" },
     diplomeDate: { type: Date, required: false, default: null },
