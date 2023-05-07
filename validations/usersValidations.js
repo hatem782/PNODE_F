@@ -188,7 +188,12 @@ const PermissionsValidation = Joi.object({
         "participation",
         "project",
         "technologie",
-        "cv"
+        "cv",
+        "saison",
+        "admin",
+        "employement",
+        "recruitment",
+        "offer"
       )
     ),
 });
