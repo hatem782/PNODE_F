@@ -327,6 +327,38 @@ const UpdateAnneeUniv = async (req, res) => {
     res.status(500).send({ Message: "Server Error", Error: error.message });
   }
 };
+
+const autoUpdateEveryYear = async (req, res) => {
+  try {
+    // { classe, niveau, numero_classe, diplome }
+    const updateStudent = await UserModel.find(
+      {
+        $or: [{ role: "STUDENT" }, { role: "ALUMINIE" }],
+      },
+      {
+        $set: {
+          isUpdated: false,
+        },
+      }
+    );
+    console.log("##########: failed");
+
+    if (!updateStudent) {
+      return res.status(400).json({
+        Message: "Failed to update student",
+        Success: false,
+      });
+    }
+    console.log("##########: updateeeeeeeeeed");
+
+    return res
+      .status(200)
+      .json({ Message: "Student updated successfully", data: updateStudent });
+  } catch (error) {
+    console.log("##########:", error);
+    res.status(500).send({ Message: "Server Error", Error: error.message });
+  }
+};
 module.exports = {
   RegisterAluminie,
   UpdatePromotion,
@@ -338,4 +370,5 @@ module.exports = {
   VerifObtDateDip,
   GetAllAccounts,
   UpdateAnneeUniv,
+  autoUpdateEveryYear,
 };
