@@ -13,6 +13,19 @@ router.post(
 );
 
 router.post(
+  "/create_pfa",
+  VerifToken.isTeacher,
+  validator.validateCreatePfa,
+  ProjectController.CreatePFA
+);
+router.post(
+  "/update_pfa",
+  VerifToken.isTeacher,
+  validator.validateUpdateProjectPFA,
+  ProjectController.UpdatePFA
+);
+
+router.post(
   "/update",
   VerifToken.isStudent,
   validator.validateUpdateProject,
@@ -23,6 +36,18 @@ router.post(
   "/approve_by_enseig/:_id",
   VerifToken.isTeacher,
   ProjectController.ValiderPFE_Enseignant
+);
+
+router.post(
+  "/approve_by_responsable/:_id",
+  VerifToken.isResponsible,
+  ProjectController.ValiderPFA_Responsibale
+);
+
+router.post(
+  "/choisirpfa_by_student/:_id",
+  VerifToken.isStudent,
+  ProjectController.ChoisirPFA_Student
 );
 
 router.post(
@@ -41,6 +66,29 @@ router.get(
 );
 
 router.get(
+  "/get_pfa_teacher",
+  VerifToken.isTeacher,
+  ProjectController.GetPFATeacher
+);
+
+router.get(
+  "/get_pfa_resp",
+  VerifToken.isResponsible,
+  ProjectController.GetAllPFA
+);
+router.get(
+  "/get_pfa_student",
+  VerifToken.isStudent,
+  ProjectController.GetAllPFAStu
+);
+
+router.get(
+  "/get_pfa_admin",
+  VerifToken.isAdmin,
+  ProjectController.GetAllPFAAdmin
+);
+
+router.get(
   "/get_stage_student",
   VerifToken.isStudent,
   ProjectController.GetStageStudent
@@ -52,6 +100,18 @@ router.delete(
   "/delete/:_id",
   VerifToken.isStudent,
   ProjectController.DeleteProject
+);
+
+router.delete(
+  "/delete_pfa/:_id",
+  VerifToken.isTeacher,
+  ProjectController.DeleteProject
+);
+
+router.get(
+  "/alowed_to_pick",
+  VerifToken.isStudent,
+  ProjectController.isAllowedToPick
 );
 
 // statistiques for pfe

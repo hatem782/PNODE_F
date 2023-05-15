@@ -25,6 +25,25 @@ const validationProject2 = Joi.object({
   endDate: Joi.date().required(),
 });
 
+const pfa_validation = Joi.object({
+  title: Joi.string().required(),
+  description: Joi.string().required(),
+  technologies: Joi.array().required(),
+  promotion: Joi.string().required(),
+  startDate: Joi.date().required(),
+  endDate: Joi.date().required(),
+});
+
+const validationProjectPFA = Joi.object({
+  _id: Joi.string().required(),
+  title: Joi.string().required(),
+  description: Joi.string().required(),
+  technologies: Joi.array().required(),
+  promotion: Joi.string().required(),
+  startDate: Joi.date().required(),
+  endDate: Joi.date().required(),
+});
+
 const validate_validate_by_admin = Joi.object({
   note: Joi.number().required(),
 });
@@ -39,8 +58,28 @@ const validateCreateProject = (req, res, next) => {
   next();
 };
 
+const validateCreatePfa = (req, res, next) => {
+  const validation = pfa_validation.validate(req.body);
+  if (validation.error)
+    return res
+      .status(400)
+      .json({ Message: validation.error.details[0].message, Success: false });
+
+  next();
+};
+
 const validateUpdateProject = (req, res, next) => {
   const validation = validationProject2.validate(req.body);
+  if (validation.error)
+    return res
+      .status(400)
+      .json({ Message: validation.error.details[0].message, Success: false });
+
+  next();
+};
+
+const validateUpdateProjectPFA = (req, res, next) => {
+  const validation = validationProjectPFA.validate(req.body);
   if (validation.error)
     return res
       .status(400)
@@ -60,7 +99,9 @@ const validate_validate_by_adminFunc = (req, res, next) => {
 };
 
 module.exports = {
+  validateCreatePfa,
   validateCreateProject,
   validateUpdateProject,
+  validateUpdateProjectPFA,
   validate_validate_by_adminFunc,
 };

@@ -74,13 +74,13 @@ const CreateProject = async (req, res) => {
   }
 };
 
+//create-PFA
 const CreatePFA = async (req, res) => {
   try {
     const {
       title,
       description,
-      technologies,
-      societe,
+      technologies = [],
       startDate,
       pays,
       endDate,
@@ -89,14 +89,21 @@ const CreatePFA = async (req, res) => {
 
     const teacher = req.user;
 
-    // here you have to chech if ther's a new techno => add it
-    // code here of add techno
+    for (let i = 0; i < technologies.length; i++) {
+      let exist = await TechnoModel.findOne({ title: technologies[i] });
+      if (!exist) {
+        const newTech = await new ProjectModel({
+          title: technologies[i],
+        }).save();
+        console.log(newTech);
+      }
+    }
 
     const newProject = new ProjectModel({
       title: title,
       description: description,
       type: "PFA",
-      students: [],
+      students: null,
       encadrant: teacher._id,
       technologies: technologies,
       startDate: startDate,
@@ -110,7 +117,7 @@ const CreatePFA = async (req, res) => {
 
     const createdProject = await newProject.save();
     return res.status(200).json({
-      Message: "Project created suucessfully",
+      Message: "Project PFA created suucessfully",
       Success: true,
       data: createdProject,
     });
@@ -173,6 +180,55 @@ const UpdateMyProject = async (req, res) => {
   }
 };
 
+const UpdatePFA = async (req, res) => {
+  try {
+    const {
+      _id,
+      title,
+      description,
+      technologies,
+      startDate,
+      endDate,
+      promotion,
+    } = req.body;
+
+    for (let i = 0; i < technologies.length; i++) {
+      let exist = await TechnoModel.findOne({ title: technologies[i] });
+
+      if (!exist) {
+        const newTech = await new TechnoModel({
+          title: technologies[i],
+        }).save();
+        console.log(newTech);
+      }
+    }
+
+    const updatedProject = await ProjectModel.findOneAndUpdate(
+      { _id: _id },
+      {
+        title: title,
+        description: description,
+        students: null,
+        technologies: technologies,
+        startDate: startDate,
+        endDate: endDate,
+        promotion: promotion,
+      },
+      { new: true }
+    );
+    console.log("######[" + JSON.stringify(updatedProject) + "]######:");
+
+    return res.status(200).json({
+      Message: "Project Updated suucessfully",
+      Success: true,
+      data: updatedProject,
+    });
+  } catch (error) {
+    console.log("##########:", error);
+    res.status(500).send({ Message: "Server Error", Error: error.message });
+  }
+};
+
 const ValiderPFE_Enseignant = async (req, res) => {
   try {
     const { _id } = req.params;
@@ -190,6 +246,57 @@ const ValiderPFE_Enseignant = async (req, res) => {
 
     return res.status(200).json({
       Message: "Project Updated successfully",
+      Success: true,
+      data: updatedProject,
+    });
+  } catch (error) {
+    console.log("##########:", error);
+    res.status(500).send({ Message: "Server Error", Error: error.message });
+  }
+};
+
+const ValiderPFA_Responsibale = async (req, res) => {
+  try {
+    const { _id } = req.params;
+    const responsible = req.user;
+
+    const updatedProject = await ProjectModel.findOneAndUpdate(
+      { _id: _id },
+      {
+        responsable: responsible._id,
+        project_life_cycle: "Validated",
+      },
+      { new: true }
+    );
+    console.log("######[" + JSON.stringify(updatedProject) + "]######:");
+
+    return res.status(200).json({
+      Message: "Project Updated successfully",
+      Success: true,
+      data: updatedProject,
+    });
+  } catch (error) {
+    console.log("##########:", error);
+    res.status(500).send({ Message: "Server Error", Error: error.message });
+  }
+};
+
+const ChoisirPFA_Student = async (req, res) => {
+  try {
+    const { _id } = req.params;
+    const student = req.user;
+
+    const updatedProject = await ProjectModel.findOneAndUpdate(
+      { _id: _id },
+      {
+        students: student._id,
+      },
+      { new: true }
+    );
+    console.log("######[" + JSON.stringify(updatedProject) + "]######:");
+
+    return res.status(200).json({
+      Message: "Project Affected successfully",
       Success: true,
       data: updatedProject,
     });
@@ -253,6 +360,28 @@ const GetPfeStudent = async (req, res) => {
 
     return res.status(200).json({
       Message: "Project created suucessfully",
+      Success: true,
+      data: MyProjects,
+    });
+  } catch (error) {
+    console.log("##########:", error);
+    res.status(500).send({ Message: "Server Error", Error: error.message });
+  }
+};
+
+const GetPFATeacher = async (req, res) => {
+  try {
+    const teacher = req.user;
+
+    const MyProjects = await ProjectModel.find({
+      encadrant: teacher._id,
+      type: "PFA",
+    }).populate("students");
+
+    console.log("######[" + JSON.stringify(MyProjects) + "]######:");
+
+    return res.status(200).json({
+      Message: "PFA Projects retrieved successfully",
       Success: true,
       data: MyProjects,
     });
@@ -413,6 +542,74 @@ const GetAllProjects = async (req, res) => {
     return res
       .status(200)
       .json({ Message: "Projects found successfully ", data: Projects });
+  } catch (error) {
+    console.log("#####[ERROR]##### : ", error);
+    res.status(500).send({ Message: "Server Error", Error: error.message });
+  }
+};
+
+const GetAllPFA = async (req, res) => {
+  try {
+    const pfa = await ProjectModel.find({ type: "PFA", ...req.query })
+      .populate("students")
+      .populate("encadrant");
+    return res
+      .status(200)
+      .json({ Message: "Projects found successfully ", data: pfa });
+  } catch (error) {
+    console.log("#####[ERROR]##### : ", error);
+    res.status(500).send({ Message: "Server Error", Error: error.message });
+  }
+};
+
+const isAllowedToPick = async (req, res) => {
+  try {
+    const student = req.user;
+    const this_year = new Date().getFullYear();
+    const promotion = `${this_year - 1}-${this_year}`;
+
+    const pfa = await ProjectModel.find({
+      type: "PFA",
+      students: [student._id],
+      promotion: promotion,
+    });
+    let allowed = true;
+    if (pfa.length !== 0) {
+      allowed = false;
+    }
+    return res
+      .status(200)
+      .json({ Message: "Projects found successfully ", data: { allowed } });
+  } catch (error) {
+    console.log("#####[ERROR]##### : ", error);
+    res.status(500).send({ Message: "Server Error", Error: error.message });
+  }
+};
+
+const GetAllPFAStu = async (req, res) => {
+  try {
+    const pfa = await ProjectModel.find({ type: "PFA" })
+      .populate("students")
+      .populate("encadrant");
+
+    return res
+      .status(200)
+      .json({ Message: "Projects found successfully ", data: pfa });
+  } catch (error) {
+    console.log("#####[ERROR]##### : ", error);
+    res.status(500).send({ Message: "Server Error", Error: error.message });
+  }
+};
+
+const GetAllPFAAdmin = async (req, res) => {
+  try {
+    const pfa = await ProjectModel.find({ type: "PFA" })
+      .populate("students")
+      .populate("encadrant");
+
+    return res
+      .status(200)
+      .json({ Message: "Projects found successfully ", data: pfa });
   } catch (error) {
     console.log("#####[ERROR]##### : ", error);
     res.status(500).send({ Message: "Server Error", Error: error.message });
@@ -624,9 +821,18 @@ module.exports = {
   validateProject,
   getStatProjects,
   GetPfeStudent,
+  GetPFATeacher,
+  GetAllProjects,
   GetStageStudent,
   UpdateMyProject,
+  UpdatePFA,
   ValiderPFE_Enseignant,
+  ValiderPFA_Responsibale,
   ValiderProjet_Admin,
   DeleteProject,
+  GetAllPFA,
+  ChoisirPFA_Student,
+  GetAllPFAStu,
+  GetAllPFAAdmin,
+  isAllowedToPick,
 };

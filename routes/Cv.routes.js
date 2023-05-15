@@ -14,7 +14,7 @@ router.post(
 );
 
 router.get("/get_cv_by_user", VerifToken.isUser, CvController.getcvbyuser);
-router.get("/get_cv_by_id/:_id", VerifToken.isTeacher, CvController.getcvbyid);
+router.get("/get_cv_by_id/:_id", VerifToken.isUser, CvController.getcvbyid);
 
 router.put(
   "/update",
