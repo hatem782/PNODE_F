@@ -15,6 +15,7 @@ const CreateProject = async (req, res) => {
       endDate,
       type,
       promotion,
+      pays,
     } = req.body;
 
     const student = req.user;
@@ -55,6 +56,7 @@ const CreateProject = async (req, res) => {
       startDate: startDate,
       endDate: endDate,
       societe: societe,
+      pays: pays,
       promotion: promotion,
       project_life_cycle: project_life_cycle,
     });
@@ -80,6 +82,7 @@ const CreatePFA = async (req, res) => {
       technologies,
       societe,
       startDate,
+      pays,
       endDate,
       promotion,
     } = req.body;
@@ -98,6 +101,7 @@ const CreatePFA = async (req, res) => {
       technologies: technologies,
       startDate: startDate,
       endDate: endDate,
+      pays: pays,
       societe: societe,
       promotion: promotion,
       project_life_cycle: "Pending_Accept_By_Resp",
@@ -124,6 +128,7 @@ const UpdateMyProject = async (req, res) => {
       description,
       technologies,
       societe,
+      pays,
       startDate,
       endDate,
       promotion,
@@ -149,6 +154,7 @@ const UpdateMyProject = async (req, res) => {
         technologies: technologies,
         startDate: startDate,
         endDate: endDate,
+        pays: pays,
         societe: societe,
         promotion: promotion,
       },
@@ -282,7 +288,11 @@ const GetSocietes = async (req, res) => {
     const Projects = await ProjectModel.find();
 
     const societes = [
-      ...new Set(Projects.map((proj) => proj.societe.toLowerCase())),
+      ...new Set(
+        Projects.map((proj) => proj?.societe?.toLowerCase()).filter(
+          (elem) => elem
+        )
+      ),
     ];
 
     console.log("######[" + JSON.stringify(Projects) + "]######:");

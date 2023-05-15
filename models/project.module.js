@@ -31,6 +31,14 @@ const ProjectModel = new Schema(
       // ref: "Socite",
     },
 
+    pays: {
+      type: String,
+      required: false,
+      default: "tunis",
+      // type: mongoose.Schema.Types.ObjectId,
+      // ref: "Socite",
+    },
+
     type: {
       type: String,
       enum: ["PFA", "PFE", "STAGE"],
