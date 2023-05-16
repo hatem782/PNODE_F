@@ -75,14 +75,7 @@ const CreateProject = async (req, res) => {
 //create-PFA
 const CreatePFA = async (req, res) => {
   try {
-    const {
-      title,
-      description,
-      technologies = [],
-      startDate,
-      endDate,
-      promotion,
-    } = req.body;
+    const { title, description, technologies = [], promotion } = req.body;
 
     const teacher = req.user;
 
@@ -103,8 +96,6 @@ const CreatePFA = async (req, res) => {
       students: null,
       encadrant: teacher._id,
       technologies: technologies,
-      startDate: startDate,
-      endDate: endDate,
       promotion: promotion,
       project_life_cycle: "Pending_Accept_By_Resp",
     });
@@ -175,15 +166,7 @@ const UpdateMyProject = async (req, res) => {
 
 const UpdatePFA = async (req, res) => {
   try {
-    const {
-      _id,
-      title,
-      description,
-      technologies,
-      startDate,
-      endDate,
-      promotion,
-    } = req.body;
+    const { _id, title, description, technologies, promotion } = req.body;
 
     for (let i = 0; i < technologies.length; i++) {
       let exist = await TechnoModel.findOne({ title: technologies[i] });
@@ -203,8 +186,6 @@ const UpdatePFA = async (req, res) => {
         description: description,
         students: null,
         technologies: technologies,
-        startDate: startDate,
-        endDate: endDate,
         promotion: promotion,
       },
       { new: true }
@@ -215,6 +196,30 @@ const UpdatePFA = async (req, res) => {
       Message: "Project Updated suucessfully",
       Success: true,
       data: updatedProject,
+    });
+  } catch (error) {
+    console.log("##########:", error);
+    res.status(500).send({ Message: "Server Error", Error: error.message });
+  }
+};
+
+const getPFAById = async (req, res) => {
+  try {
+    const { id } = req.params;
+
+    const pfa = await ProjectModel.findById(id);
+
+    if (!pfa || pfa.type !== "PFA") {
+      return res.status(404).json({
+        Message: "Project not found",
+        Success: false,
+      });
+    }
+
+    return res.status(200).json({
+      Message: "Project PFA retrieved successfully",
+      Success: true,
+      data: pfa,
     });
   } catch (error) {
     console.log("##########:", error);
@@ -824,4 +829,5 @@ module.exports = {
   GetAllPFAStu,
   GetAllPFAAdmin,
   isAllowedToPick,
+  getPFAById,
 };

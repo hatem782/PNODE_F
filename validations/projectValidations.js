@@ -28,8 +28,6 @@ const pfa_validation = Joi.object({
   description: Joi.string().required(),
   technologies: Joi.array().required(),
   promotion: Joi.string().required(),
-  startDate: Joi.date().required(),
-  endDate: Joi.date().required(),
 });
 
 const validationProjectPFA = Joi.object({
@@ -38,8 +36,6 @@ const validationProjectPFA = Joi.object({
   description: Joi.string().required(),
   technologies: Joi.array().required(),
   promotion: Joi.string().required(),
-  startDate: Joi.date().required(),
-  endDate: Joi.date().required(),
 });
 
 const validate_validate_by_admin = Joi.object({

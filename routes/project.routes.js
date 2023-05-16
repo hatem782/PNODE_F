@@ -71,6 +71,12 @@ router.get(
 );
 
 router.get(
+  "/get_pfa_id/:id",
+  VerifToken.isTeacher,
+  ProjectController.getPFAById
+);
+
+router.get(
   "/get_pfa_resp",
   VerifToken.isResponsible,
   ProjectController.GetAllPFA
