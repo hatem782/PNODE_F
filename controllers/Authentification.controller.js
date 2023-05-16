@@ -30,6 +30,7 @@ const Login = async (req, res) => {
       });
     }
     console.log("same password");
+
     const token = GenereteToken({ _id: user._id }, process.env.TOKEN_TIME);
     const refreshToken = GenereteRefreshToken(
       { _id: user._id },

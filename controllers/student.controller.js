@@ -1,4 +1,5 @@
 const UserModel = require("../models/user.module");
+const cvModel = require("../models/cv.model");
 const bcrypt = require("bcrypt");
 const readXlsxFile = require("read-excel-file/node");
 const Mailer = require("../mails/Mail_Sender");
@@ -200,6 +201,22 @@ const CreateStudentsFromExl = async (req, res) => {
           <p>please make sure to change your password after you access to your account</p>
           </div>`;
           await Mailer.Mail_Sender(student.email, content, subject);
+
+          // hadha code jdyd
+          const newCv = await cvModel.create({
+            student: createdStudent._id,
+            bio: "",
+            localisation: "",
+            linkedIn: "",
+            style: 1,
+            experiences: [],
+            formations: [],
+            languages: [],
+            hard_skills: [],
+            soft_skills: [],
+            hobbys: [],
+          });
+          await newCv.save();
         }
       }
     }

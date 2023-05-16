@@ -1,8 +1,11 @@
 const ProjectModel = require("../models/project.module");
 const TechnoModel = require("../models/technologie.module");
 const { filt_year_parser } = require("../functions/FiltYearParser");
+const CvModule = require("../models/cv.model");
+const NotifsModule = require("../models/notifs.model");
 
 var mongoose = require("mongoose");
+const { SendStocket } = require("../sockets/Socket");
 
 const CreateProject = async (req, res) => {
   try {
@@ -39,7 +42,6 @@ const CreateProject = async (req, res) => {
         const newTech = await new TechnoModel({
           title: technologies[i],
         }).save();
-        console.log(newTech);
       }
     }
 
@@ -60,7 +62,6 @@ const CreateProject = async (req, res) => {
       promotion: promotion,
       project_life_cycle: project_life_cycle,
     });
-    console.log("######[" + JSON.stringify(newProject) + "]######:");
 
     const createdProject = await newProject.save();
     return res.status(200).json({
@@ -95,7 +96,6 @@ const CreatePFA = async (req, res) => {
         const newTech = await new ProjectModel({
           title: technologies[i],
         }).save();
-        console.log(newTech);
       }
     }
 
@@ -113,7 +113,6 @@ const CreatePFA = async (req, res) => {
       promotion: promotion,
       project_life_cycle: "Pending_Accept_By_Resp",
     });
-    console.log("######[" + JSON.stringify(newProject) + "]######:");
 
     const createdProject = await newProject.save();
     return res.status(200).json({
@@ -148,7 +147,6 @@ const UpdateMyProject = async (req, res) => {
         const newTech = await new TechnoModel({
           title: technologies[i],
         }).save();
-        console.log(newTech);
       }
     }
 
@@ -167,7 +165,6 @@ const UpdateMyProject = async (req, res) => {
       },
       { new: true }
     );
-    console.log("######[" + JSON.stringify(updatedProject) + "]######:");
 
     return res.status(200).json({
       Message: "Project Updated suucessfully",
@@ -199,7 +196,6 @@ const UpdatePFA = async (req, res) => {
         const newTech = await new TechnoModel({
           title: technologies[i],
         }).save();
-        console.log(newTech);
       }
     }
 
@@ -216,7 +212,6 @@ const UpdatePFA = async (req, res) => {
       },
       { new: true }
     );
-    console.log("######[" + JSON.stringify(updatedProject) + "]######:");
 
     return res.status(200).json({
       Message: "Project Updated suucessfully",
@@ -242,7 +237,15 @@ const ValiderPFE_Enseignant = async (req, res) => {
       },
       { new: true }
     );
-    console.log("######[" + JSON.stringify(updatedProject) + "]######:");
+
+    // here we will create notiffication
+    // here we will send notif to student
+    const newNotif = await NotifsModule({
+      user: updatedProject.students[0],
+      title: `Your PFE is selected by ${teacher.firstName} ${teacher.lastName}`,
+    });
+    const saved_notif = await newNotif.save();
+    SendStocket(`notif-pfe-${updatedProject.students[0]}`, saved_notif.title);
 
     return res.status(200).json({
       Message: "Project Updated successfully",
@@ -268,7 +271,6 @@ const ValiderPFA_Responsibale = async (req, res) => {
       },
       { new: true }
     );
-    console.log("######[" + JSON.stringify(updatedProject) + "]######:");
 
     return res.status(200).json({
       Message: "Project Updated successfully",
@@ -293,7 +295,6 @@ const ChoisirPFA_Student = async (req, res) => {
       },
       { new: true }
     );
-    console.log("######[" + JSON.stringify(updatedProject) + "]######:");
 
     return res.status(200).json({
       Message: "Project Affected successfully",
@@ -334,7 +335,30 @@ const ValiderProjet_Admin = async (req, res) => {
       },
       { new: true }
     );
-    console.log("######[" + JSON.stringify(updatedProject) + "]######:");
+
+    console.log(updatedProject.students[0]._id);
+
+    const OldCv = await CvModule.findOne({
+      student: updatedProject.students[0]._id,
+    });
+    const newExp = {
+      title: updatedProject.title,
+      description: updatedProject.description,
+      emplacement: updatedProject.societe,
+      startDate: updatedProject.startDate,
+      endDate: updatedProject.endDate,
+    };
+
+    OldCv.experiences = [...OldCv.experiences, newExp];
+    OldCv.hard_skills = [...OldCv.hard_skills, ...updatedProject.technologies];
+
+    const updatedCv = await CvModule.findOneAndUpdate(
+      { student: updatedProject.students[0]._id },
+      {
+        $set: OldCv,
+      },
+      { new: true, upsert: true }
+    );
 
     return res.status(200).json({
       Message: "Project Updated successfully",
@@ -356,8 +380,6 @@ const GetPfeStudent = async (req, res) => {
       type: "PFE",
     }).populate("encadrant");
 
-    console.log("######[" + JSON.stringify(MyProjects) + "]######:");
-
     return res.status(200).json({
       Message: "Project created suucessfully",
       Success: true,
@@ -378,8 +400,6 @@ const GetPFATeacher = async (req, res) => {
       type: "PFA",
     }).populate("students");
 
-    console.log("######[" + JSON.stringify(MyProjects) + "]######:");
-
     return res.status(200).json({
       Message: "PFA Projects retrieved successfully",
       Success: true,
@@ -398,8 +418,6 @@ const GetProjectAll = async (req, res) => {
     })
       .populate("students")
       .populate("encadrant");
-
-    console.log("######[" + JSON.stringify(MyProjects) + "]######:");
 
     return res.status(200).json({
       Message: "Project retreaved suucessfully",
@@ -424,8 +442,6 @@ const GetSocietes = async (req, res) => {
       ),
     ];
 
-    console.log("######[" + JSON.stringify(Projects) + "]######:");
-
     return res.status(200).json({
       Message: "les societes",
       Success: true,
@@ -447,7 +463,6 @@ const GetPfaStudent = async (req, res) => {
       type: "PFA",
     }).populate("encadrant");
 
-    console.log("######[" + JSON.stringify(MyProjects) + "]######:");
 
     return res.status(200).json({
       Message: "Project created suucessfully",
@@ -468,8 +483,6 @@ const GetStageStudent = async (req, res) => {
       students: [student._id],
       type: "STAGE",
     }).populate("encadrant");
-
-    console.log("######[" + JSON.stringify(MyProjects) + "]######:");
 
     return res.status(200).json({
       Message: "Project created suucessfully",
@@ -740,7 +753,7 @@ const validateProject = async (req, res) => {
 
   try {
     const _id = idProject;
-    const affectedTeacher = await ProjectModel.findOneAndUpdate(
+    const updatedProj = await ProjectModel.findOneAndUpdate(
       { _id },
       {
         $set: {
@@ -751,16 +764,19 @@ const validateProject = async (req, res) => {
       },
       { new: true } // return new project with update
     );
-    if (!affectedTeacher) {
+
+    if (!updatedProj) {
       return res.status(400).json({
         Message: "Failed to validate project",
         Success: false,
         data: false,
       });
     }
+    // HERE WE WILL UPDATE CV
+
     return res.status(200).json({
       Message: "project validated successfully",
-      data: affectedTeacher,
+      data: updatedProj,
     });
   } catch (error) {
     console.log("##########:", error);
