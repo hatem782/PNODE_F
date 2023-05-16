@@ -35,4 +35,8 @@ router.put("/pub_priv", VerifToken.isUser, AllUsers.pub_priv_profile);
 router.get("/getAll", VerifToken.isAdmin, AllUsers.GetAllUsersByRole);
 router.delete("/delete/:_id", VerifToken.isAdmin, AllUsers.DeleteUser);
 
+// ################ Notifications ################
+
+router.get("/notifs", VerifToken.isUser, AllUsers.GetMyNotifs);
+
 module.exports = router;

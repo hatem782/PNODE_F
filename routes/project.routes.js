@@ -1,6 +1,7 @@
 const express = require("express");
 const router = express.Router();
 const ProjectController = require("../controllers/Project.controller");
+const pfe_statistuqye = require("../controllers/pfe_statistuqye.controller");
 const VerifToken = require("../middlewares/VerifToken");
 const validator = require("../validations/projectValidations");
 
@@ -118,5 +119,15 @@ router.get(
   VerifToken.isStudent,
   ProjectController.isAllowedToPick
 );
+
+// statistiques for pfe
+
+router.get("/stats_societe", VerifToken.isAdmin, pfe_statistuqye.GetBySociete);
+router.get("/stats_techno", VerifToken.isAdmin, pfe_statistuqye.GetByTecho);
+router.get("/stats_mention", VerifToken.isAdmin, pfe_statistuqye.GetByMention);
+router.get("/stats_encad", VerifToken.isAdmin, pfe_statistuqye.GetByEnseig);
+router.get("/stats_promot", VerifToken.isAdmin, pfe_statistuqye.GetByPromotion);
+router.get("/stats_pays", VerifToken.isAdmin, pfe_statistuqye.GetByPays);
+router.get("/global_pie", VerifToken.isAdmin, pfe_statistuqye.GlobalPie);
 
 module.exports = router;

@@ -7,6 +7,7 @@ const validationProject = Joi.object({
   societe: Joi.string().required(),
   type: Joi.string().valid("PFE", "PFA", "STAGE").required(),
   promotion: Joi.string().required(),
+  pays: Joi.string().required(),
   startDate: Joi.date().required(),
   endDate: Joi.date().required(),
 });
@@ -19,6 +20,7 @@ const validationProject2 = Joi.object({
   societe: Joi.string().required(),
   type: Joi.string().valid("PFE", "PFA", "STAGE").required(),
   promotion: Joi.string().required(),
+  pays: Joi.string().required(),
   startDate: Joi.date().required(),
   endDate: Joi.date().required(),
 });

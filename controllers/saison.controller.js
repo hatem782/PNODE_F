@@ -2,7 +2,7 @@ const SaisonModel = require("../models/saison.model");
 
 const GetAllSaisons = async (req, res) => {
   try {
-    const Saisons = await SaisonModel.find();
+    const Saisons = await SaisonModel.find().sort({ title: "asc" });
     return res
       .status(200)
       .json({ Message: "Saisons found successfully ", data: Saisons });
@@ -19,6 +19,16 @@ const CreateSaison = async (req, res) => {
     const title = `${new Date(startDate).getFullYear()}-${new Date(
       endDate
     ).getFullYear()}`;
+
+    const [a, b] = title.split("-");
+
+    if (Number(b) - Number(a) !== 1) {
+      console.log(Number(a) - Number(b));
+      return res.status(409).json({
+        Message: "saison invalide",
+        Success: false,
+      });
+    }
 
     const existSaison = await SaisonModel.findOne({
       title,
@@ -54,6 +64,16 @@ const UpdateSaison = async (req, res) => {
     const title = `${new Date(startDate).getFullYear()}-${new Date(
       endDate
     ).getFullYear()}`;
+
+    const [a, b] = title.split("-");
+
+    if (Number(b) - Number(a) !== 1) {
+      console.log(Number(a) - Number(b));
+      return res.status(409).json({
+        Message: "saison invalide",
+        Success: false,
+      });
+    }
 
     console.log({ title, startDate, endDate });
 

@@ -26,7 +26,7 @@ router.post(
 
 router.get(
   "/getAllConfirmed/:_idEvent",
-  verifToken.isAdmin,
+  verifToken.isUser,
   ParticipationController.GetAllParticipationsConfirmed
 );
 router.get(

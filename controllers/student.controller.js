@@ -1,4 +1,5 @@
 const UserModel = require("../models/user.module");
+const cvModel = require("../models/cv.model");
 const bcrypt = require("bcrypt");
 const readXlsxFile = require("read-excel-file/node");
 const Mailer = require("../mails/Mail_Sender");
@@ -200,6 +201,22 @@ const CreateStudentsFromExl = async (req, res) => {
           <p>please make sure to change your password after you access to your account</p>
           </div>`;
           await Mailer.Mail_Sender(student.email, content, subject);
+
+          // hadha code jdyd
+          const newCv = await cvModel.create({
+            student: createdStudent._id,
+            bio: "",
+            localisation: "",
+            linkedIn: "",
+            style: 1,
+            experiences: [],
+            formations: [],
+            languages: [],
+            hard_skills: [],
+            soft_skills: [],
+            hobbys: [],
+          });
+          await newCv.save();
         }
       }
     }
@@ -327,6 +344,38 @@ const UpdateAnneeUniv = async (req, res) => {
     res.status(500).send({ Message: "Server Error", Error: error.message });
   }
 };
+
+const autoUpdateEveryYear = async (req, res) => {
+  try {
+    // { classe, niveau, numero_classe, diplome }
+    const updateStudent = await UserModel.find(
+      {
+        $or: [{ role: "STUDENT" }, { role: "ALUMINIE" }],
+      },
+      {
+        $set: {
+          isUpdated: false,
+        },
+      }
+    );
+    console.log("##########: failed");
+
+    if (!updateStudent) {
+      return res.status(400).json({
+        Message: "Failed to update student",
+        Success: false,
+      });
+    }
+    console.log("##########: updateeeeeeeeeed");
+
+    return res
+      .status(200)
+      .json({ Message: "Student updated successfully", data: updateStudent });
+  } catch (error) {
+    console.log("##########:", error);
+    res.status(500).send({ Message: "Server Error", Error: error.message });
+  }
+};
 module.exports = {
   RegisterAluminie,
   UpdatePromotion,
@@ -338,4 +387,5 @@ module.exports = {
   VerifObtDateDip,
   GetAllAccounts,
   UpdateAnneeUniv,
+  autoUpdateEveryYear,
 };
