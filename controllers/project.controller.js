@@ -603,7 +603,9 @@ const isAllowedToPick = async (req, res) => {
 
 const GetAllPFAStu = async (req, res) => {
   try {
-    const pfa = await ProjectModel.find({ type: "PFA" })
+    const this_year = new Date().getFullYear();
+    const promotion = `${this_year - 1}-${this_year}`;
+    const pfa = await ProjectModel.find({ type: "PFA", promotion })
       .populate("students")
       .populate("encadrant");
 
