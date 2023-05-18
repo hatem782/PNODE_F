@@ -33,7 +33,7 @@ router.post(
 
 router.post(
   "/create_multiple_with_excel",
-  VerifToken.isAdmin,
+  VerifToken.isSuperadmin,
   StudentController.CreateStudentsFromExl
 );
 

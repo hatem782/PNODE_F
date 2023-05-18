@@ -96,9 +96,13 @@ const GetOneEvent = async (req, res) => {
     const { _id } = req.params;
 
     const Event = await EventModel.findOne({ _id });
-    return res
-      .status(200)
-      .json({ Message: "Event found successfully ", data: Event });
+    if (Event) {
+      return res
+        .status(200)
+        .json({ Message: "Event found successfully ", data: Event });
+    } else {
+      return res.status(404).json({ Message: "Event Not found " });
+    }
   } catch (error) {
     console.log("##########:", error);
     res.status(500).send({ Message: "Server Error", Error: error.message });
