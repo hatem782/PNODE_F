@@ -376,6 +376,60 @@ const autoUpdateEveryYear = async (req, res) => {
     res.status(500).send({ Message: "Server Error", Error: error.message });
   }
 };
+//controllers added for alumini by talel
+const GetAllAluminies = async (req, res) => {
+  try {
+const allAluminies = await UserModel.find({
+      role: "ALUMINIE",
+    });
+    return res.status(200).json({
+      Message: "All  ALUMINIE",
+      Success: true,
+      data: {  allAluminies },
+    });
+  } catch (error) {
+    console.log("##########:", error);
+    res.status(500).send({ Message: "Server Error", Error: error.message });
+  }
+};
+
+const ValidateAluminiInscription = async (req, res) => {
+  try {
+    console.log(req.body);
+    const { idAlumini, validated } = req.body;
+    const Alumini = await UserModel.findById(idAlumini);
+
+    if (Alumini) {
+      if (Alumini.isValide === null || Alumini.isValide !== validated) {
+        Alumini.isValide = validated;
+        const result = await Alumini.save();
+
+        return res.status(200).json({
+          Message: validated ? "Validated successfully" : "Validation reported successfully",
+          data: {
+            result: result,
+          },
+        });
+      } else {
+        return res.status(200).json({
+          Message: "No changes made",
+          data: {
+            result: Alumini,
+          },
+        });
+      }
+    } else {
+      return res.status(404).json({
+        Message: "Alumini not found",
+        data: null,
+      });
+    }
+  } catch (error) {
+    console.log("##########:", error);
+    res.status(500).send({ Message: "Server Error", Error: error.message });
+  }
+};
+
 module.exports = {
   RegisterAluminie,
   UpdatePromotion,
@@ -388,4 +442,6 @@ module.exports = {
   GetAllAccounts,
   UpdateAnneeUniv,
   autoUpdateEveryYear,
+  GetAllAluminies,
+  ValidateAluminiInscription
 };

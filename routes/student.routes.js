@@ -24,6 +24,14 @@ router.post(
 );
 
 // ################ ONLY BY ADMIN ################
+router.get("/getAllAluminies", StudentController.GetAllAluminies);
+
+router.put(
+  "/validateAlumini",
+  VerifToken.isAdmin,
+  StudentController.ValidateAluminiInscription
+);
+
 router.post(
   "/create",
   VerifToken.isAdmin,
