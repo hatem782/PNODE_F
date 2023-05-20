@@ -16,21 +16,22 @@ router.put(
 // ################ ONLY BY ADMIN ################
 router.post(
   "/createTeacher",
-  VerifToken.isSuperadmin,
+  VerifToken.isAdmin,
   validator.createTeacherValidation,
   AllUsers.CreateUser
 );
-router.get("/get_all", VerifToken.isUser, TeacherController.GetAllTeacher);
+router.get("/get_all", VerifToken.isAdmin, TeacherController.GetAllTeacher);
 router.put(
   "/update_info/:_id",
-  VerifToken.isSuperadmin,
+  VerifToken.isAdmin,
   TeacherController.UpdateTeacherToResp
 );
+router.get("/getOne/:_id", VerifToken.isAdmin, TeacherController.GetOne);
 
 // ######## RESPONSABLE ROUTES###########
 router.post(
   "/createTeacherResponsible",
-  VerifToken.isSuperadmin,
+  VerifToken.isAdmin,
   validator.createResponsableValidation,
   AllUsers.CreateUser
 );

@@ -101,9 +101,7 @@ const GetOneEvent = async (req, res) => {
         .status(200)
         .json({ Message: "Event found successfully ", data: Event });
     } else {
-      return res
-        .status(404)
-        .json({ Message: "Event Not found  ", data: Event });
+      return res.status(404).json({ Message: "Event Not found " });
     }
   } catch (error) {
     console.log("##########:", error);
