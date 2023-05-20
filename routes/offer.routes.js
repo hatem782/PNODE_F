@@ -21,7 +21,7 @@ router.put(
   offerController.Update
 );
 
-router.get("/getAll", verifToken.isAluminie, offerController.GetAll);
+router.get("/getAll", verifToken.isUser, offerController.GetAll);
 router.get("/GetAllByIdOwner", verifToken.isAluminie, offerController.GetAllByIdOwner);
 
 router.get(
