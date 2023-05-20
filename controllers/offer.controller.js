@@ -3,14 +3,23 @@ const offerModel = require("../models/offer.model");
 const Create = async (req, res) => {
   try {
     const { offerName, offerType, description, location } = req.body;
-
+    const owner = req.user._id;
     const existoffer = await offerModel.findOne({ offerName, offerType });
     if (existoffer)
       return res.status(409).json({
         Message: "offer already exist",
         Success: false,
       });
-    const newOffer = new offerModel(req.body);
+      console.log("\ owner is "+owner);
+    const newOffer = new offerModel({
+      offerName,
+      offerType,
+      description,
+      location,
+      owner
+
+    });
+    newOffer.owner=owner;
     const createdOffer = await newOffer.save();
     return res.status(200).json({
       Message: "offer created suucessfully",
@@ -60,7 +69,13 @@ const Update = async (req, res) => {
 const Delete = async (req, res) => {
   try {
     const { _id } = req.params;
-    const removeoffer = await offerModel.deleteOne({ _id });
+
+    // Vérifier si _id est indéfini
+    if (!_id) {
+      return res.status(400).json({ Message: "Invalid offer ID" });
+    }
+
+    const removeoffer = await offerModel.deleteOne({_id: _id });
 
     if (!removeoffer) {
       return res.status(400).json({ Message: "Failed to delete offer" });
@@ -72,9 +87,25 @@ const Delete = async (req, res) => {
   }
 };
 
+
 const GetAll = async (req, res) => {
   try {
     const offers = await offerModel.find();
+    return res
+      .status(200)
+      .json({ Message: "offers found successfully ", data: offers });
+  } catch (error) {
+    console.log("##########:", error);
+    res.status(500).send({ Message: "Server Error", Error: error.message });
+  }
+};
+
+const GetAllByIdOwner = async (req, res) => {
+  try {
+    
+    const owner = req.user._id;
+
+    const offers = await offerModel.find({owner});
     return res
       .status(200)
       .json({ Message: "offers found successfully ", data: offers });
@@ -109,4 +140,4 @@ const GetOne = async (req, res) => {
     res.status(500).send({ Message: "Server Error", Error: error.message });
   }
 };
-module.exports = { Create, Update, Delete, GetAll, GetAllByType, GetOne };
+module.exports = { Create, Update, Delete, GetAll, GetAllByType, GetOne,GetAllByIdOwner };

@@ -5,6 +5,7 @@ const GeneratePassword = require("../functions/GeneratePass");
 const FileUpload = require("../uploads/FileUpload");
 const { filt_year_parser } = require("../functions/FiltYearParser");
 const cvModel = require("../models/cv.model");
+const NotifsModel = require("../models/notifs.model");
 
 const CreateUser = async (req, res) => {
   try {
@@ -341,6 +342,21 @@ const ChangeEmail = async (req, res) => {
   }
 };
 
+const GetMyNotifs = async (req, res) => {
+  try {
+    const _id = req.user._id;
+
+    const notifs = await NotifsModel.find({ user: _id });
+
+    return res
+      .status(200)
+      .json({ Message: "updated successfully", data: notifs });
+  } catch (error) {
+    console.log("##########:", error);
+    res.status(500).send({ Message: "Server Error", Error: error.message });
+  }
+};
+
 module.exports = {
   CreateUser,
   GetAllUsersByRole,
@@ -351,4 +367,5 @@ module.exports = {
   ChangeEmail,
   ForgotPassword,
   DeleteUser,
+  GetMyNotifs,
 };

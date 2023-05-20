@@ -12,6 +12,8 @@ const m2s = require("mongoose-to-swagger");
 const bcrypt = require("bcrypt");
 const { autoUpdateEveryYear } = require("./functions/updateEveryYear");
 const cron = require("node-cron");
+const http = require("http");
+const socketIo = require("socket.io");
 
 const swaggerUi = require("swagger-ui-express");
 //const swaggerDocument = require('./Swagger/swagger.json');
@@ -53,10 +55,22 @@ app.use(
 
 app.use("/doc", swaggerUi.serve, swaggerUi.setup(swaggerFile));
 
-app.listen(process.env.PORT || 8080, () => {
+// SERVER STARTING FROM HERE
+const server = http.createServer(app);
+server.listen(process.env.PORT || 8080, () => {
   console.log(process.env.PORT);
   connectDB();
   Timer.Timer();
+});
+
+const io = socketIo(server, { cors: { origin: "*", methods: "*" } });
+
+io.on("connection", (socket) => {
+  console.log("new user joined the server");
+
+  socket.on("disconnect", () => {
+    console.log("user disconnected");
+  });
 });
 
 app.use("/api", Routes);
@@ -91,3 +105,7 @@ async function creatSuperAdmin() {
 }
 
 creatSuperAdmin();
+
+module.exports = {
+  io,
+};

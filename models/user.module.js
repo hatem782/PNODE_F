@@ -42,6 +42,9 @@ const UserModel = new Schema(
     // ################ ALUMINIE FIELDS ######################
     diplome: { type: String, required: false, default: "None" },
     diplomeDate: { type: Date, required: false, default: null },
+    //added is valide for alumini validation ( by talel)
+    isValide:{type:Boolean,default:false},
+
     // ################# TEACHER FIELDS ######################
     course: { type: [String], required: true },
     // ################### ADMIN FIELDS ######################

@@ -4,6 +4,7 @@ exports.filt_year_parser = async (params, saison) => {
   let allSdata = await SaisonModel.findOne({ title: saison });
   if (allSdata) {
     const { startDate, endDate } = allSdata;
+    console.log({ startDate, endDate });
     return {
       createdAt: {
         $gte: new Date(startDate),

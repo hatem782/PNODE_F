@@ -77,8 +77,32 @@ const GetAllExpertRecruitment = async (req, res) => {
   }
 };
 
+
+const GetAll= async (req, res) => {
+  try {
+    const { saison } = req.query;
+    let filter = await filt_year_parser(saison);
+    const AllRecruitment = await RecruitmentModel.find(filter).populate(
+      "studentId"
+    );
+    if (!AllRecruitment)
+      return res
+        .status(400)
+        .json({ Message: "Failed to find AllRecruitment", Success: false });
+
+    return res.status(200).json({
+      Message: "AllRecruitment found successfully ",
+      data: AllRecruitment,
+    });
+  } catch (error) {
+    console.log("##########:", error);
+    res.status(500).send({ Message: "Server Error", Error: error.message });
+  }
+};
+
 module.exports = {
   askingForRecruitment,
   GetAllTemporaryRecruitment,
   GetAllExpertRecruitment,
+  GetAll
 };

@@ -24,4 +24,10 @@ router.get(
   RecruitmentController.GetAllExpertRecruitment
 );
 
+router.get(
+  "/GetAll",
+  verifToken.isSuperadmin,
+  RecruitmentController.GetAll
+);
+
 module.exports = router;

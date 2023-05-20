@@ -1,4 +1,5 @@
 const UserModel = require("../models/user.module");
+const cvModel = require("../models/cv.model");
 const bcrypt = require("bcrypt");
 const readXlsxFile = require("read-excel-file/node");
 const Mailer = require("../mails/Mail_Sender");
@@ -200,6 +201,22 @@ const CreateStudentsFromExl = async (req, res) => {
           <p>please make sure to change your password after you access to your account</p>
           </div>`;
           await Mailer.Mail_Sender(student.email, content, subject);
+
+          // hadha code jdyd
+          const newCv = await cvModel.create({
+            student: createdStudent._id,
+            bio: "",
+            localisation: "",
+            linkedIn: "",
+            style: 1,
+            experiences: [],
+            formations: [],
+            languages: [],
+            hard_skills: [],
+            soft_skills: [],
+            hobbys: [],
+          });
+          await newCv.save();
         }
       }
     }
@@ -359,6 +376,60 @@ const autoUpdateEveryYear = async (req, res) => {
     res.status(500).send({ Message: "Server Error", Error: error.message });
   }
 };
+//controllers added for alumini by talel
+const GetAllAluminies = async (req, res) => {
+  try {
+const allAluminies = await UserModel.find({
+      role: "ALUMINIE",
+    });
+    return res.status(200).json({
+      Message: "All  ALUMINIE",
+      Success: true,
+      data: {  allAluminies },
+    });
+  } catch (error) {
+    console.log("##########:", error);
+    res.status(500).send({ Message: "Server Error", Error: error.message });
+  }
+};
+
+const ValidateAluminiInscription = async (req, res) => {
+  try {
+    console.log(req.body);
+    const { idAlumini, validated } = req.body;
+    const Alumini = await UserModel.findById(idAlumini);
+
+    if (Alumini) {
+      if (Alumini.isValide === null || Alumini.isValide !== validated) {
+        Alumini.isValide = validated;
+        const result = await Alumini.save();
+
+        return res.status(200).json({
+          Message: validated ? "Validated successfully" : "Validation reported successfully",
+          data: {
+            result: result,
+          },
+        });
+      } else {
+        return res.status(200).json({
+          Message: "No changes made",
+          data: {
+            result: Alumini,
+          },
+        });
+      }
+    } else {
+      return res.status(404).json({
+        Message: "Alumini not found",
+        data: null,
+      });
+    }
+  } catch (error) {
+    console.log("##########:", error);
+    res.status(500).send({ Message: "Server Error", Error: error.message });
+  }
+};
+
 module.exports = {
   RegisterAluminie,
   UpdatePromotion,
@@ -371,4 +442,6 @@ module.exports = {
   GetAllAccounts,
   UpdateAnneeUniv,
   autoUpdateEveryYear,
+  GetAllAluminies,
+  ValidateAluminiInscription
 };

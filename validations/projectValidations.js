@@ -7,6 +7,7 @@ const validationProject = Joi.object({
   societe: Joi.string().required(),
   type: Joi.string().valid("PFE", "PFA", "STAGE").required(),
   promotion: Joi.string().required(),
+  pays: Joi.string().required(),
   startDate: Joi.date().required(),
   endDate: Joi.date().required(),
 });
@@ -19,6 +20,7 @@ const validationProject2 = Joi.object({
   societe: Joi.string().required(),
   type: Joi.string().valid("PFE", "PFA", "STAGE").required(),
   promotion: Joi.string().required(),
+  pays: Joi.string().required(),
   startDate: Joi.date().required(),
   endDate: Joi.date().required(),
 });
@@ -28,8 +30,6 @@ const pfa_validation = Joi.object({
   description: Joi.string().required(),
   technologies: Joi.array().required(),
   promotion: Joi.string().required(),
-  startDate: Joi.date().required(),
-  endDate: Joi.date().required(),
 });
 
 const validationProjectPFA = Joi.object({
@@ -38,8 +38,6 @@ const validationProjectPFA = Joi.object({
   description: Joi.string().required(),
   technologies: Joi.array().required(),
   promotion: Joi.string().required(),
-  startDate: Joi.date().required(),
-  endDate: Joi.date().required(),
 });
 
 const validate_validate_by_admin = Joi.object({

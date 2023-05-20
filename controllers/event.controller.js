@@ -1,5 +1,6 @@
 const EventModel = require("../models/event.model");
 const { filt_year_parser } = require("../functions/FiltYearParser");
+const SaisonModel = require("../models/saison.model");
 
 const CreateEvent = async (req, res) => {
   try {
@@ -79,7 +80,19 @@ const DeleteEvent = async (req, res) => {
 
 const GetAllEvents = async (req, res) => {
   const { saison } = req.query;
-  let filter = await filt_year_parser({}, saison);
+  let allSdata = await SaisonModel.findOne({ title: saison });
+  let filter = {};
+  if (allSdata) {
+    const { startDate, endDate } = allSdata;
+    console.log({ startDate, endDate });
+    filter = {
+      eventDateDebut: {
+        $gte: new Date(startDate),
+        $lt: new Date(endDate),
+      },
+    };
+  }
+
   try {
     const Events = await EventModel.find(filter);
     return res

@@ -44,6 +44,19 @@ const CreateSociete = async (req, res) => {
 const getAllSociete = async (req, res) => {
 // #swagger.tags = ['employement apis']
     // #swagger.description = 'Endpoint return list of entreprises '
+
+    try
+    {
+        const listSociete = await SocieteModel.find({
+         });
+          return res
+            .status(200)
+            .json({ Message: "Projects found successfully ", data: listSociete });
+    }
+    catch(error){
+        console.log("##########:", error);
+        res.status(500).send({ Message: "Server Error", Error: error.message });
+    }
 }
 
 const startPositionInSociete = async (req,res) => {
@@ -113,69 +126,93 @@ const getAllPositionsByAllumini = async (req,res) => {
 }
 
 
-const getAluminiStats=async(req,res)=>{
-   //employement stat depending on selection critéria ( societe / pays /diplome )
- // #swagger.tags = ['employement apis']
-    // #swagger.description = 'Moyenne des anneés de chommage des allumini calculé en fonction du cirtére donneé'
-        // #swagger.parameters['critere'] = { description: 'critére du groupement : [societe  / pays/diplome]' }
-
+const getAluminiStats = async (req, res) => {
     const { critere } = req.params;
-    console.log(critere)
-    try{      //can be grouped by diplome / promotion //skills
-        const result=await PositionModel.aggregate([
-            
-           {  $lookup: {
-              //  from: 'positions',
-                from: 'users',
-
-                localField: 'alumini',
-                foreignField: '_id',
-                as: 'Employee',
-               // "pipeline" : [{ "$sort": {"startDate":1}}, { "$limit" : 1 }] ,
-        
-            },},
-            {  $lookup: {
-                //  from: 'positions',
-                  from: 'societes',
   
-                  localField: 'societe',
-                  foreignField: '_id',
-                  as: 'Soceiete',
-                 // "pipeline" : [{ "$sort": {"startDate":1}}, { "$limit" : 1 }] ,
-          
-              },},
-            {$unwind: '$Employee'},   
-            {$unwind: '$Soceiete'},   
-
-            {$project:{
-                societe: '$Soceiete.title',
-                post:"$designation",
-                pays: '$Soceiete.pays',
-                employe:'$Employee.firstName',
-            diplome:'$Employee.deplome',
-            }},
-            {$group:{
-               _id: `$${critere}`,
-               "number": {"$sum": 1}
-            }}
-
-          
-            
-        
-        ])
-            
-             return res.status(200).json({
-               Message: "list not empty",
-               Success: true,
-               data: result,
-           });
-           
-        }
-        catch(error)
+    try {
+      let groupByField;
+      let projectFields;
+  
+      if (critere === 'promotion') {
+        groupByField = '$Employee.promotion';
+        projectFields = {
+          promotion: '$_id',
+        };
+      } else if (critere === 'societe') {
+        groupByField = '$Soceiete.title';
+        projectFields = {
+          societe: '$_id',
+        };
+      } else if (critere === 'pays') {
+        groupByField = '$Soceiete.pays';
+        projectFields = {
+          pays: '$_id',
+        };
+      }
+  
+      const result = await PositionModel.aggregate([
         {
-        console.log(JSON.stringify(error))
-        }
-}
+          $lookup: {
+            from: 'users',
+            localField: 'alumini',
+            foreignField: '_id',
+            as: 'Employee',
+          },
+        },
+        {
+          $lookup: {
+            from: 'societes',
+            localField: 'societe',
+            foreignField: '_id',
+            as: 'Soceiete',
+          },
+        },
+        { $unwind: '$Employee' },
+        { $unwind: '$Soceiete' },
+        {
+          $group: {
+            _id: {
+              groupByField,
+              promotion: '$Employee.promotion',
+            },
+            count: { $sum: 1 },
+          },
+        },
+        {
+          $group: {
+            _id: '$_id.groupByField',
+            promotions: {
+              $push: {
+                promotion: '$_id.promotion',
+                count: '$count',
+              },
+            },
+          },
+        },
+        {
+          $project: {
+            _id: 0,
+            ...projectFields,
+            promotions: 1,
+          },
+        },
+      ]);
+  
+      return res.status(200).json({
+        Message: 'List not empty',
+        Success: true,
+        data: result,
+      });
+    } catch (error) {
+      console.log(JSON.stringify(error));
+      return res.status(500).json({
+        Message: 'An error occurred',
+        Success: false,
+      });
+    }
+  };
+  
+  
 
 const getStatChommage=async(req,res)=>{
 //average chommage moyenne depending on selection critéria ( diplome / promotion / technologie )
