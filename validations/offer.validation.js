@@ -6,7 +6,7 @@ const validationOffer = Joi.object({
     "Conseil",
     "Offre",
     "Opportunité",
-    "Offre d'emploi"
+    "Offre d'emploi",
   ),
   description: Joi.string().required(),
   location: Joi.string().required(),

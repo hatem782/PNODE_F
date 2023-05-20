@@ -22,6 +22,7 @@ router.put(
 );
 
 router.get("/getAll", verifToken.isAluminie, offerController.GetAll);
+router.get("/GetAllByIdOwner", verifToken.isAluminie, offerController.GetAllByIdOwner);
 
 router.get(
   "/getAllByType",
