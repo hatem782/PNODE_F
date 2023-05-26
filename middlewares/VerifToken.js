@@ -153,7 +153,7 @@ const isAdmin = async (req, res, next) => {
     });
 
     // here we have to test the permission
-    if (user) {
+    /*if (user) {
       const action = req.baseUrl.split("/")[2];
       const index = user.permessions.indexOf(action);
       if (index === -1) {
@@ -162,6 +162,13 @@ const isAdmin = async (req, res, next) => {
           .json({ success: false, Message: "Unauthorized" });
       }
     } else {
+      user = await usertModel.findOne({
+        _id: decoded._id,
+        role: "SUPERADMIN",
+      });
+    }*/
+
+    if (!user) {
       user = await usertModel.findOne({
         _id: decoded._id,
         role: "SUPERADMIN",
