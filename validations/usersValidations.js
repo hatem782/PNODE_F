@@ -193,7 +193,13 @@ const PermissionsValidation = Joi.object({
         "admin",
         "employement",
         "recruitment",
-        "offer"
+        "offer",
+        "PFE",
+        "PFA",
+        "offer",
+        "recruitment",
+        "statisticChomage",
+        "validateAluminie"
       )
     ),
 });

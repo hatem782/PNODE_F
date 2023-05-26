@@ -43,7 +43,7 @@ const UserModel = new Schema(
     diplome: { type: String, required: false, default: "None" },
     diplomeDate: { type: Date, required: false, default: null },
     //added is valide for alumini validation ( by talel)
-    isValide:{type:Boolean,default:false},
+    isValide: { type: Boolean, default: false },
 
     // ################# TEACHER FIELDS ######################
     course: { type: [String], required: true },
@@ -65,6 +65,10 @@ const UserModel = new Schema(
         "employement",
         "recruitment",
         "offer",
+        "PFA",
+        "PFE",
+        "statisticChomage",
+        "validateAluminie",
       ],
     },
   },

@@ -31,8 +31,15 @@ const CreateEvent = async (req, res) => {
 const UpdateEvent = async (req, res) => {
   try {
     const { _id } = req.params;
-    const { eventDateDebut, eventDateFin, eventType, description, eventName } =
-      req.body;
+    const {
+      eventDateDebut,
+      eventDateFin,
+      eventType,
+      description,
+      eventName,
+      organizedBy,
+      location,
+    } = req.body;
 
     const updateEvent = await EventModel.findOneAndUpdate(
       { _id },
@@ -43,6 +50,8 @@ const UpdateEvent = async (req, res) => {
           eventType,
           description,
           eventName,
+          organizedBy,
+          location,
         },
       },
       { new: true } // return new Event with update
