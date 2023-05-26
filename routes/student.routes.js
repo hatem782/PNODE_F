@@ -16,6 +16,12 @@ router.get(
   StudentController.GetAllAccounts
 );
 
+router.get(
+  "/get_one/:_id",
+  VerifToken.isSuperThanStudent,
+  StudentController.GetOneStudent
+);
+
 // #################### ALUMINIE ROUTES #################
 router.post(
   "/register_aluminie",

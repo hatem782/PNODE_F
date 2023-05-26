@@ -66,6 +66,12 @@ router.get(
 );
 
 router.get(
+  "/get_pfe_id/:id",
+  VerifToken.isStudent,
+  ProjectController.getPFEById
+);
+
+router.get(
   "/get_pfa_teacher",
   VerifToken.isTeacher,
   ProjectController.GetPFATeacher

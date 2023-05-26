@@ -44,6 +44,25 @@ const GetAllAccounts = async (req, res) => {
   }
 };
 
+const GetOneStudent = async (req, res) => {
+  try {
+    const { _id } = req.params;
+    const student = await UserModel.findById(_id);
+    if (student) {
+      return res.status(200).json({
+        Message: "one student",
+        Success: true,
+        data: student,
+      });
+    } else {
+      return res.status(404).json({ Message: "Student Not found " });
+    }
+  } catch (error) {
+    console.log("##########:", error);
+    res.status(500).send({ Message: "Server Error", Error: error.message });
+  }
+};
+
 const RegisterAluminie = async (req, res) => {
   try {
     const { phoneNumber, email, password } = req.body;
@@ -447,5 +466,6 @@ module.exports = {
   UpdateAnneeUniv,
   autoUpdateEveryYear,
   GetAllAluminies,
+  GetOneStudent,
   ValidateAluminiInscription,
 };
