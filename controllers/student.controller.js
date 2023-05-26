@@ -44,6 +44,25 @@ const GetAllAccounts = async (req, res) => {
   }
 };
 
+const GetOneStudent = async (req, res) => {
+  try {
+    const { _id } = req.params;
+    const student = await UserModel.findById(_id);
+    if (student) {
+      return res.status(200).json({
+        Message: "one student",
+        Success: true,
+        data: student,
+      });
+    } else {
+      return res.status(404).json({ Message: "Student Not found " });
+    }
+  } catch (error) {
+    console.log("##########:", error);
+    res.status(500).send({ Message: "Server Error", Error: error.message });
+  }
+};
+
 const RegisterAluminie = async (req, res) => {
   try {
     const { phoneNumber, email, password } = req.body;
@@ -259,6 +278,7 @@ const NotifMailWorkUpdate = async () => {
       <div>
       <h2>Good morning ${student.firstName} ${student.lastName}</h2>
       <p>we want to remind you to update your work in our platform</p>
+      <a href="http://localhost:3000/dash/profile" >Click Here</a>
       </div>`;
       await Mailer.Mail_Sender(student.email, content, subject);
       console.log("i have sent email");
@@ -281,7 +301,8 @@ const NotifMailUpdateCompAndProf = async () => {
       let content = `
       <div>
       <h2>Good morning ${student.firstName} ${student.lastName}</h2>
-      <p>we want to remind you to update your profile and </p>
+      <p>we want to remind you to update your profile and skills</p>
+      <a href="http://localhost:3000/dash/profile" >Click Here</a>
       </div>`;
       await Mailer.Mail_Sender(student.email, content, subject);
     }
@@ -308,7 +329,7 @@ const VerifObtDateDip = async () => {
       <h2>Good morning ${student.firstName} ${student.lastName}</h2>
       <p>we want to remind you to update your diplome date</p>
       <p>please use the link below to update it</p>
-      <p>currently the website is under dev , no link provided</p>
+      <a href="http://localhost:3000/dash/diplome_date" >Click Here</a>
       </div>`;
       await Mailer.Mail_Sender(student.email, content, subject);
     }
@@ -379,13 +400,13 @@ const autoUpdateEveryYear = async (req, res) => {
 //controllers added for alumini by talel
 const GetAllAluminies = async (req, res) => {
   try {
-const allAluminies = await UserModel.find({
+    const allAluminies = await UserModel.find({
       role: "ALUMINIE",
     });
     return res.status(200).json({
       Message: "All  ALUMINIE",
       Success: true,
-      data: {  allAluminies },
+      data: { allAluminies },
     });
   } catch (error) {
     console.log("##########:", error);
@@ -405,7 +426,9 @@ const ValidateAluminiInscription = async (req, res) => {
         const result = await Alumini.save();
 
         return res.status(200).json({
-          Message: validated ? "Validated successfully" : "Validation reported successfully",
+          Message: validated
+            ? "Validated successfully"
+            : "Validation reported successfully",
           data: {
             result: result,
           },
@@ -443,5 +466,6 @@ module.exports = {
   UpdateAnneeUniv,
   autoUpdateEveryYear,
   GetAllAluminies,
-  ValidateAluminiInscription
+  GetOneStudent,
+  ValidateAluminiInscription,
 };

@@ -202,6 +202,30 @@ const UpdatePFA = async (req, res) => {
   }
 };
 
+const getPFEById = async (req, res) => {
+  try {
+    const { id } = req.params;
+
+    const pfe = await ProjectModel.findById(id);
+
+    if (!pfe || pfe.type !== "PFE") {
+      return res.status(404).json({
+        Message: "Project not found",
+        Success: false,
+      });
+    }
+
+    return res.status(200).json({
+      Message: "Project pfe retrieved successfully",
+      Success: true,
+      data: pfe,
+    });
+  } catch (error) {
+    console.log("##########:", error);
+    res.status(500).send({ Message: "Server Error", Error: error.message });
+  }
+};
+
 const getPFAById = async (req, res) => {
   try {
     const { id } = req.params;
@@ -856,4 +880,5 @@ module.exports = {
   GetAllPFAAdmin,
   isAllowedToPick,
   getPFAById,
+  getPFEById,
 };
